@@ -1,0 +1,198 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "770753ef-ac7c-4e28-82e7-96cee89de54f")
+	(paper "A4")
+	(lib_symbols)
+	(sheet
+		(at 154.94 77.47)
+		(size 116.84 24.13)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "530ede69-5bb8-49a7-82ac-beba7f5c1be5")
+		(property "Sheetname" "processor"
+			(at 154.94 76.7584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "processor.kicad_sch"
+			(at 154.94 102.1846 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "3DSCAN2026"
+				(path "/770753ef-ac7c-4e28-82e7-96cee89de54f"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 31.75 77.47)
+		(size 105.41 25.4)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "9dea7881-28c6-447a-9e1e-49e8ff977d3f")
+		(property "Sheetname" "IMU"
+			(at 31.75 76.7584 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "IMU.kicad_sch"
+			(at 31.75 103.4546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "3DSCAN2026"
+				(path "/770753ef-ac7c-4e28-82e7-96cee89de54f"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 153.67 33.02)
+		(size 115.57 31.75)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "efcbb765-aeac-41ac-a9cd-c3241498f0bc")
+		(property "Sheetname" "énergie"
+			(at 153.67 32.3084 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "enrgie.kicad_sch"
+			(at 153.67 65.3546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "3DSCAN2026"
+				(path "/770753ef-ac7c-4e28-82e7-96cee89de54f"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 33.02 31.75)
+		(size 102.87 34.29)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "fa669d3e-778f-46aa-8fe5-c5718d19c072")
+		(property "Sheetname" "communication"
+			(at 33.02 31.0384 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "communication.kicad_sch"
+			(at 33.02 66.6246 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "3DSCAN2026"
+				(path "/770753ef-ac7c-4e28-82e7-96cee89de54f"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)
