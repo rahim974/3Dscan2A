@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP ST67W611M1A6B
+D 802.15.4, Bluetooth, WiFi 802.11b/g/n/ax, Bluetooth v5.4, Thread Transceiver Module 2.4GHz PCB Trace Surface Mount,53mA ~ 63mA,-40C ~ 85C,32-LGA Module
+K
+F https://www.st.com/resource/en/datasheet/st67w611m1.pdf
+$ENDCMP
+#
+#End Doc Library
