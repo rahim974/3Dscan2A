@@ -2,4 +2,5 @@
 	(version 7)
 	(lib (name "IMU_symbole") (type "KiCad") (uri "/Users/moatsembellhelnemrawi/Downloads/ul_LSM6DSV16X/KiCADv6/2026-09-29_14-03-09.kicad_sym") (options "") (descr ""))
 	(lib (name "Lidar") (type "KiCad") (uri "/Users/moatsembellhelnemrawi/Documents/GitHub/3Dscan2A/PCB_prototype1/VL53L9CX_large.kicad_sym") (options "") (descr ""))
+	(lib (name "VL53L9CX") (type "KiCad") (uri "${KIPRJMOD}/VL53L9CX.kicad_sym") (options "") (descr ""))
 )
