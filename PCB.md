@@ -7,7 +7,7 @@ Ce document liste l'ensemble des composants nécessaires au projet en distinguan
 ## 1. Composants DÉJÀ DISPONIBLES sur le Kit (STM32N6570-DK)
 *Il n'y a pas besoin de router ces composants, la carte mère s'en charge.*
 
-*   **Microcontrôleur (MCU) :** Puce STM32N657X0 comprenant un cœur Arm Cortex-M55 et un accélérateur IA Neural-ART[span_0](start_span)[span_0](end_span).
+*   **Microcontrôleur (MCU) :** Puce STM32N657X0 comprenant un cœur Arm Cortex-M55 et un accélérateur IA Neural-ART [span_0](start_span)[span_0](end_span).
 *   **Mémoires embarquées :** Environ 4,2 Mo de SRAM interne, mémoire Flash externe Octo-SPI de grande capacité, et de la PSRAM externe[span_1](start_span)[span_1](end_span).
 *   **Capteur Visuel (Caméra RGB) :** Module caméra connecté sur l'interface MIPI CSI-2[span_2](start_span)[span_2](end_span).
 *   **Stockage et Interface :** Prise en charge Ethernet, microSD, écran et connecteurs d'extension[span_3](start_span)[span_3](end_span).
