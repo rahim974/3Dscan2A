@@ -618,7 +618,7 @@
       "include_excluded_from_bom": true,
       "name": "Default Editing",
       "sort_asc": true,
-      "sort_field": "R\u00e9f\u00e9rence"
+      "sort_field": "Référence"
     },
     "bus_aliases": {},
     "connection_grid_size": 50.0,
@@ -656,8 +656,8 @@
     "subpart_id_separator": 0,
     "top_level_sheets": [
       {
-        "filename": "PCB_prototype1.kicad_sch",
-        "name": "",
+        "filename": "PCB_final.kicad_sch",
+        "name": "PCB_final",
         "uuid": "b3b2f076-77d6-4387-9016-5baa9c63c57c"
       }
     ],
@@ -666,36 +666,36 @@
   },
   "sheets": [
     [
-      "5d631378-84fd-4437-85a5-e043674c80f6",
-      "Root"
+      "b3b2f076-77d6-4387-9016-5baa9c63c57c",
+      "PCB_final"
     ],
     [
       "324bda7c-ad6d-4a2e-beef-a66db09857e0",
       "Alimentation"
     ],
     [
-      "f3856b92-109f-44cc-a370-ba2498542fcd",
-      "USB"
-    ],
-    [
-      "63b46b5b-512d-40b4-9b05-948afbd75608",
-      "Lidar"
-    ],
-    [
-      "03b66077-b8a1-4daa-987c-fef5088821fa",
-      "IMU"
-    ],
-    [
       "9e27c032-1227-4ab8-90b7-a090921cf1b2",
       "WiFi BLE"
+    ],
+    [
+      "f3856b92-109f-44cc-a370-ba2498542fcd",
+      "USB"
     ],
     [
       "281020cd-b63a-458a-b6e8-3f174b1bbac0",
       "Debug IHM"
     ],
     [
+      "63b46b5b-512d-40b4-9b05-948afbd75608",
+      "Lidar"
+    ],
+    [
       "0667c5bc-4f4f-43ec-a37c-50bf0503ee30",
       "MCU"
+    ],
+    [
+      "03b66077-b8a1-4daa-987c-fef5088821fa",
+      "IMU"
     ]
   ],
   "text_variables": {},
