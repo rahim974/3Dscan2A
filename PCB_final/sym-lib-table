@@ -1,0 +1,7 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "IMU_symbole") (type "KiCad") (uri "${KIPRJMOD}/libs/IMU_symbole.kicad_sym") (options "") (descr ""))
+	(lib (name "Lidar") (type "KiCad") (uri "${KIPRJMOD}/libs/Lidar.kicad_sym") (options "") (descr ""))
+	(lib (name "carte_wifi") (type "KiCad") (uri "${KIPRJMOD}/libs/carte_wifi.kicad_sym") (options "") (descr ""))
+	(lib (name "ST_custom") (type "KiCad") (uri "${KIPRJMOD}/libs/ST_custom.kicad_sym") (options "") (descr ""))
+)
