@@ -1,0 +1,323 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "5d631378-84fd-4437-85a5-e043674c80f6")
+	(paper "A3")
+	(title_block
+		(title "Scanner 3D portable - PCB final")
+		(company "Projet 2A")
+	)
+	(lib_symbols)
+	(sheet
+		(at 30.48 40.64)
+		(size 63.5 25.4)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "324bda7c-ad6d-4a2e-beef-a66db09857e0")
+		(property "Sheetname" "Alimentation"
+			(at 30.48 39.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "alimentation.kicad_sch"
+			(at 30.48 66.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "PCB_final"
+				(path "/5d631378-84fd-4437-85a5-e043674c80f6"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 119.38 40.64)
+		(size 63.5 25.4)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "f3856b92-109f-44cc-a370-ba2498542fcd")
+		(property "Sheetname" "USB"
+			(at 119.38 39.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "usb.kicad_sch"
+			(at 119.38 66.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "PCB_final"
+				(path "/5d631378-84fd-4437-85a5-e043674c80f6"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 208.28 40.64)
+		(size 63.5 25.4)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "63b46b5b-512d-40b4-9b05-948afbd75608")
+		(property "Sheetname" "Lidar"
+			(at 208.28 39.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "lidar.kicad_sch"
+			(at 208.28 66.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "PCB_final"
+				(path "/5d631378-84fd-4437-85a5-e043674c80f6"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 297.18 40.64)
+		(size 63.5 25.4)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "03b66077-b8a1-4daa-987c-fef5088821fa")
+		(property "Sheetname" "IMU"
+			(at 297.18 39.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "imu.kicad_sch"
+			(at 297.18 66.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "PCB_final"
+				(path "/5d631378-84fd-4437-85a5-e043674c80f6"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 30.48 91.44)
+		(size 63.5 25.4)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "9e27c032-1227-4ab8-90b7-a090921cf1b2")
+		(property "Sheetname" "WiFi BLE"
+			(at 30.48 90.74 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "wifi.kicad_sch"
+			(at 30.48 117.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "PCB_final"
+				(path "/5d631378-84fd-4437-85a5-e043674c80f6"
+					(page "6")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 119.38 91.44)
+		(size 63.5 25.4)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "281020cd-b63a-458a-b6e8-3f174b1bbac0")
+		(property "Sheetname" "Debug IHM"
+			(at 119.38 90.74 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "debug_ihm.kicad_sch"
+			(at 119.38 117.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "PCB_final"
+				(path "/5d631378-84fd-4437-85a5-e043674c80f6"
+					(page "7")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 208.28 91.44)
+		(size 63.5 25.4)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "0667c5bc-4f4f-43ec-a37c-50bf0503ee30")
+		(property "Sheetname" "MCU"
+			(at 208.28 90.74 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "mcu.kicad_sch"
+			(at 208.28 117.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "PCB_final"
+				(path "/5d631378-84fd-4437-85a5-e043674c80f6"
+					(page "8")
+				)
+			)
+		)
+	)
+	(text "PCB FINAL - SCANNER 3D PORTABLE (STM32H563VIT6)\n\nComposants actifs 100 % ST. Rails : VBUS (USB-C) -> STC4054 + power-path -> VSYS -> LDO +3V3 / +1V8 / +1V2.\nTraitement (IA) deporte sur l application PC : pas de camera ni de memoire externe.\nLes signaux vers le MCU sont des labels globaux (LIDAR_*, IMU_*, WIFI_*, USB_*, SWD...).\nGenere automatiquement puis a reprendre a la main pour la mise en page."
+		(exclude_from_sim no)
+		(at 30.48 160.02 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left top)
+		)
+		(uuid "c3af6965-f028-4d45-a65c-5de88d35ecce")
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)
