@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TP Caméra — STM32N6570-DK + IMX335, code réutilisable pour scanner 3D</title>
+<style>
+:root{
+  --bg:#f4f7fb; --card:#fff; --ink:#142033; --muted:#657286; --line:#dce3ed;
+  --blue:#2458e6; --blue2:#eaf0ff; --green:#147a55; --green2:#eaf7f1;
+  --orange:#a95c00; --orange2:#fff3e2; --red:#b42318; --red2:#fdecea;
+  --purple:#6547d8; --purple2:#f0edff; --dark:#101828; --gray:#eef2f6;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;line-height:1.58}
+.container{max-width:1240px;margin:auto;padding:30px 22px 70px}
+.hero{background:linear-gradient(135deg,#10234b,#2458e6);color:#fff;border-radius:18px;padding:34px;box-shadow:0 10px 30px rgba(20,40,80,.14)}
+.hero h1{margin:0 0 12px;font-size:2rem;line-height:1.18}.hero p{margin:6px 0}
+.badge{display:inline-block;padding:6px 10px;margin:5px 5px 0 0;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);font-size:.87rem}
+.card,.phase{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:20px;box-shadow:0 7px 24px rgba(25,40,70,.07)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}@media(max-width:900px){.grid{grid-template-columns:1fr}}
+h2{margin:0 0 12px;font-size:1.38rem}h3{margin:22px 0 9px;font-size:1.08rem}h4{margin:17px 0 7px;font-size:1rem}
+p{margin:8px 0}ul,ol{padding-left:22px}li{margin:5px 0}
+.callout{padding:13px 15px;border-radius:10px;border-left:5px solid var(--blue);background:var(--blue2);margin:14px 0}
+.ok{background:var(--green2);border-left-color:var(--green)}
+.warn{background:var(--orange2);border-left-color:var(--orange)}
+.risk{background:var(--red2);border-left-color:var(--red)}
+.purple{background:var(--purple2);border-left-color:var(--purple)}
+.status{display:inline-block;font-size:.8rem;font-weight:700;border-radius:999px;padding:4px 8px}
+.todo{background:var(--blue2);color:var(--blue)}.done{background:var(--green2);color:var(--green)}.warns{background:var(--orange2);color:var(--orange)}
+table{width:100%;border-collapse:collapse;margin-top:12px}th,td{border:1px solid var(--line);padding:10px 11px;text-align:left;vertical-align:top}th{background:#eef3fa}
+code{font-family:Consolas,Monaco,monospace;background:#f1f4f8;color:#162033;border:1px solid #e1e6ee;border-radius:5px;padding:2px 5px}
+pre{background:var(--dark);color:#edf2f7;padding:15px;border-radius:11px;overflow:auto;line-height:1.48;font-size:.91rem}
+pre code{background:transparent!important;border:0!important;padding:0!important;color:#edf2f7!important;white-space:pre-wrap}
+.phasehead{display:flex;gap:14px;align-items:flex-start}.num{min-width:52px;height:52px;border-radius:13px;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.17rem}
+.stepbox{background:#fafcff;border:1px solid #dce5f2;border-radius:12px;padding:15px;margin:13px 0}.stepbox h4{margin-top:0}
+.file{font-weight:700;color:#153e9f}.pass{font-weight:700;color:var(--green)}.small{font-size:.91rem;color:var(--muted)}
+.kpi{display:inline-block;background:var(--gray);border-radius:8px;padding:4px 8px;margin:3px 4px 3px 0;font-size:.87rem}
+.toc a{color:#1749c6;text-decoration:none}.toc li{margin:6px 0}.check{list-style:"☐  ";padding-left:26px}
+.footer{text-align:center;color:var(--muted);font-size:.88rem;margin-top:30px}
+@media print{pre{background:#101828!important;color:#edf2f7!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.card,.phase,.stepbox{break-inside:avoid-page}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<section class="hero">
+<h1>TP Caméra — STM32N6570-DK + IMX335</h1>
+<p><strong>Finalité :</strong> apprendre à utiliser la caméra seule, comprendre la chaîne CSI-2 → DCMIPP → ISP → framebuffer, puis produire un module caméra réutilisable lorsque le LiDAR VL53L9CX sera intégré.</p>
+<p><strong>Stratégie :</strong> ne pas casser le projet LiDAR simulé actuel. Réaliser d’abord ce TP dans un projet caméra séparé, puis extraire seulement le code validé.</p>
+<div>
+<span class="badge">STM32N6570-DK</span>
+<span class="badge">MB1854B / Sony IMX335</span>
+<span class="badge">MIPI CSI-2</span>
+<span class="badge">DCMIPP + ISP</span>
+<span class="badge">Code réutilisable futur scanner</span>
+</div>
+</section>
+
+<section class="card">
+<h2>Architecture cible du futur système</h2>
+<pre><code>IMX335
+   │
+   │ MIPI CSI-2
+   ▼
+STM32N6570
+   │
+   ├── DCMIPP / ISP ──► CameraFrame ──► futur YOLO / fusion
+   │
+VL53L9CX
+   │
+   │ I3C
+   ▼
+LidarFrame
+   │
+   └──────────────► synchronisation timestamp / pose / fusion</code></pre>
+<div class="callout purple"><strong>Point architectural important :</strong> la caméra utilisera le CSI-2 du STM32. Le VL53L9CX devra donc être intégré par I3C dans l’architecture visée, et non en utilisant lui aussi le même récepteur CSI-2.</div>
+</section>
+
+<section class="card toc">
+<h2>Plan du TP</h2>
+<ol>
+<li><a href="#p0">Préparer un projet caméra de laboratoire indépendant</a></li>
+<li><a href="#p1">Faire fonctionner l’exemple ST sans modification</a></li>
+<li><a href="#p2">Comprendre la chaîne caméra existante</a></li>
+<li><a href="#p3">Vérifier acquisition continue et framebuffer</a></li>
+<li><a href="#p4">Passer au mode snapshot, utile au scanner</a></li>
+<li><a href="#p5">Créer CameraFrame et les métadonnées</a></li>
+<li><a href="#p6">Créer une API CameraSource réutilisable</a></li>
+<li><a href="#p7">Ajouter timestamps et compteur de frames</a></li>
+<li><a href="#p8">Mesurer résolution, débit, mémoire et cadence</a></li>
+<li><a href="#p9">Préparer deux pipelines : visualisation et IA</a></li>
+<li><a href="#p10">Préparer la future synchronisation caméra–LiDAR</a></li>
+<li><a href="#p11">Extraire le module réutilisable</a></li>
+<li><a href="#p12">Tests de non-régression avant intégration</a></li>
+</ol>
+</section>
+
+<section class="card">
+<h2>Référence de départ recommandée</h2>
+<p>Pour apprendre la caméra, partir de l’exemple officiel STM32CubeN6 :</p>
+<pre><code>Projects/
+└── STM32N6570-DK/
+    └── Applications/
+        └── DCMIPP/
+            └── DCMIPP_ContinuousMode/</code></pre>
+<p>Cet exemple initialise l’IMX335, DCMIPP et l’ISP, puis démarre une acquisition continue. L’exemple officiel utilise notamment :</p>
+<pre><code>MX_DCMIPP_Init();
+
+IMX335_Probe(
+    IMX335_R2592_1944,
+    IMX335_RAW_RGGB10
+);
+
+HAL_DCMIPP_CSI_PIPE_Start(
+    &hdcmipp,
+    DCMIPP_PIPE1,
+    DCMIPP_VIRTUAL_CHANNEL0,
+    BUFFER_ADDRESS,
+    DCMIPP_MODE_CONTINUOUS
+);</code></pre>
+<div class="callout warn">Ne recopie pas immédiatement ces lignes dans ton projet LiDAR. L’objectif du TP est d’abord de faire fonctionner l’exemple officiel isolément, puis de comprendre quelles parties sont réellement réutilisables.</div>
+</section>
+
+<section class="phase" id="p0">
+<div class="phasehead"><div class="num">0</div><div><h2>Préparer un projet caméra indépendant</h2><span class="status todo">DÉPART</span></div></div>
+
+<div class="stepbox">
+<h4>0.1 — Ne pas modifier test_projet_v3</h4>
+<p>Conserve ton projet LiDAR simulé comme baseline. Le TP caméra doit vivre dans un autre dossier/workspace ou dans une copie clairement séparée.</p>
+<p>Nom conseillé :</p>
+<pre><code>TP_CAMERA_IMX335_N6570</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>0.2 — Matériel</h4>
+<ul>
+<li>STM32N6570-DK ;</li>
+<li>module MB1854B / B-CAMS-IMX avec IMX335 ;</li>
+<li>nappe caméra correctement connectée au connecteur caméra de la carte ;</li>
+<li>USB-C sur le port ST-LINK de la carte pour alimentation/debug.</li>
+</ul>
+<div class="callout warn">Utilise de préférence une alimentation USB-C suffisante. Les exemples ST pour STM32N6570-DK recommandent le port ST-LINK CN6 avec USB-C pour disposer d’une alimentation adaptée.</div>
+</div>
+
+<div class="stepbox">
+<h4>0.3 — Validation</h4>
+<ul class="check">
+<li>Le projet LiDAR reste intact.</li>
+<li>Le dossier du TP caméra est séparé.</li>
+<li>La caméra est physiquement connectée avant alimentation de la carte.</li>
+</ul>
+</div>
+</section>
+
+<section class="phase" id="p1">
+<div class="phasehead"><div class="num">1</div><div><h2>Faire fonctionner l’exemple officiel ST sans modification</h2><span class="status todo">PREMIER OBJECTIF</span></div></div>
+
+<div class="stepbox">
+<h4>1.1 — Copier/importer l’exemple</h4>
+<p>Dans ton installation STM32CubeN6, localise :</p>
+<pre><code>Projects/STM32N6570-DK/Applications/DCMIPP/DCMIPP_ContinuousMode</code></pre>
+<p>Importe ce projet dans STM32CubeIDE ou travaille sur une copie de l’exemple.</p>
+</div>
+
+<div class="stepbox">
+<h4>1.2 — Compiler avant toute modification</h4>
+<ol>
+<li>Ouvre le projet.</li>
+<li><strong>Project → Clean...</strong></li>
+<li><strong>Project → Build Project</strong>.</li>
+<li>Ne modifie rien tant que le build original ne fonctionne pas.</li>
+</ol>
+<p>Résultat attendu : <span class="pass">0 erreur de compilation</span>.</p>
+</div>
+
+<div class="stepbox">
+<h4>1.3 — Lancer le debug</h4>
+<p>Place des breakpoints successifs sur :</p>
+<pre><code>MX_DCMIPP_Init();
+
+IMX335_Probe(...);
+
+ISP_Init(...);
+
+HAL_DCMIPP_CSI_PIPE_Start(...);
+
+ISP_Start(...);</code></pre>
+<p>Utilise <strong>Step Over</strong> pour vérifier que le programme passe chaque étape sans entrer dans <code>Error_Handler()</code>.</p>
+</div>
+
+<div class="stepbox">
+<h4>1.4 — Test visuel</h4>
+<p>Si l’exemple affiche l’image sur l’écran de la Discovery, vérifie :</p>
+<ul>
+<li>image présente ;</li>
+<li>orientation cohérente ;</li>
+<li>pas de bandes ou corruption évidente ;</li>
+<li>réaction lorsque tu bouges la caméra.</li>
+</ul>
+<div class="callout ok"><strong>Phase validée si :</strong> l’exemple officiel tourne avant toute personnalisation.</div>
+</div>
+</section>
+
+<section class="phase" id="p2">
+<div class="phasehead"><div class="num">2</div><div><h2>Comprendre la chaîne d’initialisation</h2><span class="status todo">APPRENTISSAGE</span></div></div>
+
+<div class="stepbox">
+<h4>2.1 — Identifier les blocs</h4>
+<table>
+<tr><th>Bloc</th><th>Rôle</th></tr>
+<tr><td><code>IMX335_Probe()</code></td><td>Détecte/configure le capteur Sony IMX335 et son format de sortie.</td></tr>
+<tr><td><code>MX_DCMIPP_Init()</code></td><td>Configure le pipeline numérique image du STM32.</td></tr>
+<tr><td><code>ISP_Init()</code></td><td>Initialise le traitement d’image (Image Signal Processor).</td></tr>
+<tr><td><code>HAL_DCMIPP_CSI_PIPE_Start()</code></td><td>Démarre le transfert CSI vers un buffer mémoire.</td></tr>
+<tr><td><code>ISP_Start()</code></td><td>Démarre le traitement ISP.</td></tr>
+<tr><td><code>ISP_BackgroundProcess()</code></td><td>Met à jour périodiquement le traitement image selon les conditions.</td></tr>
+</table>
+</div>
+
+<div class="stepbox">
+<h4>2.2 — Exercice</h4>
+<p>Dans le code de l’exemple, retrouve chacune de ces fonctions et note :</p>
+<ul>
+<li>le fichier dans lequel elle est appelée ;</li>
+<li>les paramètres importants ;</li>
+<li>le buffer de destination ;</li>
+<li>le mode continu ou snapshot ;</li>
+<li>le pipe DCMIPP utilisé.</li>
+</ul>
+</div>
+
+<div class="stepbox">
+<h4>2.3 — Validation</h4>
+<p>Tu dois être capable d’expliquer verbalement :</p>
+<pre><code>capteur IMX335
+→ flux RAW
+→ CSI-2
+→ DCMIPP
+→ ISP
+→ framebuffer
+→ affichage / traitement</code></pre>
+</div>
+</section>
+
+<section class="phase" id="p3">
+<div class="phasehead"><div class="num">3</div><div><h2>Vérifier le mode continu et le framebuffer</h2><span class="status todo">MANIPULATION</span></div></div>
+
+<div class="stepbox">
+<h4>3.1 — Localiser le framebuffer</h4>
+<p>Dans l’exemple, identifie :</p>
+<ul>
+<li>l’adresse du buffer ;</li>
+<li>la largeur ;</li>
+<li>la hauteur ;</li>
+<li>le format pixel ;</li>
+<li>le nombre d’octets par pixel après traitement.</li>
+</ul>
+</div>
+
+<div class="stepbox">
+<h4>3.2 — Ajouter un compteur d’activité</h4>
+<p>Dans une zone <code>USER CODE</code> appropriée, ajoute une variable globale :</p>
+<pre><code>volatile uint32_t g_camera_loop_counter = 0u;</code></pre>
+<p>Dans la boucle principale :</p>
+<pre><code>g_camera_loop_counter++;</code></pre>
+<p>Observe-la dans le debugger pour vérifier que l’application continue à vivre après démarrage du pipeline.</p>
+</div>
+
+<div class="stepbox">
+<h4>3.3 — Test</h4>
+<ul>
+<li>Le buffer reste stable en mémoire.</li>
+<li>L’image continue d’évoluer.</li>
+<li>Le programme ne tombe pas dans <code>Error_Handler()</code>.</li>
+</ul>
+<div class="callout ok"><strong>Phase validée si :</strong> tu comprends où se trouvent réellement les pixels produits.</div>
+</div>
+</section>
+
+<section class="phase" id="p4">
+<div class="phasehead"><div class="num">4</div><div><h2>Apprendre le mode snapshot</h2><span class="status todo">TRÈS IMPORTANT POUR LE SCANNER</span></div></div>
+
+<div class="stepbox">
+<h4>4.1 — Pourquoi</h4>
+<p>Le scanner sera d’abord exploité en stratégie <strong>Stop-and-Scan</strong>. Il est donc plus utile de savoir demander une image au moment choisi que de dépendre uniquement d’un flux continu.</p>
+</div>
+
+<div class="stepbox">
+<h4>4.2 — S’appuyer sur le middleware caméra ST</h4>
+<p>Les applications récentes STM32N6 de ST utilisent une couche Camera Middleware avec une API de type :</p>
+<pre><code>CMW_CAMERA_Start(
+    DCMIPP_PIPE2,
+    destination_buffer,
+    CAMERA_MODE_SNAPSHOT
+);</code></pre>
+<p>Le TP doit donc te faire identifier dans un exemple ST récent :</p>
+<ul>
+<li><code>CMW_CAMERA_Init(...)</code> ou équivalent ;</li>
+<li><code>CMW_CAMERA_Start(...)</code> ;</li>
+<li>la configuration <code>CAMERA_MODE_SNAPSHOT</code> ;</li>
+<li>le callback/flag indiquant qu’une frame est terminée.</li>
+</ul>
+</div>
+
+<div class="stepbox">
+<h4>4.3 — Test recherché</h4>
+<ol>
+<li>Programme arrêté ou en attente.</li>
+<li>Déclenche une capture snapshot.</li>
+<li>Attends l’indication de fin de frame.</li>
+<li>Incrémente <code>g_snapshot_count</code>.</li>
+<li>Relance une seconde capture.</li>
+</ol>
+<p>Résultat attendu : <code>g_snapshot_count</code> augmente d’une unité par image demandée, et non en continu.</p>
+</div>
+</section>
+
+<section class="phase" id="p5">
+<div class="phasehead"><div class="num">5</div><div><h2>Créer un type CameraFrame réutilisable</h2><span class="status todo">CODE À CONSERVER</span></div></div>
+
+<div class="stepbox">
+<h4>5.1 — Créer camera_types.h</h4>
+<p>Dans le projet de TP :</p>
+<pre><code>Core/Inc/camera_types.h</code></pre>
+<p>Contenu de départ :</p>
+<pre><code>#ifndef CAMERA_TYPES_H
+#define CAMERA_TYPES_H
+
+#include &lt;stdint.h&gt;
+
+typedef enum
+{
+    CAMERA_PIXEL_FORMAT_UNKNOWN = 0,
+    CAMERA_PIXEL_FORMAT_RGB565,
+    CAMERA_PIXEL_FORMAT_RGB888,
+    CAMERA_PIXEL_FORMAT_RAW10
+} CameraPixelFormat;
+
+typedef struct
+{
+    uint32_t frame_id;
+    uint32_t timestamp_ms;
+
+    uint16_t width;
+    uint16_t height;
+
+    CameraPixelFormat format;
+
+    uint8_t *data;
+    uint32_t data_size_bytes;
+
+} CameraFrame;
+
+#endif</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>5.2 — Principe mémoire</h4>
+<div class="callout warn">Ne mets pas une image complète sous forme de tableau directement dans <code>CameraFrame</code>. La structure doit contenir un <strong>pointeur vers le framebuffer</strong>, sinon chaque copie de structure dupliquerait potentiellement une énorme quantité de données.</div>
+</div>
+
+<div class="stepbox">
+<h4>5.3 — Test</h4>
+<p>Crée une instance globale :</p>
+<pre><code>static CameraFrame g_camera_frame;</code></pre>
+<p>Remplis manuellement <code>width</code>, <code>height</code>, <code>data</code>, <code>frame_id</code> et <code>timestamp_ms</code>, puis observe-les dans le debugger.</p>
+</div>
+</section>
+
+<section class="phase" id="p6">
+<div class="phasehead"><div class="num">6</div><div><h2>Créer CameraSource : l’API que l’on réutilisera dans le scanner</h2><span class="status todo">ARCHITECTURE CLÉ</span></div></div>
+
+<div class="stepbox">
+<h4>6.1 — Créer les fichiers</h4>
+<pre><code>Core/Inc/camera_source.h
+Core/Src/camera_source.c</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>6.2 — API cible</h4>
+<pre><code>#ifndef CAMERA_SOURCE_H
+#define CAMERA_SOURCE_H
+
+#include &lt;stdbool.h&gt;
+#include "camera_types.h"
+
+bool CameraSource_Init(void);
+bool CameraSource_StartContinuous(void);
+bool CameraSource_Stop(void);
+bool CameraSource_Capture(CameraFrame *frame);
+bool CameraSource_IsFrameReady(void);
+
+#endif</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>6.3 — Règle de conception</h4>
+<p><code>main.c</code> ne doit plus connaître directement :</p>
+<ul>
+<li><code>IMX335_Probe()</code> ;</li>
+<li>les détails DCMIPP ;</li>
+<li>les détails de l’ISP ;</li>
+<li>l’adresse matérielle du framebuffer.</li>
+</ul>
+<p>Ces détails doivent rester derrière <code>CameraSource_*</code>.</p>
+</div>
+
+<div class="stepbox">
+<h4>6.4 — Test de non-régression</h4>
+<p>Après migration, la capture doit continuer à fonctionner exactement comme avant.</p>
+<div class="callout ok"><strong>Phase validée si :</strong> <code>main.c</code> peut demander une image via <code>CameraSource_Capture()</code> sans appeler directement le driver IMX335 ou HAL DCMIPP.</div>
+</div>
+</section>
+
+<section class="phase" id="p7">
+<div class="phasehead"><div class="num">7</div><div><h2>Ajouter frame_id et timestamp au bon moment</h2><span class="status todo">FUTURE SYNCHRONISATION</span></div></div>
+
+<div class="stepbox">
+<h4>7.1 — Quand timestamp-er ?</h4>
+<p>Pour le scanner, il faut distinguer :</p>
+<ul>
+<li>instant où la capture est demandée ;</li>
+<li>instant où la frame est terminée.</li>
+</ul>
+<p>V1 : stocke au minimum un timestamp cohérent au déclenchement ou à la réception de la frame, puis documente précisément lequel tu utilises.</p>
+</div>
+
+<div class="stepbox">
+<h4>7.2 — Dans CameraSource_Capture()</h4>
+<p>À chaque nouvelle capture :</p>
+<pre><code>frame->frame_id++;
+frame->timestamp_ms = HAL_GetTick();</code></pre>
+<p>À terme, le compteur doit appartenir au module caméra plutôt qu’à l’appelant.</p>
+</div>
+
+<div class="stepbox">
+<h4>7.3 — Test</h4>
+<p>Capture 5 images successives et vérifie :</p>
+<pre><code>frame_id : 1, 2, 3, 4, 5
+timestamp_ms : valeurs croissantes</code></pre>
+</div>
+</section>
+
+<section class="phase" id="p8">
+<div class="phasehead"><div class="num">8</div><div><h2>Mesurer les performances caméra</h2><span class="status todo">BENCHMARK</span></div></div>
+
+<div class="stepbox">
+<h4>8.1 — Mesures</h4>
+<table>
+<tr><th>Mesure</th><th>Méthode</th></tr>
+<tr><td>Temps d’initialisation</td><td><code>HAL_GetTick()</code> avant/après <code>CameraSource_Init()</code>.</td></tr>
+<tr><td>Temps snapshot</td><td>timestamp demande → timestamp frame prête.</td></tr>
+<tr><td>FPS continu</td><td>compter les frames sur 1 seconde.</td></tr>
+<tr><td>Taille buffer</td><td><code>width × height × octets/pixel</code>, ou taille réelle configurée.</td></tr>
+<tr><td>RAM externe/interne</td><td>map file + emplacement du framebuffer.</td></tr>
+</table>
+</div>
+
+<div class="stepbox">
+<h4>8.2 — Tableau à compléter</h4>
+<table>
+<tr><th>Configuration</th><th>Résolution</th><th>Format</th><th>Buffer</th><th>FPS</th><th>Latence snapshot</th></tr>
+<tr><td>Mode de base</td><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr>
+<tr><td>Mode réduit</td><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr>
+</table>
+</div>
+</section>
+
+<section class="phase" id="p9">
+<div class="phasehead"><div class="num">9</div><div><h2>Préparer les deux usages futurs de l’image</h2><span class="status todo">VISUALISATION + IA</span></div></div>
+
+<div class="stepbox">
+<h4>9.1 — Pourquoi deux pipelines</h4>
+<p>Les exemples ST récents exploitent plusieurs pipes DCMIPP. Pour ton futur scanner, le principe sera utile :</p>
+<pre><code>Pipe A : image d'affichage / archive
+Pipe B : image redimensionnée pour IA</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>9.2 — Ne pas intégrer YOLO maintenant</h4>
+<p>Le but du TP est seulement de savoir produire :</p>
+<ul>
+<li>une frame « principale » ;</li>
+<li>une frame plus petite destinée plus tard à l’IA, par exemple autour de 320×320 selon le modèle choisi.</li>
+</ul>
+</div>
+
+<div class="stepbox">
+<h4>9.3 — Test</h4>
+<p>Vérifie que les deux destinations mémoire sont distinctes et que leur taille correspond à leur résolution/format.</p>
+</div>
+</section>
+
+<section class="phase" id="p10">
+<div class="phasehead"><div class="num">10</div><div><h2>Préparer la synchronisation caméra–LiDAR</h2><span class="status todo">POUR LE SYSTÈME COMPLET</span></div></div>
+
+<div class="stepbox">
+<h4>10.1 — API visée</h4>
+<pre><code>CameraSource_Capture(&camera_frame);
+LidarSource_GetFrame(&lidar_frame);</code></pre>
+<p>Les deux frames auront :</p>
+<pre><code>camera_frame.timestamp_ms
+lidar_frame.timestamp_ms</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>10.2 — V1 Stop-and-Scan</h4>
+<pre><code>scanner immobile
+→ déclencher caméra
+→ obtenir CameraFrame
+→ déclencher / lire LiDAR
+→ obtenir LidarFrame
+→ calculer delta_t
+→ accepter la paire si delta_t est suffisamment faible</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>10.3 — Structure de paire future</h4>
+<pre><code>typedef struct
+{
+    CameraFrame camera;
+    LidarFrame lidar;
+    uint32_t pair_id;
+    uint32_t delta_t_ms;
+} SensorPair;</code></pre>
+<div class="callout purple">L’objectif du TP caméra est que, le jour de l’intégration, on n’ait pas à réécrire l’acquisition caméra : on devra seulement connecter <code>CameraSource</code> au coordinateur multi-capteurs.</div>
+</div>
+</section>
+
+<section class="phase" id="p11">
+<div class="phasehead"><div class="num">11</div><div><h2>Extraire le code réellement réutilisable</h2><span class="status todo">LIVRABLE DU TP</span></div></div>
+
+<div class="stepbox">
+<h4>11.1 — Dossier final à conserver</h4>
+<pre><code>camera_module/
+├── Inc/
+│   ├── camera_types.h
+│   └── camera_source.h
+└── Src/
+    └── camera_source.c</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>11.2 — Ce qui peut rester spécifique au board/example</h4>
+<ul>
+<li>configuration DCMIPP générée ;</li>
+<li>driver IMX335 ;</li>
+<li>ISP middleware ;</li>
+<li>fichiers BSP ;</li>
+<li>linker/memory sections.</li>
+</ul>
+<p>Ton module réutilisable doit s’appuyer dessus, pas les dupliquer.</p>
+</div>
+</section>
+
+<section class="phase" id="p12">
+<div class="phasehead"><div class="num">12</div><div><h2>Validation finale avant réutilisation</h2><span class="status todo">CHECKLIST</span></div></div>
+
+<div class="stepbox">
+<h4>12.1 — Tests obligatoires</h4>
+<ul class="check">
+<li>Build à 0 erreur.</li>
+<li>Initialisation caméra réussie 10 fois de suite.</li>
+<li>Image continue stable.</li>
+<li>Snapshot déclenchable à la demande.</li>
+<li><code>frame_id</code> augmente correctement.</li>
+<li>Timestamp augmente correctement.</li>
+<li>Framebuffer connu et documenté.</li>
+<li>Résolution et format documentés.</li>
+<li>Latence snapshot mesurée.</li>
+<li><code>main.c</code> utilise l’API <code>CameraSource</code> plutôt que le driver brut.</li>
+<li>Aucun code LiDAR n’est nécessaire pour faire fonctionner le module caméra.</li>
+</ul>
+</div>
+
+<div class="stepbox">
+<h4>12.2 — Critère de réussite du TP</h4>
+<div class="callout ok">Le TP est terminé lorsque tu peux appeler une fonction unique pour obtenir une <code>CameraFrame</code> horodatée et documentée, sans avoir besoin de connaître dans le code applicatif les détails IMX335 / CSI / DCMIPP / ISP.</div>
+</div>
+</section>
+
+<section class="card">
+<h2>Ordre de travail recommandé</h2>
+<table>
+<tr><th>Session</th><th>Travail</th><th>Résultat</th></tr>
+<tr><td>1</td><td>Phases 0–2</td><td>Exemple ST fonctionnel + compréhension de la chaîne.</td></tr>
+<tr><td>2</td><td>Phases 3–4</td><td>Mode continu + snapshot maîtrisés.</td></tr>
+<tr><td>3</td><td>Phases 5–7</td><td><code>CameraFrame</code> + <code>CameraSource</code> + timestamps.</td></tr>
+<tr><td>4</td><td>Phases 8–9</td><td>Mesures + préparation double pipeline.</td></tr>
+<tr><td>5</td><td>Phases 10–12</td><td>Module prêt à être intégré au scanner caméra + LiDAR.</td></tr>
+</table>
+</section>
+
+<section class="card">
+<h2>Ce que l’on ne fait pas encore</h2>
+<ul>
+<li>pas de YOLO ;</li>
+<li>pas de fusion caméra–LiDAR réelle ;</li>
+<li>pas de SLAM ;</li>
+<li>pas de calibration extrinsèque caméra–LiDAR ;</li>
+<li>pas d’optimisation NPU ;</li>
+<li>pas de copie complète du middleware ST dans notre propre code.</li>
+</ul>
+<p>Ces étapes viendront après maîtrise de l’acquisition caméra.</p>
+</section>
+
+<section class="card">
+<h2>Sources techniques à garder avec le TP</h2>
+<ul>
+<li>Exemple ST : <code>STM32CubeN6 / STM32N6570-DK / Applications / DCMIPP / DCMIPP_ContinuousMode</code>.</li>
+<li>STM32 Camera Middleware : couche recommandée pour abstraire capteurs et pipelines CSI/DCMIPP.</li>
+<li>Exemples STM32N6 Getting Started récents : montrent l’utilisation de plusieurs pipes DCMIPP, du mode snapshot et de l’ISP avec IMX335.</li>
+</ul>
+</section>
+
+<div class="footer">TP Caméra — préparation du module réutilisable pour le scanner 3D STM32N6570-DK + IMX335 + futur VL53L9CX</div>
+</div>
+</body>
+</html>

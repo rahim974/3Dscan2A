@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TP détaillé — Scanner 3D STM32N6570-DK avant réception du VL53L9CX</title>
+<style>
+:root{
+  --bg:#f4f7fb; --card:#ffffff; --ink:#152033; --muted:#637083; --line:#dce3ed;
+  --blue:#2458e6; --blue2:#eaf0ff; --green:#147a55; --green2:#eaf7f1;
+  --orange:#a95c00; --orange2:#fff3e2; --red:#b42318; --red2:#fdecea;
+  --purple:#6547d8; --purple2:#f0edff; --gray:#eef2f6; --dark:#101828;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;line-height:1.58}
+.container{max-width:1220px;margin:auto;padding:30px 22px 70px}
+.hero{background:linear-gradient(135deg,#11264f,#2458e6);color:#fff;border-radius:18px;padding:34px;box-shadow:0 10px 30px rgba(20,40,80,.14)}
+.hero h1{margin:0 0 12px;font-size:2rem;line-height:1.18}.hero p{margin:6px 0}
+.badges{margin-top:14px}.badge{display:inline-block;padding:6px 10px;margin:4px 6px 0 0;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);font-size:.88rem}
+.card,.phase{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:20px;box-shadow:0 7px 24px rgba(25,40,70,.07)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+h2{margin:0 0 12px;font-size:1.38rem}h3{margin:22px 0 9px;font-size:1.08rem}h4{margin:17px 0 7px;font-size:1rem}
+p{margin:8px 0}ul,ol{padding-left:22px}li{margin:5px 0}
+.callout{padding:13px 15px;border-radius:10px;border-left:5px solid var(--blue);background:var(--blue2);margin:14px 0}
+.ok{background:var(--green2);border-left-color:var(--green)}
+.warn{background:var(--orange2);border-left-color:var(--orange)}
+.risk{background:var(--red2);border-left-color:var(--red)}
+.purple{background:var(--purple2);border-left-color:var(--purple)}
+.status{display:inline-block;font-size:.8rem;font-weight:700;border-radius:999px;padding:4px 8px}
+.done{background:var(--green2);color:var(--green)}.partial{background:var(--orange2);color:var(--orange)}.todo{background:var(--blue2);color:var(--blue)}.block{background:var(--red2);color:var(--red)}
+table{width:100%;border-collapse:collapse;margin-top:12px}th,td{border:1px solid var(--line);padding:10px 11px;text-align:left;vertical-align:top}th{background:#eef3fa}
+code{font-family:Consolas,Monaco,monospace;background:#f1f4f8;color:#162033;border:1px solid #e1e6ee;border-radius:5px;padding:2px 5px}
+pre{background:var(--dark);color:#edf2f7;padding:15px;border-radius:11px;overflow:auto;line-height:1.48;font-size:.91rem}
+pre code{background:transparent!important;border:0!important;padding:0!important;border-radius:0!important;color:#edf2f7!important;white-space:pre-wrap}
+.phasehead{display:flex;align-items:flex-start;gap:14px}.num{min-width:52px;height:52px;border-radius:13px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.17rem}
+.phase h2{margin-top:2px}.small{font-size:.91rem;color:var(--muted)}
+.stepbox{background:#fafcff;border:1px solid #dce5f2;border-radius:12px;padding:15px;margin:13px 0}
+.stepbox h4{margin-top:0}
+.file{font-weight:700;color:#153e9f}
+.pass{font-weight:700;color:var(--green)}
+.fail{font-weight:700;color:var(--red)}
+.cmd{background:#0f172a;color:#e5edf8;padding:10px 12px;border-radius:9px;font-family:Consolas,monospace;white-space:pre-wrap}
+.kpi{display:inline-block;background:var(--gray);border-radius:8px;padding:4px 8px;margin:3px 4px 3px 0;font-size:.87rem}
+.tree{white-space:pre-wrap}.toc a{color:#1749c6;text-decoration:none}.toc li{margin:6px 0}
+.check{list-style:"☐  ";padding-left:26px}.footer{text-align:center;color:var(--muted);font-size:.88rem;margin-top:30px}
+@media print{pre{background:#101828!important;color:#edf2f7!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.card,.phase,.stepbox{break-inside:avoid-page}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<section class="hero">
+  <h1>TP détaillé — Avancer le scanner 3D avant réception du VL53L9CX</h1>
+  <p><strong>Projet analysé :</strong> <code>test_projet_v3</code></p>
+  <p><strong>Plateforme :</strong> STM32N6570-DK / STM32N657X0H3Q</p>
+  <p><strong>Objectif :</strong> disposer, avant l’arrivée du capteur réel, d’une chaîne logicielle testée allant d’une trame simulée jusqu’à la détection, la géométrie 3D et une première projection 2D.</p>
+  <div class="badges">
+    <span class="badge">Simulateur LiDAR déjà présent</span>
+    <span class="badge">54 × 42 zones</span>
+    <span class="badge">STM32CubeIDE</span>
+    <span class="badge">Backend matériel à venir</span>
+  </div>
+</section>
+
+<section class="card toc">
+<h2>Comment utiliser ce TP</h2>
+<p>Chaque phase suit désormais toujours la même logique : <strong>où modifier → quoi modifier → comment compiler → comment tester → résultat attendu → critère de validation</strong>.</p>
+<ol>
+<li><a href="#phase0">Phase 0 — Valider les statistiques déjà présentes</a></li>
+<li><a href="#phase1">Phase 1 — Ajouter la détection d’obstacle</a></li>
+<li><a href="#phase2">Phase 2 — Découpler les types et traitements du simulateur</a></li>
+<li><a href="#phase3">Phase 3 — Créer une vraie interface de source LiDAR</a></li>
+<li><a href="#phase4">Phase 4 — Passer à une séquence de frames</a></li>
+<li><a href="#phase5">Phase 5 — Enrichir les scènes simulées</a></li>
+<li><a href="#phase6">Phase 6 — Exporter une frame vers le PC</a></li>
+<li><a href="#phase7">Phase 7 — Convertir profondeur → XYZ sur PC</a></li>
+<li><a href="#phase8">Phase 8 — Faire une première carte 2D</a></li>
+<li><a href="#phase9">Phase 9 — Introduire la notion de pose</a></li>
+<li><a href="#phase10">Phase 10 — Clarifier FSBL / Application</a></li>
+<li><a href="#phase11">Phase 11 — Bring-up caméra IMX335</a></li>
+<li><a href="#phase12">Phase 12 — Préparer le futur driver VL53L9CX/I3C</a></li>
+<li><a href="#phase13">Phase 13 — Plan de validation à l’arrivée du capteur</a></li>
+</ol>
+</section>
+
+<section class="card">
+<h2>État de départ observé dans le ZIP</h2>
+<table>
+<tr><th>Élément</th><th>État</th><th>Conséquence</th></tr>
+<tr><td><code>lidar_simulator.c/.h</code></td><td><span class="status done">DÉJÀ PRÉSENTS</span></td><td>4 scènes, bruit, invalides, amplitude, ambient, DSS simplifié.</td></tr>
+<tr><td><code>LidarFrame</code></td><td><span class="status done">DÉJÀ PRÉSENT</span></td><td>Environ 15,9 kB par frame.</td></tr>
+<tr><td><code>LidarSim_ComputeStats()</code></td><td><span class="status partial">CODÉ MAIS NON BRANCHÉ</span></td><td>Première modification à faire.</td></tr>
+<tr><td>Détection d’obstacle</td><td><span class="status todo">ABSENTE</span></td><td>À implémenter après validation des stats.</td></tr>
+<tr><td>Flux continu</td><td><span class="status todo">ABSENT</span></td><td>Une seule frame est générée actuellement.</td></tr>
+<tr><td>I3C / VL53L9CX réel</td><td><span class="status block">NON CONFIGURÉ</span></td><td>On prépare l’API, pas le driver complet.</td></tr>
+<tr><td>Caméra</td><td><span class="status block">NON CONFIGURÉE</span></td><td>Bring-up séparé.</td></tr>
+</table>
+</section>
+
+<section class="phase" id="phase0">
+<div class="phasehead"><div class="num">0</div><div><h2>Valider les statistiques déjà présentes</h2><span class="status todo">À FAIRE MAINTENANT</span></div></div>
+
+<div class="stepbox">
+<h4>0.1 — Fichier à modifier</h4>
+<p><span class="file">FSBL/Core/Src/main.c</span></p>
+<p>Ne modifie pas encore <code>lidar_simulator.c</code> : la fonction de statistiques est déjà implémentée.</p>
+</div>
+
+<div class="stepbox">
+<h4>0.2 — Ajouter la variable globale</h4>
+<p>Dans <code>main.c</code>, cherche :</p>
+<pre><code>/* USER CODE BEGIN PV */</code></pre>
+<p>Tu dois déjà avoir quelque chose proche de :</p>
+<pre><code>static LidarSimulator g_lidar_sim;
+static LidarFrame g_lidar_frame;</code></pre>
+<p>Ajoute immédiatement dessous :</p>
+<pre><code>static LidarFrameStats g_lidar_stats;</code></pre>
+<p>Le bloc doit donc devenir :</p>
+<pre><code>/* USER CODE BEGIN PV */
+
+static LidarSimulator g_lidar_sim;
+static LidarFrame g_lidar_frame;
+static LidarFrameStats g_lidar_stats;
+
+/* USER CODE END PV */</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>0.3 — Appeler le calcul des statistiques</h4>
+<p>Toujours dans <span class="file">main.c</span>, cherche l’appel existant à :</p>
+<pre><code>LidarSim_Generate(...);</code></pre>
+<p>Juste après la fermeture <code>);</code>, ajoute :</p>
+<pre><code>LidarSim_ComputeStats(
+    &g_lidar_frame,
+    &g_lidar_stats
+);</code></pre>
+<p>Ton bloc doit ressembler à :</p>
+<pre><code>LidarSim_Generate(
+    &g_lidar_sim,
+    LIDAR_SCENE_CENTRAL_OBSTACLE,
+    HAL_GetTick(),
+    &g_lidar_frame
+);
+
+LidarSim_ComputeStats(
+    &g_lidar_frame,
+    &g_lidar_stats
+);
+
+volatile uint32_t test = 0;</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>0.4 — Compiler</h4>
+<ol>
+<li>Enregistre avec <code>Ctrl+S</code>.</li>
+<li>Dans STM32CubeIDE : <strong>Project → Build Project</strong>.</li>
+<li>Vérifie dans la console : <span class="pass">0 Errors</span>.</li>
+<li>Si tu as une erreur <code>unknown type name LidarFrameStats</code>, vérifie que <code>#include "lidar_simulator.h"</code> est bien présent dans <code>main.c</code>.</li>
+</ol>
+</div>
+
+<div class="stepbox">
+<h4>0.5 — Lancer le test dans le debugger</h4>
+<ol>
+<li>Place un breakpoint sur :
+<pre><code>volatile uint32_t test = 0;</code></pre>
+</li>
+<li>Lance <strong>Debug As → STM32 C/C++ Application</strong>.</li>
+<li>Le programme doit s’arrêter sur ce breakpoint.</li>
+<li>Ouvre <strong>Window → Show View → Expressions</strong> si la fenêtre n’est pas visible.</li>
+<li>Ajoute exactement les expressions suivantes :</li>
+</ol>
+<pre><code>g_lidar_stats.min_mm
+g_lidar_stats.max_mm
+g_lidar_stats.mean_mm
+g_lidar_stats.invalid_count
+g_lidar_stats.valid_count</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>0.6 — Résultat attendu pour CENTRAL_OBSTACLE</h4>
+<table>
+<tr><th>Expression</th><th>Valeur attendue</th></tr>
+<tr><td><code>g_lidar_stats.min_mm</code></td><td><strong>1200</strong></td></tr>
+<tr><td><code>g_lidar_stats.max_mm</code></td><td><strong>4000</strong></td></tr>
+<tr><td><code>g_lidar_stats.mean_mm</code></td><td><strong>3600</strong></td></tr>
+<tr><td><code>g_lidar_stats.invalid_count</code></td><td><strong>0</strong></td></tr>
+<tr><td><code>g_lidar_stats.valid_count</code></td><td><strong>2268</strong></td></tr>
+</table>
+</div>
+
+<div class="stepbox">
+<h4>0.7 — Répéter pour les 3 scènes déterministes</h4>
+<p>Dans <code>main.c</code>, remplace uniquement l’énumération de scène dans <code>LidarSim_Generate()</code>, recompile et relance.</p>
+<table>
+<tr><th>Scène</th><th>min</th><th>max</th><th>mean</th><th>invalid</th><th>valid</th></tr>
+<tr><td><code>LIDAR_SCENE_FLAT_WALL</code></td><td>2000</td><td>2000</td><td>2000</td><td>0</td><td>2268</td></tr>
+<tr><td><code>LIDAR_SCENE_CENTRAL_OBSTACLE</code></td><td>1200</td><td>4000</td><td>3600</td><td>0</td><td>2268</td></tr>
+<tr><td><code>LIDAR_SCENE_ROOM_CORNER</code></td><td>1137</td><td>4175</td><td>2656</td><td>0</td><td>2268</td></tr>
+</table>
+<div class="callout ok"><strong>Phase validée si :</strong> les 3 scènes donnent exactement les valeurs attendues et le build reste à 0 erreur.</div>
+</div>
+</section>
+
+<section class="phase" id="phase1">
+<div class="phasehead"><div class="num">1</div><div><h2>Ajouter une détection d’obstacle simple</h2><span class="status todo">APRÈS PHASE 0</span></div></div>
+
+<div class="stepbox">
+<h4>1.1 — Fichiers à modifier</h4>
+<p><span class="file">FSBL/Core/Inc/lidar_simulator.h</span><br>
+<span class="file">FSBL/Core/Src/lidar_simulator.c</span><br>
+<span class="file">FSBL/Core/Src/main.c</span></p>
+</div>
+
+<div class="stepbox">
+<h4>1.2 — Ajouter la structure de résultat</h4>
+<p>Dans <code>lidar_simulator.h</code>, après <code>LidarFrameStats</code>, ajoute :</p>
+<pre><code>typedef struct
+{
+    uint32_t close_count;
+    uint16_t nearest_mm;
+    uint16_t mean_close_mm;
+    float centroid_row;
+    float centroid_col;
+    uint8_t detected;
+} LidarObstacleInfo;</code></pre>
+<p>Puis ajoute le prototype :</p>
+<pre><code>void LidarSim_DetectObstacle(
+    const LidarFrame *frame,
+    uint16_t threshold_mm,
+    LidarObstacleInfo *info
+);</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>1.3 — Implémenter la fonction</h4>
+<p>Dans <code>lidar_simulator.c</code>, ajoute à la fin du fichier :</p>
+<pre><code>void LidarSim_DetectObstacle(
+    const LidarFrame *frame,
+    uint16_t threshold_mm,
+    LidarObstacleInfo *info
+)
+{
+    uint32_t row_sum = 0u;
+    uint32_t col_sum = 0u;
+    uint32_t distance_sum = 0u;
+
+    info->close_count = 0u;
+    info->nearest_mm = 0xFFFFu;
+    info->mean_close_mm = 0u;
+    info->centroid_row = 0.0f;
+    info->centroid_col = 0.0f;
+    info->detected = 0u;
+
+    for (uint32_t r = 0; r < LIDAR_HEIGHT; r++)
+    {
+        for (uint32_t c = 0; c < LIDAR_WIDTH; c++)
+        {
+            uint16_t d = frame->range_mm[r][c];
+
+            if ((d != LIDAR_INVALID_MM) && (d < threshold_mm))
+            {
+                info->close_count++;
+                distance_sum += d;
+                row_sum += r;
+                col_sum += c;
+
+                if (d < info->nearest_mm)
+                    info->nearest_mm = d;
+            }
+        }
+    }
+
+    if (info->close_count > 0u)
+    {
+        info->detected = 1u;
+        info->mean_close_mm = distance_sum / info->close_count;
+        info->centroid_row = (float)row_sum / info->close_count;
+        info->centroid_col = (float)col_sum / info->close_count;
+    }
+}</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>1.4 — Brancher la fonction dans main.c</h4>
+<p>Dans <code>USER CODE BEGIN PV</code>, ajoute :</p>
+<pre><code>static LidarObstacleInfo g_obstacle;</code></pre>
+<p>Après <code>LidarSim_ComputeStats()</code>, ajoute :</p>
+<pre><code>LidarSim_DetectObstacle(
+    &g_lidar_frame,
+    1500u,
+    &g_obstacle
+);</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>1.5 — Tester</h4>
+<p>Garde <code>LIDAR_SCENE_CENTRAL_OBSTACLE</code>, compile, lance le debugger et ajoute :</p>
+<pre><code>g_obstacle.detected
+g_obstacle.close_count
+g_obstacle.nearest_mm
+g_obstacle.mean_close_mm
+g_obstacle.centroid_row
+g_obstacle.centroid_col</code></pre>
+<table>
+<tr><th>Champ</th><th>Attendu</th></tr>
+<tr><td><code>detected</code></td><td>1</td></tr>
+<tr><td><code>close_count</code></td><td>324</td></tr>
+<tr><td><code>nearest_mm</code></td><td>1200</td></tr>
+<tr><td><code>mean_close_mm</code></td><td>1200</td></tr>
+<tr><td><code>centroid_row</code></td><td>20.5</td></tr>
+<tr><td><code>centroid_col</code></td><td>26.5</td></tr>
+</table>
+<p>Refais ensuite avec <code>LIDAR_SCENE_FLAT_WALL</code> : <code>detected</code> doit être 0 et <code>close_count</code> 0.</p>
+<div class="callout ok"><strong>Phase validée si :</strong> l’obstacle central est détecté, le mur plat ne l’est pas, et les points invalides ne sont jamais comptés comme obstacle.</div>
+</div>
+</section>
+
+<section class="phase" id="phase2">
+<div class="phasehead"><div class="num">2</div><div><h2>Découpler les types de données du simulateur</h2><span class="status todo">REFACTORING CONTRÔLÉ</span></div></div>
+
+<div class="stepbox">
+<h4>2.1 — Pourquoi faire cette étape</h4>
+<p>Actuellement <code>LidarFrame</code>, <code>LidarFrameStats</code> et <code>LidarObstacleInfo</code> appartiennent à <code>lidar_simulator.h</code>. Le futur driver réel ne doit pas dépendre d’un fichier nommé « simulator ».</p>
+</div>
+
+<div class="stepbox">
+<h4>2.2 — Créer les nouveaux fichiers</h4>
+<p>Dans STM32CubeIDE :</p>
+<ol>
+<li>Clic droit sur <code>FSBL/Core/Inc</code> → <strong>New → Header File</strong> → <code>lidar_types.h</code>.</li>
+<li>Clic droit sur <code>FSBL/Core/Inc</code> → <strong>New → Header File</strong> → <code>lidar_processing.h</code>.</li>
+<li>Clic droit sur <code>FSBL/Core/Src</code> → <strong>New → Source File</strong> → <code>lidar_processing.c</code>.</li>
+</ol>
+</div>
+
+<div class="stepbox">
+<h4>2.3 — Déplacer uniquement les types</h4>
+<p>Dans <code>lidar_types.h</code>, mettre :</p>
+<pre><code>#ifndef LIDAR_TYPES_H
+#define LIDAR_TYPES_H
+
+#include &lt;stdint.h&gt;
+
+#define LIDAR_WIDTH       54u
+#define LIDAR_HEIGHT      42u
+#define LIDAR_INVALID_MM  0xFFFFu
+
+typedef struct
+{
+    uint32_t timestamp_ms;
+    uint16_t range_mm[LIDAR_HEIGHT][LIDAR_WIDTH];
+    uint16_t amplitude[LIDAR_HEIGHT][LIDAR_WIDTH];
+    uint16_t ambient[LIDAR_HEIGHT][LIDAR_WIDTH];
+    uint8_t dss[LIDAR_HEIGHT][LIDAR_WIDTH];
+} LidarFrame;
+
+typedef struct
+{
+    uint16_t min_mm;
+    uint16_t max_mm;
+    uint32_t mean_mm;
+    uint32_t invalid_count;
+    uint32_t valid_count;
+} LidarFrameStats;
+
+typedef struct
+{
+    uint32_t close_count;
+    uint16_t nearest_mm;
+    uint16_t mean_close_mm;
+    float centroid_row;
+    float centroid_col;
+    uint8_t detected;
+} LidarObstacleInfo;
+
+#endif</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>2.4 — Déplacer les traitements</h4>
+<p>Dans <code>lidar_processing.h</code>, déclarer :</p>
+<pre><code>#ifndef LIDAR_PROCESSING_H
+#define LIDAR_PROCESSING_H
+
+#include "lidar_types.h"
+
+void LidarProcessing_ComputeStats(
+    const LidarFrame *frame,
+    LidarFrameStats *stats
+);
+
+void LidarProcessing_DetectObstacle(
+    const LidarFrame *frame,
+    uint16_t threshold_mm,
+    LidarObstacleInfo *info
+);
+
+#endif</code></pre>
+<p>Dans <code>lidar_processing.c</code>, déplacer/copier les implémentations de statistiques et de détection en les renommant avec le préfixe <code>LidarProcessing_</code>.</p>
+</div>
+
+<div class="stepbox">
+<h4>2.5 — Adapter le simulateur</h4>
+<p>Dans <code>lidar_simulator.h</code> :</p>
+<ul>
+<li>supprime les définitions de <code>LidarFrame</code>, <code>LidarFrameStats</code>, <code>LidarObstacleInfo</code> ;</li>
+<li>ajoute <code>#include "lidar_types.h"</code> ;</li>
+<li>conserve seulement les types/fonctions propres au simulateur.</li>
+</ul>
+</div>
+
+<div class="stepbox">
+<h4>2.6 — Adapter main.c</h4>
+<p>Ajoute :</p>
+<pre><code>#include "lidar_types.h"
+#include "lidar_processing.h"
+#include "lidar_simulator.h"</code></pre>
+<p>Puis remplace :</p>
+<pre><code>LidarSim_ComputeStats(...)</code></pre>
+<p>par :</p>
+<pre><code>LidarProcessing_ComputeStats(...)</code></pre>
+<p>et remplace :</p>
+<pre><code>LidarSim_DetectObstacle(...)</code></pre>
+<p>par :</p>
+<pre><code>LidarProcessing_DetectObstacle(...)</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>2.7 — Tester la non-régression</h4>
+<p>Refais exactement les tests des phases 0 et 1.</p>
+<div class="callout ok"><strong>Phase validée si :</strong> toutes les valeurs restent identiques après le déplacement des types et traitements.</div>
+</div>
+</section>
+
+<section class="phase" id="phase3">
+<div class="phasehead"><div class="num">3</div><div><h2>Créer une interface unique de source LiDAR</h2><span class="status todo">ARCHITECTURE CLÉ</span></div></div>
+
+<div class="stepbox">
+<h4>3.1 — Créer les fichiers</h4>
+<p><span class="file">FSBL/Core/Inc/lidar_source.h</span><br>
+<span class="file">FSBL/Core/Src/lidar_source.c</span></p>
+</div>
+
+<div class="stepbox">
+<h4>3.2 — API minimale</h4>
+<p>Dans <code>lidar_source.h</code> :</p>
+<pre><code>#ifndef LIDAR_SOURCE_H
+#define LIDAR_SOURCE_H
+
+#include &lt;stdbool.h&gt;
+#include "lidar_types.h"
+
+bool LidarSource_Init(void);
+bool LidarSource_GetFrame(LidarFrame *frame);
+
+#endif</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>3.3 — Backend simulation</h4>
+<p>Dans <code>lidar_source.c</code>, utilise pour l’instant uniquement le simulateur :</p>
+<pre><code>#include "lidar_source.h"
+#include "lidar_simulator.h"
+#include "main.h"
+
+static LidarSimulator s_sim;
+
+bool LidarSource_Init(void)
+{
+    LidarSim_Init(&s_sim, 1234u);
+    return true;
+}
+
+bool LidarSource_GetFrame(LidarFrame *frame)
+{
+    LidarSim_Generate(
+        &s_sim,
+        LIDAR_SCENE_CENTRAL_OBSTACLE,
+        HAL_GetTick(),
+        frame
+    );
+
+    return true;
+}</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>3.4 — Modifier main.c</h4>
+<p>Retire l’appel direct à <code>LidarSim_Init()</code> et <code>LidarSim_Generate()</code>. Remplace par :</p>
+<pre><code>LidarSource_Init();
+LidarSource_GetFrame(&g_lidar_frame);</code></pre>
+<p>Le traitement doit ensuite rester inchangé :</p>
+<pre><code>LidarProcessing_ComputeStats(...);
+LidarProcessing_DetectObstacle(...);</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>3.5 — Tester</h4>
+<p>Refais les Expressions des phases 0 et 1.</p>
+<div class="callout ok"><strong>Phase validée si :</strong> le programme donne exactement les mêmes valeurs qu’avant, alors que <code>main.c</code> n’appelle plus directement le simulateur.</div>
+</div>
+</section>
+
+<section class="phase" id="phase4">
+<div class="phasehead"><div class="num">4</div><div><h2>Passer d’une frame unique à un flux de frames</h2><span class="status todo">SIMULATION TEMPORELLE</span></div></div>
+
+<div class="stepbox">
+<h4>4.1 — Fichier à modifier</h4>
+<p><span class="file">FSBL/Core/Src/main.c</span></p>
+</div>
+
+<div class="stepbox">
+<h4>4.2 — Ajouter les variables de contrôle</h4>
+<p>Dans <code>USER CODE BEGIN PV</code> :</p>
+<pre><code>static uint32_t g_last_frame_ms = 0u;
+static uint32_t g_frame_id = 0u;</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>4.3 — Déplacer l’acquisition dans while(1)</h4>
+<p>Dans la boucle principale :</p>
+<pre><code>if ((HAL_GetTick() - g_last_frame_ms) >= 100u)
+{
+    g_last_frame_ms = HAL_GetTick();
+
+    if (LidarSource_GetFrame(&g_lidar_frame))
+    {
+        g_frame_id++;
+
+        LidarProcessing_ComputeStats(
+            &g_lidar_frame,
+            &g_lidar_stats
+        );
+
+        LidarProcessing_DetectObstacle(
+            &g_lidar_frame,
+            1500u,
+            &g_obstacle
+        );
+    }
+}</code></pre>
+<p>À 100 ms, le flux est à environ <strong>10 Hz</strong>.</p>
+</div>
+
+<div class="stepbox">
+<h4>4.4 — Tester</h4>
+<ol>
+<li>Place un breakpoint dans le bloc <code>if</code>, après <code>g_frame_id++</code>.</li>
+<li>Lance le debug.</li>
+<li>Appuie plusieurs fois sur <strong>Resume</strong>.</li>
+<li>Observe <code>g_frame_id</code> : il doit augmenter 1, 2, 3, 4...</li>
+<li>Observe <code>g_lidar_frame.timestamp_ms</code> : il doit augmenter.</li>
+</ol>
+<div class="callout ok"><strong>Phase validée si :</strong> le système produit plusieurs frames successives, sans <code>HAL_Delay()</code>, et les timestamps progressent.</div>
+</div>
+</section>
+
+<section class="phase" id="phase5">
+<div class="phasehead"><div class="num">5</div><div><h2>Enrichir les scènes simulées</h2><span class="status todo">POUR TESTER LES ALGORITHMES</span></div></div>
+
+<div class="stepbox">
+<h4>5.1 — Fichiers à modifier</h4>
+<p><span class="file">FSBL/Core/Inc/lidar_simulator.h</span><br>
+<span class="file">FSBL/Core/Src/lidar_simulator.c</span></p>
+</div>
+
+<div class="stepbox">
+<h4>5.2 — Ajouter au moins 4 nouvelles scènes</h4>
+<p>Ajoute dans l’énumération :</p>
+<pre><code>LIDAR_SCENE_OFFSET_OBSTACLE,
+LIDAR_SCENE_TWO_OBSTACLES,
+LIDAR_SCENE_DOOR_OPENING,
+LIDAR_SCENE_FLOOR_WALL</code></pre>
+<p>Objectif de chaque scène :</p>
+<table>
+<tr><th>Scène</th><th>But du test</th></tr>
+<tr><td>OFFSET_OBSTACLE</td><td>Vérifier que le centroïde bouge hors du centre.</td></tr>
+<tr><td>TWO_OBSTACLES</td><td>Voir les limites d’une détection à centroïde unique.</td></tr>
+<tr><td>DOOR_OPENING</td><td>Simuler une zone sans obstacle au milieu d’un mur.</td></tr>
+<tr><td>FLOOR_WALL</td><td>Préparer la future séparation sol/mur.</td></tr>
+</table>
+</div>
+
+<div class="stepbox">
+<h4>5.3 — Tester chaque scène</h4>
+<p>Pour chaque scène :</p>
+<ol>
+<li>sélectionne-la dans <code>lidar_source.c</code> ;</li>
+<li>compile ;</li>
+<li>observe <code>g_lidar_stats</code> ;</li>
+<li>observe <code>g_obstacle</code> ;</li>
+<li>note dans un tableau les valeurs obtenues.</li>
+</ol>
+<div class="callout ok"><strong>Phase validée si :</strong> les résultats sont cohérents avec la géométrie que tu as codée et reproductibles d’un run à l’autre pour les scènes déterministes.</div>
+</div>
+</section>
+
+<section class="phase" id="phase6">
+<div class="phasehead"><div class="num">6</div><div><h2>Exporter une frame vers le PC</h2><span class="status todo">PONT STM32 → ALGORITHMES PC</span></div></div>
+
+<div class="stepbox">
+<h4>6.1 — But</h4>
+<p>Avant de faire la reconstruction, il faut pouvoir récupérer sur PC une matrice <code>range_mm[42][54]</code>. Le moyen exact de transport peut évoluer ; pour commencer, utilise un export texte ou binaire simple.</p>
+</div>
+
+<div class="stepbox">
+<h4>6.2 — Option recommandée pour commencer</h4>
+<p>Ne configure pas encore un protocole complexe. Crée d’abord, côté PC, un fichier CSV à partir d’une scène simulée équivalente. Cela permet de valider les maths sans dépendre de l’UART.</p>
+<p>Format recommandé :</p>
+<pre><code>timestamp_ms,1234
+row,col,range_mm
+0,0,4000
+0,1,4000
+...
+20,25,1200
+...</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>6.3 — Test</h4>
+<p>Vérifie que le fichier contient exactement <strong>2268 valeurs de profondeur</strong>.</p>
+<div class="callout ok"><strong>Phase validée si :</strong> le PC peut reconstruire exactement la matrice 42×54 à partir du fichier exporté.</div>
+</div>
+</section>
+
+<section class="phase" id="phase7">
+<div class="phasehead"><div class="num">7</div><div><h2>Convertir profondeur → XYZ sur PC</h2><span class="status todo">GÉOMÉTRIE 3D</span></div></div>
+
+<div class="stepbox">
+<h4>7.1 — Fichier à créer sur PC</h4>
+<p>Crée hors du projet STM32, par exemple :</p>
+<pre><code>PC_tools/depth_to_xyz.py</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>7.2 — Paramètres initiaux</h4>
+<pre><code>WIDTH = 54
+HEIGHT = 42
+FOV_H_DEG = 55.0
+FOV_V_DEG = 42.0</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>7.3 — Conversion</h4>
+<pre><code>alpha = -FOV_H/2 + c * FOV_H/(WIDTH-1)
+beta  = -FOV_V/2 + r * FOV_V/(HEIGHT-1)
+
+x = d * cos(beta) * cos(alpha)
+y = d * cos(beta) * sin(alpha)
+z = d * sin(beta)</code></pre>
+<p>Convertis les angles en radians avant les fonctions trigonométriques.</p>
+</div>
+
+<div class="stepbox">
+<h4>7.4 — Gestion des invalides</h4>
+<p>Si <code>d == 0xFFFF</code>, ne génère aucun point.</p>
+</div>
+
+<div class="stepbox">
+<h4>7.5 — Test de validation</h4>
+<ol>
+<li>Utilise la scène <code>FLAT_WALL</code>.</li>
+<li>Génère les points XYZ.</li>
+<li>Affiche-les en 3D.</li>
+<li>Le nuage doit former une surface proche d’un plan.</li>
+<li>Avec <code>CENTRAL_OBSTACLE</code>, tu dois voir une surface centrale plus proche que le fond.</li>
+</ol>
+<div class="callout warn">Ce modèle angulaire est une approximation de développement. Il faudra utiliser la calibration réelle du capteur plus tard.</div>
+</div>
+</section>
+
+<section class="phase" id="phase8">
+<div class="phasehead"><div class="num">8</div><div><h2>Faire une première carte 2D</h2><span class="status todo">PREMIÈRE RESTITUTION</span></div></div>
+
+<div class="stepbox">
+<h4>8.1 — Fichier PC</h4>
+<p>Créer :</p>
+<pre><code>PC_tools/xyz_to_occupancy.py</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>8.2 — Méthode</h4>
+<ol>
+<li>Lire les points XYZ.</li>
+<li>Choisir un plan horizontal, par exemple X-Y.</li>
+<li>Définir une résolution de grille, par exemple 5 cm/cellule.</li>
+<li>Pour chaque point, calculer sa cellule.</li>
+<li>Marquer la cellule comme occupée.</li>
+<li>Afficher la grille.</li>
+</ol>
+</div>
+
+<div class="stepbox">
+<h4>8.3 — Test attendu</h4>
+<p>Avec <code>CENTRAL_OBSTACLE</code>, la carte doit montrer une zone d’occupation plus proche au centre et un fond plus éloigné.</p>
+<div class="callout ok"><strong>Phase validée si :</strong> tu obtiens une image 2D cohérente à partir d’une seule pose simulée.</div>
+</div>
+</section>
+
+<section class="phase" id="phase9">
+<div class="phasehead"><div class="num">9</div><div><h2>Introduire la pose du scanner</h2><span class="status todo">PRÉPARER LE MODE PORTABLE</span></div></div>
+
+<div class="stepbox">
+<h4>9.1 — Fichier à créer</h4>
+<p><span class="file">FSBL/Core/Inc/pose_types.h</span></p>
+</div>
+
+<div class="stepbox">
+<h4>9.2 — Structure</h4>
+<pre><code>typedef struct
+{
+    float x;
+    float y;
+    float z;
+    float roll;
+    float pitch;
+    float yaw;
+    uint32_t timestamp_ms;
+} Pose;</code></pre>
+</div>
+
+<div class="stepbox">
+<h4>9.3 — Test sur PC avant IMU</h4>
+<p>Crée artificiellement 2 poses, par exemple :</p>
+<pre><code>Pose A : x=0.0 m, y=0.0 m, yaw=0°
+Pose B : x=0.5 m, y=0.0 m, yaw=0°</code></pre>
+<p>Génère le même nuage depuis les deux poses, transforme-les dans un repère global, puis affiche-les ensemble.</p>
+<div class="callout ok"><strong>Phase validée si :</strong> le second nuage est correctement translaté de 0,5 m.</div>
+</div>
+</section>
+
+<section class="phase" id="phase10">
+<div class="phasehead"><div class="num">10</div><div><h2>Clarifier l’architecture FSBL / Application</h2><span class="status warn">À FAIRE AVANT GROSSE INTÉGRATION</span></div></div>
+
+<div class="stepbox">
+<h4>10.1 — Constat</h4>
+<p>Le code actuel est placé dans le projet <code>FSBL</code>. Ce n’est pas forcément l’emplacement final idéal pour caméra, I3C, fusion et IA.</p>
+</div>
+
+<div class="stepbox">
+<h4>10.2 — Démarche</h4>
+<ol>
+<li>Fais une copie/commit du baseline fonctionnel.</li>
+<li>Dans le <code>.ioc</code>, inspecte les contextes générés : FSBL / Appli / ExtMemLoader.</li>
+<li>Identifie le projet destiné à l’application principale.</li>
+<li>Ne déplace aucun module tant que ce projet ne compile pas seul.</li>
+<li>Ensuite seulement, migre <code>lidar_types</code>, <code>lidar_processing</code>, <code>lidar_source</code> et le simulateur.</li>
+</ol>
+</div>
+
+<div class="stepbox">
+<h4>10.3 — Test</h4>
+<p>Le nouveau projet d’application doit produire le même résultat de stats/détection que le baseline FSBL.</p>
+<div class="callout ok"><strong>Phase validée si :</strong> l’application principale est clairement identifiée et le baseline de tests reste vert.</div>
+</div>
+</section>
+
+<section class="phase" id="phase11">
+<div class="phasehead"><div class="num">11</div><div><h2>Bring-up caméra IMX335</h2><span class="status todo">SOUS-PROJET SÉPARÉ</span></div></div>
+
+<div class="stepbox">
+<h4>11.1 — Objectif</h4>
+<p>Obtenir une image caméra stable avant toute intégration YOLO ou LiDAR.</p>
+</div>
+
+<div class="stepbox">
+<h4>11.2 — Démarche recommandée</h4>
+<ol>
+<li>Partir d’un exemple ST compatible STM32N6570-DK + B-CAMS-IMX.</li>
+<li>Compiler l’exemple sans modification.</li>
+<li>Vérifier la détection caméra.</li>
+<li>Vérifier l’acquisition d’une frame.</li>
+<li>Mesurer résolution, fps, latence et taille des buffers.</li>
+<li>Ajouter un timestamp par frame.</li>
+<li>Ne fusionner avec le projet LiDAR qu’après stabilité.</li>
+</ol>
+</div>
+
+<div class="stepbox">
+<h4>11.3 — Résultats à consigner</h4>
+<table>
+<tr><th>Mesure</th><th>Valeur à noter</th></tr>
+<tr><td>Résolution</td><td>…</td></tr>
+<tr><td>FPS</td><td>…</td></tr>
+<tr><td>Latence frame</td><td>… ms</td></tr>
+<tr><td>Taille buffer</td><td>… octets</td></tr>
+<tr><td>RAM occupée</td><td>…</td></tr>
+</table>
+<div class="callout ok"><strong>Phase validée si :</strong> plusieurs frames caméra successives sont reçues sans corruption.</div>
+</div>
+</section>
+
+<section class="phase" id="phase12">
+<div class="phasehead"><div class="num">12</div><div><h2>Préparer le futur driver VL53L9CX / I3C</h2><span class="status todo">PRÉPARATION SANS MATÉRIEL</span></div></div>
+
+<div class="stepbox">
+<h4>12.1 — Fichiers à créer</h4>
+<p><span class="file">Core/Inc/vl53l9cx_driver.h</span><br>
+<span class="file">Core/Src/vl53l9cx_driver.c</span></p>
+</div>
+
+<div class="stepbox">
+<h4>12.2 — API seulement</h4>
+<pre><code>bool VL53L9CX_Init(void);
+bool VL53L9CX_Start(void);
+bool VL53L9CX_DataReady(void);
+bool VL53L9CX_ReadFrame(LidarFrame *frame);
+void VL53L9CX_Stop(void);</code></pre>
+<p>Pour l’instant, ne mets pas d’accès I3C réel dans ces fonctions si le matériel n’est pas disponible.</p>
+</div>
+
+<div class="stepbox">
+<h4>12.3 — Document de câblage à préparer</h4>
+<p>Créer un tableau contenant :</p>
+<table>
+<tr><th>Signal</th><th>STM32N6570-DK</th><th>VL53L9CX</th><th>Remarque</th></tr>
+<tr><td>I3C SDA</td><td>à déterminer</td><td>SDA</td><td>Bus données</td></tr>
+<tr><td>I3C SCL</td><td>à déterminer</td><td>SCL</td><td>Bus horloge</td></tr>
+<tr><td>XSHUT</td><td>GPIO à déterminer</td><td>XSHUT</td><td>Reset/enable</td></tr>
+<tr><td>INTR</td><td>GPIO/EXTI</td><td>INTR</td><td>Data ready</td></tr>
+<tr><td>SYNC_IN</td><td>optionnel</td><td>SYNC_IN</td><td>Synchronisation</td></tr>
+<tr><td>AP_CLK</td><td>à vérifier</td><td>AP_CLK</td><td>Selon architecture retenue</td></tr>
+</table>
+</div>
+
+<div class="stepbox">
+<h4>12.4 — Préparer le mapping capteur → LidarFrame</h4>
+<table>
+<tr><th>Donnée réelle</th><th>Champ interne</th></tr>
+<tr><td>Range array</td><td><code>range_mm</code></td></tr>
+<tr><td>Amplitude array</td><td><code>amplitude</code></td></tr>
+<tr><td>Ambient array</td><td><code>ambient</code></td></tr>
+<tr><td>DSS packed 4-bit</td><td><code>dss</code> 8-bit interne après dépaquetage</td></tr>
+</table>
+<div class="callout warn">Le vrai DSS est compacté sur 4 bits. Notre représentation interne sur 8 bits est volontairement plus simple.</div>
+</div>
+</section>
+
+<section class="phase" id="phase13">
+<div class="phasehead"><div class="num">13</div><div><h2>Plan de validation dès l’arrivée du LiDAR réel</h2><span class="status todo">À CONSERVER POUR PLUS TARD</span></div></div>
+
+<div class="stepbox">
+<h4>13.1 — Test matériel minimal</h4>
+<ol>
+<li>Vérifier alimentation.</li>
+<li>Vérifier présence du capteur sur le bus I3C.</li>
+<li>Initialiser sans erreur.</li>
+<li>Lire une première frame.</li>
+<li>Vérifier dimensions et cohérence des buffers.</li>
+</ol>
+</div>
+
+<div class="stepbox">
+<h4>13.2 — Test de remplacement du backend</h4>
+<p>Dans <code>lidar_source.c</code>, le changement final doit conceptuellement être :</p>
+<pre><code>// Avant
+LidarSim_Generate(...);
+
+// Après
+VL53L9CX_ReadFrame(frame);</code></pre>
+<p><strong>Aucun changement</strong> ne doit être nécessaire dans :</p>
+<ul>
+<li><code>lidar_processing.c</code> ;</li>
+<li>la détection ;</li>
+<li>le pipeline PC ;</li>
+<li>la conversion XYZ ;</li>
+<li>la projection 2D.</li>
+</ul>
+</div>
+
+<div class="stepbox">
+<h4>13.3 — Tests physiques simples</h4>
+<table>
+<tr><th>Scène réelle</th><th>Ce qu’on vérifie</th></tr>
+<tr><td>Mur à distance connue</td><td>Erreur de distance / stabilité</td></tr>
+<tr><td>Chaise proche</td><td>Détection obstacle</td></tr>
+<tr><td>Ouverture de porte</td><td>Absence de faux obstacle</td></tr>
+<tr><td>Surface sombre / claire</td><td>Amplitude / invalides / robustesse</td></tr>
+</table>
+<div class="callout ok"><strong>Succès global :</strong> le backend réel alimente la même <code>LidarFrame</code> que le simulateur et tous les traitements existants continuent à fonctionner.</div>
+</div>
+</section>
+
+<section class="card">
+<h2>Ordre de travail recommandé à partir de maintenant</h2>
+<table>
+<tr><th>Ordre</th><th>Phase</th><th>Durée indicative</th><th>Ne passer à la suite que si…</th></tr>
+<tr><td>1</td><td>0 — Stats</td><td>20–30 min</td><td>1200 / 4000 / 3600 / 0 / 2268 obtenus.</td></tr>
+<tr><td>2</td><td>1 — Détection</td><td>45–60 min</td><td>324 zones et centroïde 20.5 / 26.5 obtenus.</td></tr>
+<tr><td>3</td><td>2 — Découplage</td><td>45–75 min</td><td>Tous les tests précédents restent verts.</td></tr>
+<tr><td>4</td><td>3 — Source abstraite</td><td>30–45 min</td><td><code>main.c</code> n’appelle plus le simulateur directement.</td></tr>
+<tr><td>5</td><td>4 — Flux</td><td>30–45 min</td><td><code>frame_id</code> et timestamps progressent.</td></tr>
+<tr><td>6</td><td>5 — Scènes enrichies</td><td>1–2 h</td><td>Tests reproductibles.</td></tr>
+<tr><td>7</td><td>6–8 — PC / XYZ / 2D</td><td>2–4 h</td><td>Nuage 3D + première carte 2D obtenus.</td></tr>
+<tr><td>8</td><td>9–13</td><td>sessions dédiées</td><td>Architecture prête pour matériel réel.</td></tr>
+</table>
+</section>
+
+<section class="card">
+<h2>Checklist avant de considérer le travail « prêt pour le LiDAR réel »</h2>
+<ul class="check">
+<li>Les stats sont validées sur plusieurs scènes.</li>
+<li>La détection d’obstacle est testée.</li>
+<li>Les types ne dépendent plus du simulateur.</li>
+<li>Une API <code>LidarSource_GetFrame()</code> existe.</li>
+<li>Le système sait traiter plusieurs frames successives.</li>
+<li>Les timestamps sont présents.</li>
+<li>Une frame peut être exploitée sur PC.</li>
+<li>La conversion profondeur → XYZ fonctionne.</li>
+<li>Une première projection 2D existe.</li>
+<li>Une structure de pose est définie.</li>
+<li>L’architecture FSBL/Application est clarifiée.</li>
+<li>Le bring-up caméra a son propre chemin de validation.</li>
+<li>L’API du futur driver VL53L9CX est préparée.</li>
+</ul>
+</section>
+
+<div class="footer">TP détaillé adapté à l’état réel de test_projet_v3 — STM32N6570-DK / scanner 3D / futur VL53L9CX</div>
+</div>
+</body>
+</html>
