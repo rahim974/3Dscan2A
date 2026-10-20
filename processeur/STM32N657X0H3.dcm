@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP STM32N657X0H3
+D Arm Cortex-M55-based MCU, with ST Neural-ART Accelerator, H264 encoder, Neo-Chrom 2.5D GPU, 4.2 Mbytes contiguous SRAM
+K
+F https://www.st.com/resource/en/datasheet/stm32n657a0.pdf
+$ENDCMP
+#
+#End Doc Library
