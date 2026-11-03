@@ -141,7 +141,8 @@ Les valeurs exactes sont reprises de la nomenclature du schéma H563 (`Nomenclat
 
 - [ ] **Tension des I/O** sur les connecteurs Arduino et STMod+ (VDDIO à 3,3 V ou 1,8 V ? réglable ?). Si les I/O sont déjà en 1,8 V, on retire les translateurs.
 - [ ] **Courant disponible** sur les broches 3V3 et 5V de l'Arduino. Le lidar et le Wi-Fi demandent des pics d'environ 0,75 A : si le 3V3 du kit ne tient pas, on ajoute le LD39150 sur le 5 V.
-- [ ] Le kit peut-il être **alimenté par la carte fille** (VIN / 5V de l'Arduino) ? Sinon il reste sur l'USB.
+- [ ] **Alimentation portable** : power bank USB-C 5 V / 3 A sur un port USB-C du kit, sans PC. Vérifier dans l'UM3300 (« Power supply ») la position du cavalier de source et le courant maximal de chaque port. Mesurer la consommation réelle du kit + carte fille (estimée à 1,5–2 A).
+- [ ] Plus tard : alimenter le kit par la broche VIN de CN8 depuis une batterie sur la carte fille ?
 - [ ] **Pull-ups 1,5 kΩ** de l'I2C1 (PH9/PC1, R153/R149 vers VDDIO) : vérifier si elles gênent l'I3C et s'il faut retirer R153/R149.
 
 ### Broches (avec STM32CubeMX sur le STM32N657X0H3)
