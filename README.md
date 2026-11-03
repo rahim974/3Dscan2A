@@ -9,7 +9,7 @@ Le prototype C (carte autonome STM32H7S3, LQFP-144) viendra ensuite et réutilis
             │  VL53L9CX ◄─ I3C 1,8 V ─ P3A9606 ─ I3C 3,3 V ─┐                      │
             │  LSM6DSV16X ◄──────────── I²C 3,3 V ──────────┤                      │
             │  ST67W611M1 ◄──────────── SPI 3,3 V ──────────┤   connecteurs        │
-            │  LDO 3V3 / 1V8 / 1V2, oscillateur 24 MHz      ├── Arduino (+STMod+)  │
+            │  LDO 3V3 / 1V8 / 1V2, oscillateur 24 MHz      ├── Arduino            │
             └───────────────────────────────────────────────┼──────────────────────┘
                                                             ▼
                       STM32N6570-DK : STM32N6 + NPU, caméra IMX335, écran, USB
@@ -28,7 +28,7 @@ Une carte 2 couches (4 si le module Wi-Fi l'exige), au format shield Arduino, sa
 
 | Feuille | Contenu |
 |---|---|
-| `connecteurs` | Connecteurs Arduino Uno R3 (mâles, vers le kit), STMod+ si on l'utilise, points de test |
+| `connecteurs` | Connecteurs Arduino Uno R3 (mâles, vers le kit), points de test |
 | `alimentation` | LDO 3V3 depuis le 5 V du kit (si le 3V3 du kit ne suffit pas), LDO 1V8 et 1V2 pour le lidar, LED de présence |
 | `lidar` | VL53L9CX, découplage (figure 7 du datasheet), oscillateur 24 MHz, translateurs de niveau I3C et GPIO |
 | `imu` | LSM6DSV16X, pull-ups I²C si besoin, INT1/INT2 |
@@ -47,7 +47,7 @@ On tient donc le scanner comme un appareil photo, écran vers l'utilisateur :
 
 - La carte fille s'enfiche **sous le kit**, et le lidar est sur sa face extérieure. Il regarde la scène, à l'opposé de l'écran : c'est le bon sens.
 - Le **module caméra est fixé sur la carte fille**, à côté du lidar, avec des entretoises. La nappe fait le tour du bord haut du kit. Le lidar et la caméra sont alors rigidement liés et regardent dans la même direction, ce qui simplifie l'étalonnage.
-- Le STMod+ n'est pas utilisé pour la carte fille : il est côté écran, le lidar y regarderait vers l'utilisateur.
+- Le **STMod+ n'est pas utilisé** : il est sur l'autre face du kit, il faudrait une nappe pour le rejoindre, et il n'apporte rien que l'Arduino n'ait déjà (son SPI5 est le même que sur D10–D13, son UART le même que sur D0/D1). On ne le garde qu'en **repli** : si l'I3C du N6 ne sort pas sur l'Arduino mais sur une broche du STMod+, on le relie par un petit câble plat.
 
 **Contraintes de placement**
 
@@ -80,7 +80,6 @@ On tient donc le scanner comme un appareil photo, écran vers l'utilisateur :
 | Composant | Utilité |
 |---|---|
 | Barrettes mâles Arduino Uno R3 : 1×10, 1×8, 1×8, 1×6, pas de 2,54 mm (hauteur à choisir selon §3) | Enfichage sur le kit |
-| Connecteur STMod+ 2×10 *(optionnel, type et pas à vérifier)* | Accès au SPI5 / UART / GPIO supplémentaires |
 | Header 1×4, 2,54 mm | UART + BOOT du module Wi-Fi |
 | Condensateurs 100 nF / 1 µF (0402), 4,7 µF / 10 µF (0603), 22 µF (0805) | Découplage du lidar, du Wi-Fi, de l'IMU et des LDO |
 | Résistances 10 kΩ, 33 Ω, 2,2 kΩ non montées, 0 Ω | Pull-ups XSHUT/INTR, série de l'horloge, repli I²C du lidar, options |
@@ -98,7 +97,7 @@ Les valeurs exactes sont reprises de la nomenclature du schéma H563 (`Nomenclat
 
 - [x] **Face des connecteurs** (photos du 03/11/2026) : Arduino CN7/CN8 et D0–D15 **sous le kit**, STMod+ CN4 **côté écran** (bord haut), caméra sur nappe au bord haut.
 - [ ] **Position exacte** des barrettes Arduino (cote depuis un coin de la carte, entraxe) au pied à coulisse.
-- [ ] **Module caméra** (MB1854 / B-CAMS-IMX) : dimensions, entraxe de ses trous de fixation, côté de l'objectif, **longueur de la nappe** (elle doit faire le tour du bord haut jusqu'à la carte fille). Prévoir une nappe FFC plus longue si elle est trop courte.
+- [ ] **Module caméra** (MB1854 / B-CAMS-IMX) : dimensions, entraxe de ses trous de fixation, côté de l'objectif, longueur de la nappe (vérifiée le 03/11/2026 : assez longue pour faire le tour du bord haut jusqu'à la carte fille).
 - [ ] **Hauteur sous le kit** : hauteur des entretoises en laiton et des composants les plus hauts (Ethernet, USB-A, jack audio). En déduire la hauteur des barrettes (empilables ou rallongées) et la zone libre pour la carte fille.
 - [ ] Accès aux USB-C ST-LINK et USB1 et au lecteur micro-SD une fois la carte fille montée.
 - [ ] Le module caméra semble porter son propre capteur ToF et une IMU (lignes TOF_INT / IMU_INT du connecteur) : identifier les références sur la carte.
