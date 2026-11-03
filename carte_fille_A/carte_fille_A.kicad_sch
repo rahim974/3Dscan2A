@@ -9,89 +9,16 @@
 		(company "Projet 2A")
 	)
 	(lib_symbols)
-	(sheet
-		(at 30.48 40.64)
-		(size 63.5 25.4)
+	(text "CARTE FILLE PROTOTYPE A - SCANNER 3D PORTABLE\n\nShield Arduino Uno R3 enfiche SOUS le STM32N6570-DK : lidar VL53L9CX (I3C via translateur NXP P3A9606),\nIMU LSM6DSV16X, module Wi-Fi 6 / BLE ST67W611M1. Le calcul (IA sur NPU) et la camera sont sur le kit.\nLe lidar et le module camera sont sur la face exterieure et regardent la scene, a l oppose de l ecran.\nRails : +5V du kit -> LDO +3V3 -> LDO +1V8 / +1V2.\nSchema genere par generateur/design_A.py (base : schema du prototype 1), a reprendre a la main pour la mise en page."
 		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0.1524)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0.0000)
-		)
-		(uuid "c905a3b6-aeb2-42c7-a470-11a94c4258fa")
-		(property "Sheetname" "Connecteurs Arduino"
-			(at 30.48 39.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
+		(at 30.48 160.02 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
+			(justify left top)
 		)
-		(property "Sheetfile" "connecteurs.kicad_sch"
-			(at 30.48 66.64 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "carte_fille_A"
-				(path "/c531a3e0-7215-4864-b475-07536daae0cb"
-					(page "2")
-				)
-			)
-		)
-	)
-	(sheet
-		(at 119.38 40.64)
-		(size 63.5 25.4)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0.1524)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0.0000)
-		)
-		(uuid "b8f77cd6-d4c3-4f49-92a3-9508eb6ad36f")
-		(property "Sheetname" "Alimentation"
-			(at 119.38 39.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "alimentation.kicad_sch"
-			(at 119.38 66.64 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "carte_fille_A"
-				(path "/c531a3e0-7215-4864-b475-07536daae0cb"
-					(page "3")
-				)
-			)
-		)
+		(uuid "142b8aaf-5fdb-47f6-903e-881734177efe")
 	)
 	(sheet
 		(at 208.28 40.64)
@@ -106,11 +33,13 @@
 			(type solid)
 		)
 		(fill
-			(color 0 0 0 0.0000)
+			(color 0 0 0 0)
 		)
 		(uuid "14b336a9-9974-44cd-9309-eafb48a6f083")
 		(property "Sheetname" "Lidar"
 			(at 208.28 39.94 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -120,6 +49,8 @@
 		)
 		(property "Sheetfile" "lidar.kicad_sch"
 			(at 208.28 66.64 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -131,90 +62,6 @@
 			(project "carte_fille_A"
 				(path "/c531a3e0-7215-4864-b475-07536daae0cb"
 					(page "4")
-				)
-			)
-		)
-	)
-	(sheet
-		(at 297.18 40.64)
-		(size 63.5 25.4)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0.1524)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0.0000)
-		)
-		(uuid "65419d89-094f-439f-9920-3375c17b494c")
-		(property "Sheetname" "IMU"
-			(at 297.18 39.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "imu.kicad_sch"
-			(at 297.18 66.64 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "carte_fille_A"
-				(path "/c531a3e0-7215-4864-b475-07536daae0cb"
-					(page "5")
-				)
-			)
-		)
-	)
-	(sheet
-		(at 30.48 91.44)
-		(size 63.5 25.4)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0.1524)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0.0000)
-		)
-		(uuid "c80bc5a4-8613-49b8-99a6-69d2b2677ab0")
-		(property "Sheetname" "WiFi BLE"
-			(at 30.48 90.74 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "wifi.kicad_sch"
-			(at 30.48 117.44 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "carte_fille_A"
-				(path "/c531a3e0-7215-4864-b475-07536daae0cb"
-					(page "6")
 				)
 			)
 		)
@@ -232,11 +79,13 @@
 			(type solid)
 		)
 		(fill
-			(color 0 0 0 0.0000)
+			(color 0 0 0 0)
 		)
 		(uuid "63086c44-5b8e-42be-a874-09d3a3f6a142")
 		(property "Sheetname" "Mecanique"
 			(at 119.38 90.74 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -246,6 +95,8 @@
 		)
 		(property "Sheetfile" "mecanique.kicad_sch"
 			(at 119.38 117.44 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -261,16 +112,189 @@
 			)
 		)
 	)
-	(text "CARTE FILLE PROTOTYPE A - SCANNER 3D PORTABLE\n\nShield Arduino Uno R3 enfiche SOUS le STM32N6570-DK : lidar VL53L9CX (I3C via translateur NXP P3A9606),\nIMU LSM6DSV16X, module Wi-Fi 6 / BLE ST67W611M1. Le calcul (IA sur NPU) et la camera sont sur le kit.\nLe lidar et le module camera sont sur la face exterieure et regardent la scene, a l oppose de l ecran.\nRails : +5V du kit -> LDO +3V3 -> LDO +1V8 / +1V2.\nSchema genere par generateur/design_A.py (base : schema du prototype 1), a reprendre a la main pour la mise en page."
+	(sheet
+		(at 297.18 40.64)
+		(size 63.5 25.4)
 		(exclude_from_sim no)
-		(at 30.48 160.02 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left top)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
 		)
-		(uuid "142b8aaf-5fdb-47f6-903e-881734177efe")
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "65419d89-094f-439f-9920-3375c17b494c")
+		(property "Sheetname" "IMU"
+			(at 297.18 39.94 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "imu.kicad_sch"
+			(at 297.18 66.64 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "carte_fille_A"
+				(path "/c531a3e0-7215-4864-b475-07536daae0cb"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 119.38 40.64)
+		(size 63.5 25.4)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "b8f77cd6-d4c3-4f49-92a3-9508eb6ad36f")
+		(property "Sheetname" "Alimentation"
+			(at 119.38 39.94 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "alimentation.kicad_sch"
+			(at 119.38 66.64 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "carte_fille_A"
+				(path "/c531a3e0-7215-4864-b475-07536daae0cb"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 30.48 91.44)
+		(size 63.5 25.4)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "c80bc5a4-8613-49b8-99a6-69d2b2677ab0")
+		(property "Sheetname" "WiFi BLE"
+			(at 30.48 90.74 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "wifi.kicad_sch"
+			(at 30.48 117.44 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "carte_fille_A"
+				(path "/c531a3e0-7215-4864-b475-07536daae0cb"
+					(page "6")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 30.48 40.64)
+		(size 63.5 25.4)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "c905a3b6-aeb2-42c7-a470-11a94c4258fa")
+		(property "Sheetname" "Connecteurs Arduino"
+			(at 30.48 39.94 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "connecteurs.kicad_sch"
+			(at 30.48 66.64 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "carte_fille_A"
+				(path "/c531a3e0-7215-4864-b475-07536daae0cb"
+					(page "2")
+				)
+			)
+		)
 	)
 	(sheet_instances
 		(path "/"
