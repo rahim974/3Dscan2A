@@ -69,7 +69,11 @@ Une carte 2 couches au format shield Arduino Uno R3, sans microcontrôleur, sans
 - **EXTI** : D2 = ligne 0, D4 = ligne 5, D5 = ligne 10, D9 = ligne 14. Ne pas activer en interruption le TOF_INT de la caméra (PQ0, ligne 0), qui est en conflit avec D2.
 - **P3A9606** : j'ai créé son symbole sans le datasheet sous la main. Le brochage et le boîtier (X2SON-8 mis par défaut) sont **à vérifier**.
 - **Sens de la carte** : en vue de dessus, CN8/CN7 sont en bas et D15…D0 en haut, comme une Uno vue de dessus et comme sur la photo du dessous du kit. L'empreinte KiCad `Module:Arduino_UNO_R3` met l'alimentation en haut, ce qui donnerait une carte en miroir : je ne l'ai pas utilisée. À contrôler en posant un tirage papier 1:1 sur le kit.
-- **Antenne Wi-Fi** au bord côté CN7, loin de la nappe caméra (avec J5 juste en dessous) : sens de l'antenne sur l'empreinte et zone sans cuivre à définir.
+- ~~**Antenne Wi-Fi**~~ : au bord côté CN7, tournée vers l'extérieur, avec une zone sans cuivre sur toutes les couches (12,3 × 4,9 mm, DS14784 §6.2). ST conseille de mettre le module dans un coin de la carte, ce qui n'est pas possible ici à cause des barrettes. On le garde au milieu du bord.
+- ~~**Empreintes ST**~~ (vérifiées le 03/11/2026, elles viennent d'Ultra Librarian et SnapEDA, pas de ST) :
+  - VL53L9CX : 42 pastilles conformes au « solder pattern » du datasheet (DS14879, figure 30).
+  - ST67W611M1 : 36 pastilles conformes à la figure 8 de DS14784, brochage conforme au tableau 1.
+  - LSM6DSV16X : 14 pastilles qui couvrent les plots du boîtier (DS13510, figure 33), sens du boîtier correct. J'ai corrigé son courtyard, qui était mal formé.
 - **Trous de la caméra** (H1, H2) au bord opposé, côté nappe, à côté du lidar : entraxe à mesurer sur le module.
 
 **Orientation retenue (d'après les photos du kit)**

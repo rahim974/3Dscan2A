@@ -149,6 +149,27 @@ ol = z.Outline(); ol.NewOutline()
 for a in pts: ol.Append(mm(OX + a[0] + 0.3) if a[0] < 0 else mm(OX + a[0] - 0.3), mm(OY + a[1] + 0.3) if a[1] < 0 else mm(OY + a[1] - 0.3))
 board.Add(z)
 
+# zone sans cuivre sous l'antenne du module Wi-Fi (DS14784 §6.2), toutes couches
+ic1 = board.FindFootprintByReference('IC1')
+P = lambda n: ic1.FindPadByNumber(n).GetPosition()
+p32, p25 = P('32'), P('25')                    # pastilles 32 et 25 : (-4,445 ; -3,216) et (4,445 ; -3,216) en local
+ux, uy = (p25.x - p32.x) / 8.89, (p25.y - p32.y) / 8.89
+vx, vy = -uy, ux                               # axe y local, sens vérifié avec la pastille 1
+p1 = P('1')
+if (p1.x - p32.x) * vx + (p1.y - p32.y) * vy < 0: vx, vy = -vx, -vy
+def loc(x, y):
+    return pcbnew.VECTOR2I(int(p32.x + (x + 4.445) * ux + (y + 3.216) * vx),
+                           int(p32.y + (x + 4.445) * uy + (y + 3.216) * vy))
+ka = pcbnew.ZONE(board)
+ka.SetIsRuleArea(True); ka.SetZoneName('antenne Wi-Fi')
+ka.SetLayerSet(pcbnew.LSET.AllCuMask())
+ka.SetDoNotAllowZoneFills(True); ka.SetDoNotAllowTracks(True); ka.SetDoNotAllowVias(True)
+ka.SetDoNotAllowPads(True); ka.SetDoNotAllowFootprints(False)
+ol = ka.Outline(); ol.NewOutline()
+for x, y in ((-6.14, -8.64), (6.14, -8.64), (6.14, -3.70), (-6.14, -3.70)):
+    v = loc(x, y); ol.Append(v.x, v.y)
+board.Add(ka)
+
 # textes d'aide
 def note(txt, x, y, layer=pcbnew.F_SilkS, size=1.0):
     t = pcbnew.PCB_TEXT(board); t.SetText(txt); t.SetLayer(layer)
