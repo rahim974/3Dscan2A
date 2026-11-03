@@ -40,7 +40,7 @@ Une carte 2 couches au format shield Arduino Uno R3, sans microcontrôleur, sans
 |---|---|
 | `connecteurs` | 4 barrettes Arduino mâles (CN8, CN7, CN11, CN12), point de test IOREF |
 | `alimentation` | 5 V du kit → LD39150 (+3V3) → LDK130 (+1V8, +1V2), LED de présence, points de test |
-| `lidar` | VL53L9CX, translateur I3C P3A9606, 3 × SN74LVC1T45 (XSHUT, SYNC_IN, INTR), oscillateur 24 MHz, choix D14/D15 ou A4/A5 par résistances 0 Ω |
+| `lidar` | VL53L9CX, translateur I3C P3A9606, 3 × SN74LVC1T45 (XSHUT, SYNC_IN, INTR), oscillateur 24 MHz |
 | `imu` | LSM6DSV16X sur le bus D14/D15, INT1/INT2 |
 | `wifi` | ST67W611M1 sur le SPI5 (D10–D13), SPI_RDY, CHIP_EN, UART vers D0/D1 et header UART/BOOT |
 | `mecanique` | 2 trous M2 pour le module caméra |
@@ -59,12 +59,11 @@ Une carte 2 couches au format shield Arduino Uno R3, sans microcontrôleur, sans
 | D9 | PE14 | INT2 de l'IMU (EXTI 14). Pas D6/PE13 : l'EXTI 13 sert au bouton USER1 du kit (PC13). |
 | D10–D13 | PA3, PG2, PH8, PE15 | SPI5 vers le Wi-Fi (NSS, MOSI, MISO, SCK) |
 | D14 / D15 | PC1 / PH9 | Bus I3C du lidar et de l'IMU (I3C vérifié dans CubeMX le 03/11/2026) |
-| A4 / A5 | PF3 / PB10 | Bus I3C de repli (0 Ω non montées) |
 | CN8 5V / GND | | Alimentation de la carte |
 
 **Points à vérifier avant le routage**
 
-- ~~**I3C sur D14/D15**~~ : vérifié dans CubeMX. Reste à voir **quels composants du kit sont déjà sur I2C1 (PH9/PC1)** : un composant I²C sans filtre anti-parasites de 50 ns peut perturber l'I3C.
+- ~~**I3C sur D14/D15**~~ : vérifié dans CubeMX. Reste à voir **quels composants du kit sont déjà sur I2C1 (PH9/PC1)** : un composant I²C sans filtre anti-parasites de 50 ns peut perturber l'I3C. Les options de repli (I3C sur A4/A5, pull-ups I²C) ont été retirées de la carte le 03/11/2026 : en cas de problème, il faudra une nouvelle version du PCB.
 - **Timer sur PE9** (D3) pour SYNC_IN : vérifier dans CubeMX qu'une sortie timer y est disponible (TIM1_CH1 ?).
 - **EXTI** : D2 = ligne 0, D4 = ligne 5, D5 = ligne 10, D9 = ligne 14. Ne pas activer en interruption le TOF_INT de la caméra (PQ0, ligne 0), qui est en conflit avec D2.
 - **P3A9606** : j'ai créé son symbole sans le datasheet sous la main. Le brochage et le boîtier (X2SON-8 mis par défaut) sont **à vérifier**.
@@ -124,7 +123,7 @@ On tient donc le scanner comme un appareil photo, écran vers l'utilisateur :
 | Barrettes mâles Arduino Uno R3 : 1×10, 1×8, 1×8, 1×6, pas de 2,54 mm (hauteur à choisir selon §3) | Enfichage sur le kit |
 | Header 1×4, 2,54 mm | UART + BOOT du module Wi-Fi |
 | Condensateurs 100 nF / 1 µF (0402), 4,7 µF / 10 µF (0603), 22 µF (0805) | Découplage du lidar, du Wi-Fi, de l'IMU et des LDO |
-| Résistances 10 kΩ, 33 Ω, 2,2 kΩ non montées, 0 Ω | Pull-ups XSHUT/INTR, série de l'horloge, repli I²C du lidar, options |
+| Résistances 10 kΩ, 100 kΩ, 33 Ω, 0 Ω | Pull-ups et pull-downs (XSHUT, SYNC, INTR, CHIP_EN, BOOT), série de l'horloge, liaison UART Wi-Fi ↔ D0/D1 |
 | LED + résistance | Présence d'alimentation |
 
 Les valeurs exactes sont reprises de la nomenclature du schéma H563 (`Nomenclature_PCB_final`), qui partage les blocs lidar, IMU et Wi-Fi.

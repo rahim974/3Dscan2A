@@ -2,7 +2,7 @@
 	(version 20260306)
 	(generator "eeschema")
 	(generator_version "10.0")
-	(uuid "5e1d031b-ba49-4675-8920-5bf4cdf9d50f")
+	(uuid "c531a3e0-7215-4864-b475-07536daae0cb")
 	(paper "A3")
 	(title_block
 		(title "Carte fille prototype A - scanner 3D")
@@ -24,7 +24,7 @@
 		(fill
 			(color 0 0 0 0.0000)
 		)
-		(uuid "fa99e1d7-f210-47f7-8656-8cfdd647d13d")
+		(uuid "c905a3b6-aeb2-42c7-a470-11a94c4258fa")
 		(property "Sheetname" "Connecteurs Arduino"
 			(at 30.48 39.94 0)
 			(effects
@@ -45,7 +45,7 @@
 		)
 		(instances
 			(project "carte_fille_A"
-				(path "/5e1d031b-ba49-4675-8920-5bf4cdf9d50f"
+				(path "/c531a3e0-7215-4864-b475-07536daae0cb"
 					(page "2")
 				)
 			)
@@ -66,7 +66,7 @@
 		(fill
 			(color 0 0 0 0.0000)
 		)
-		(uuid "a64c300f-542a-4c73-925c-4a8902fa96cc")
+		(uuid "b8f77cd6-d4c3-4f49-92a3-9508eb6ad36f")
 		(property "Sheetname" "Alimentation"
 			(at 119.38 39.94 0)
 			(effects
@@ -87,7 +87,7 @@
 		)
 		(instances
 			(project "carte_fille_A"
-				(path "/5e1d031b-ba49-4675-8920-5bf4cdf9d50f"
+				(path "/c531a3e0-7215-4864-b475-07536daae0cb"
 					(page "3")
 				)
 			)
@@ -108,7 +108,7 @@
 		(fill
 			(color 0 0 0 0.0000)
 		)
-		(uuid "09c1cd38-c486-4fbf-ab89-5ad4a64b5c45")
+		(uuid "14b336a9-9974-44cd-9309-eafb48a6f083")
 		(property "Sheetname" "Lidar"
 			(at 208.28 39.94 0)
 			(effects
@@ -129,7 +129,7 @@
 		)
 		(instances
 			(project "carte_fille_A"
-				(path "/5e1d031b-ba49-4675-8920-5bf4cdf9d50f"
+				(path "/c531a3e0-7215-4864-b475-07536daae0cb"
 					(page "4")
 				)
 			)
@@ -150,7 +150,7 @@
 		(fill
 			(color 0 0 0 0.0000)
 		)
-		(uuid "d7112b21-42ec-49fb-8413-5ca86164a440")
+		(uuid "65419d89-094f-439f-9920-3375c17b494c")
 		(property "Sheetname" "IMU"
 			(at 297.18 39.94 0)
 			(effects
@@ -171,7 +171,7 @@
 		)
 		(instances
 			(project "carte_fille_A"
-				(path "/5e1d031b-ba49-4675-8920-5bf4cdf9d50f"
+				(path "/c531a3e0-7215-4864-b475-07536daae0cb"
 					(page "5")
 				)
 			)
@@ -192,7 +192,7 @@
 		(fill
 			(color 0 0 0 0.0000)
 		)
-		(uuid "7d1fc102-f15b-4cf4-ae03-07c7981fcdf9")
+		(uuid "c80bc5a4-8613-49b8-99a6-69d2b2677ab0")
 		(property "Sheetname" "WiFi BLE"
 			(at 30.48 90.74 0)
 			(effects
@@ -213,7 +213,7 @@
 		)
 		(instances
 			(project "carte_fille_A"
-				(path "/5e1d031b-ba49-4675-8920-5bf4cdf9d50f"
+				(path "/c531a3e0-7215-4864-b475-07536daae0cb"
 					(page "6")
 				)
 			)
@@ -234,7 +234,7 @@
 		(fill
 			(color 0 0 0 0.0000)
 		)
-		(uuid "cb527290-6002-4da8-9733-91a4bd696a22")
+		(uuid "63086c44-5b8e-42be-a874-09d3a3f6a142")
 		(property "Sheetname" "Mecanique"
 			(at 119.38 90.74 0)
 			(effects
@@ -255,7 +255,7 @@
 		)
 		(instances
 			(project "carte_fille_A"
-				(path "/5e1d031b-ba49-4675-8920-5bf4cdf9d50f"
+				(path "/c531a3e0-7215-4864-b475-07536daae0cb"
 					(page "7")
 				)
 			)
@@ -270,7 +270,7 @@
 			)
 			(justify left top)
 		)
-		(uuid "629fe4a9-e1a2-4694-8214-314d03aff8c7")
+		(uuid "142b8aaf-5fdb-47f6-903e-881734177efe")
 	)
 	(sheet_instances
 		(path "/"

@@ -11,7 +11,7 @@ OUT = sys.argv[1]
 P = Project()
 P.title = 'Carte fille prototype A - scanner 3D'
 P.force_global = {
-    'ARD_SCL', 'ARD_SDA', 'ARD_A4', 'ARD_A5', 'IOREF',
+    'ARD_SCL', 'ARD_SDA', 'IOREF',
     'LIDAR_SYNC_3V3', 'LIDAR_INT_3V3', 'LIDAR_XSHUT_3V3',
     'IMU_INT1', 'IMU_INT2',
     'WIFI_EN', 'WIFI_RDY', 'WIFI_CS', 'WIFI_MOSI', 'WIFI_SCK', 'WIFI_MISO', 'ARD_D0_RX', 'ARD_D1_TX'}
@@ -50,7 +50,7 @@ s.text('BARRETTES ARDUINO UNO R3 (males) - la carte s enfiche SOUS le STM32N6570
        '  D0 PF6, D1 PD5, D2 PD0, D3 PE9, D4 PH5, D5 PE10, D6 PE13, D7 PD6\n'
        '  D8 PE7, D9 PE14, D10 PA3 (SPI5_NSS), D11 PG2 (SPI5_MOSI), D12 PH8 (SPI5_MISO), D13 PE15 (SPI5_SCK)\n'
        '  D14/D15 : I2C1 PC1/PH9 a priori (pull-ups 1,5k au VDDIO sur le kit), A4 PF3, A5 PB10\n'
-       'I3C sur D14/D15 : verifie dans CubeMX le 03/11/2026. Option A4/A5 conservee (resistances 0R DNP, feuille Lidar).\n'
+       'I3C sur D14/D15 : verifie dans CubeMX le 03/11/2026. CN7 (A0-A5) ne sert qu a tenir la carte.\n'
        'EXTI : PD0 (ligne 0), PH5 (5), PE10 (10), PE14 (14). IMU INT2 sur D9 (PE14) et non D6 (PE13) :\n'
        '  la ligne EXTI 13 est prise par le bouton USER1 du kit (PC13).\n'
        'A VERIFIER : timer sur PE9 (SYNC_IN), autres peripheriques du kit sur le bus I2C1 (PH9/PC1).\n'
@@ -58,8 +58,8 @@ s.text('BARRETTES ARDUINO UNO R3 (males) - la carte s enfiche SOUS le STM32N6570
        20.32, 15.24)
 P.part(s, 'Connector:Conn_01x08_Pin', 'J', 'CN8 alim', 50.8, 101.6, {
     '2': 'IOREF', '5': '+5V', '6': 'GND', '7': 'GND'}, nc=('1', '3', '4', '8'), fp=HDR.format(8))
-P.part(s, 'Connector:Conn_01x06_Pin', 'J', 'CN7 A0-A5', 50.8, 160.02, {
-    '5': 'ARD_A4', '6': 'ARD_A5'}, nc=('1', '2', '3', '4'), fp=HDR.format(6))
+P.part(s, 'Connector:Conn_01x06_Pin', 'J', 'CN7 A0-A5', 50.8, 160.02, {},
+       nc=('1', '2', '3', '4', '5', '6'), fp=HDR.format(6))
 P.part(s, 'Connector:Conn_01x08_Pin', 'J', 'CN11 D0-D7', 152.4, 101.6, {
     '1': 'ARD_D0_RX', '2': 'ARD_D1_TX', '3': 'WIFI_RDY', '4': 'LIDAR_SYNC_3V3', '5': 'LIDAR_INT_3V3',
     '6': 'IMU_INT1', '8': 'WIFI_EN'}, nc=('7',), fp=HDR.format(8))
@@ -109,8 +109,7 @@ s.text('LIDAR VL53L9CX - IOVDD = 1,8 V, DVDD = 1,2 V, AVDD = 3,3 V, VBAT_LDD / V
        'Le kit est en 3,3 V : translateurs entre le kit et le lidar.\n'
        '  I3C SCL/SDA : NXP P3A9606 (translateur I3C 12,5 MHz). BROCHAGE ET BOITIER DU SYMBOLE A VERIFIER (datasheet NXP).\n'
        '  XSHUT, SYNC_IN (kit -> lidar) et INTR (lidar -> kit) : SN74LVC1T45, sens fixe par DIR.\n'
-       'Choix des broches I3C du kit par resistances 0R : D14/D15 montees, A4/A5 non montees (DNP).\n'
-       'L IMU partage le bus D14/D15 (le LSM6DSV16X accepte l I3C). Repli I2C du lidar : pull-ups 2,2k DNP cote 1,8 V.\n'
+       'Bus I3C sur D14/D15 (verifie dans CubeMX). L IMU partage ce bus (le LSM6DSV16X accepte l I3C).\n'
        'AP_CLK : oscillateur 24 MHz 1,8 V dedie. MIPI CSI du lidar non utilise.\n'
        'Decouplage au plus pres des billes (figure 7 du datasheet), vias thermiques sous les VSS.', 20.32, 15.24)
 P.part(s, 'Lidar:VL53L9CX_large', 'U', 'VL53L9CX', 101.6, 114.3, {
@@ -119,7 +118,7 @@ P.part(s, 'Lidar:VL53L9CX_large', 'U', 'VL53L9CX', 101.6, 114.3, {
     'B1': '+3V3', 'D1': '+3V3', 'E6': '+3V3', 'E7': '+3V3', 'C12': '+1V2', 'E8': '+1V8'},
     nc=('A5', 'A6', 'A8', 'A9', 'E3', 'E12'), fp='custom_fp:VL53L9CX')
 P.part(s, 'Custom:P3A9606', 'U', 'P3A9606', 228.6, 50.8, {
-    '3': '+3V3', '6': '+1V8', '5': '+3V3', '1': 'I3C_SCL', '2': 'I3C_SDA',
+    '3': '+3V3', '6': '+1V8', '5': '+3V3', '1': 'ARD_SCL', '2': 'ARD_SDA',
     '8': 'LIDAR_SCL', '7': 'LIDAR_SDA', '4': 'GND'})
 TR = 'Logic_LevelTranslator:SN74LVC1T45DBV'
 P.part(s, TR, 'U', 'SN74LVC1T45 XSHUT', 228.6, 101.6, {
@@ -132,16 +131,10 @@ P.part(s, 'Oscillator:ECS-2520MV-xxx-xx', 'Y', '24MHz 1V8', 60.96, 203.2, {
     '4': '+1V8', '1': '+1V8', '2': 'GND', '3': 'OSC_24M'})
 g = Grid(20.32, 254.0, cols=11)
 res(s, g, '33R', 'OSC_24M', 'LIDAR_APCLK')
-res(s, g, '0R', 'I3C_SCL', 'ARD_SCL')
-res(s, g, '0R', 'I3C_SDA', 'ARD_SDA')
-res(s, g, '0R DNP', 'I3C_SCL', 'ARD_A5', dnp=True)
-res(s, g, '0R DNP', 'I3C_SDA', 'ARD_A4', dnp=True)
 res(s, g, '10k', 'LIDAR_XSHUT_3V3', 'GND')
 res(s, g, '10k', 'LIDAR_XSHUT', 'GND')
 res(s, g, '10k', 'LIDAR_SYNC_3V3', 'GND')
 res(s, g, '10k', 'LIDAR_INT', '+1V8')
-res(s, g, '2.2k DNP', 'LIDAR_SDA', '+1V8', dnp=True)
-res(s, g, '2.2k DNP', 'LIDAR_SCL', '+1V8', dnp=True)
 for _ in range(5): cap(s, g, '100nF', '+3V3')                  # P3A9606 A, 3 x LVC1T45, osc
 g = Grid(20.32, 332.74, cols=11)
 for v in ('100nF',) * 4: cap(s, g, v, '+1V8')                  # cotes 1,8 V des translateurs
@@ -158,7 +151,7 @@ s.paper = 'A2'
 # ======================================================================
 s = P.sheet('IMU', 'imu.kicad_sch')
 s.text('IMU LSM6DSV16X sur le bus D14/D15 du kit (3,3 V), adresse 0x6A (CS = VDDIO, SA0 = GND).\n'
-       'Pull-ups deja presentes sur le kit (1,5k sur I2C1) : les 2,2k locales sont DNP.\n'
+       'Pull-ups deja presentes sur le kit (1,5k sur I2C1) : pas de pull-ups sur la carte fille.\n'
        'INT1 -> D5 (PE10), INT2 -> D9 (PE14). Sensor hub inutilise (SDx/SCx a la masse).\n'
        'Placer l IMU pres du lidar, sur la meme carte rigide, loin du LDO 3V3.', 20.32, 15.24)
 P.part(s, 'IMU_symbole:LSM6DSV16X', 'U', 'LSM6DSV16X', 76.2, 88.9, {
@@ -166,8 +159,6 @@ P.part(s, 'IMU_symbole:LSM6DSV16X', 'U', 'LSM6DSV16X', 76.2, 88.9, {
     '2': 'GND', '3': 'GND', '5': '+3V3', '8': '+3V3', '6': 'GND', '7': 'GND'}, nc=('10', '11'),
     fp='custom_fp:LGA14_LSM6_STM')
 g = Grid(20.32, 165.1, cols=14)
-res(s, g, '2.2k DNP', 'ARD_SDA', '+3V3', dnp=True)
-res(s, g, '2.2k DNP', 'ARD_SCL', '+3V3', dnp=True)
 cap(s, g, '100nF', '+3V3')
 cap(s, g, '100nF', '+3V3')
 cap(s, g, '10uF', '+3V3')
