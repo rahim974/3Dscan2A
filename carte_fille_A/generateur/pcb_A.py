@@ -28,18 +28,18 @@ HEADERS = {                                  # ref : (x broche 1, y, pas en x)
 }
 # Placement des composants principaux (x, y relatifs à l'origine, y compté depuis la rangée CN8 vers les D, angle)
 MAIN = {
-    'IC1': (-19.0, 16.0, 90),   # Wi-Fi au bord gauche, antenne vers l'extérieur (sens à vérifier sur l'empreinte)
-    'J5': (-24.0, 40.0, 90),
-    'U4': (14.0, 24.0, 0),      # lidar au centre
-    'H1': (34.0, 15.0, 0), 'H2': (34.0, 33.0, 0),   # module caméra (entraxe à mesurer)
-    'U5': (1.0, 19.0, 0), 'U6': (1.0, 25.0, 0), 'U7': (1.0, 31.0, 0), 'U8': (1.0, 37.0, 0),
-    'Y1': (14.0, 33.0, 0),
-    'U9': (24.0, 38.0, 0),      # IMU près du lidar
+    'IC1': (30.0, 26.0, 270),   # Wi-Fi au bord côté CN7, antenne vers l'extérieur (sens à vérifier sur l'empreinte)
+    'J5': (24.0, 15.0, 90),
+    'H1': (-20.0, 15.0, 0), 'H2': (-20.0, 33.0, 0),  # module caméra côté nappe (entraxe à mesurer)
+    'U4': (-4.0, 24.0, 0),      # lidar à côté de la caméra
+    'U5': (9.0, 19.0, 0), 'U6': (9.0, 25.0, 0), 'U7': (9.0, 31.0, 0), 'U8': (9.0, 37.0, 0),
+    'Y1': (-4.0, 33.0, 0),
+    'U9': (-4.0, 40.0, 0),      # IMU près du lidar
     'U1': (11.0, 7.5, 0), 'U2': (21.0, 6.0, 0), 'U3': (27.0, 6.0, 0),
 }
 # Point de départ de la recherche de place des autres composants, par feuille
-ANCHOR = {'Alimentation': (4.0, 6.0), 'Lidar': (7.0, 28.0), 'IMU': (24.0, 42.0),
-          'WiFi BLE': (-10.0, 30.0), 'Connecteurs Arduino': (-6.0, 4.0), 'Mecanique': (34.0, 24.0)}
+ANCHOR = {'Alimentation': (4.0, 6.0), 'Lidar': (2.0, 30.0), 'IMU': (2.0, 42.0),
+          'WiFi BLE': (20.0, 30.0), 'Connecteurs Arduino': (-6.0, 4.0), 'Mecanique': (-20.0, 24.0)}
 ANCHOR_REF = {'TP2': (-24.0, 4.0), 'TP3': (-20.0, 4.0), 'TP4': (-16.0, 4.0), 'TP5': (-12.0, 4.0), 'TP6': (-24.0, 31.0)}
 GAP = 0.25
 
@@ -154,12 +154,12 @@ def note(txt, x, y, layer=pcbnew.F_SilkS, size=1.0):
     t = pcbnew.PCB_TEXT(board); t.SetText(txt); t.SetLayer(layer)
     t.SetPosition(pcbnew.VECTOR2I(mm(OX + x), mm(OY + ROW - y)))
     t.SetTextSize(pcbnew.VECTOR2I(mm(size), mm(size))); t.SetTextThickness(mm(size * 0.15)); board.Add(t)
-note('CARTE FILLE A - scanner 3D', 6.0, 42.0)
+note('CARTE FILLE A - scanner 3D', 14.0, 41.5, size=0.8)
 for txt, x, y in (('CN8', 8.9, 2.2), ('CN7 A0-A5', 29.2, 2.2), ('CN12 D8-D15', 2.3, 46.0), ('CN11 D0-D7', 26.7, 46.0)):
     note(txt, x, y, size=0.8)
 note('Face F : vers la scene (lidar, camera). Barrettes sur B, vers le kit.', 6.0, 56.0, pcbnew.Cmts_User)
-note('Antenne Wi-Fi : bord gauche, zone sans cuivre a definir (datasheet ST67W611M1).', 6.0, 58.0, pcbnew.Cmts_User)
-note('Trous camera H1/H2 : entraxe a mesurer sur le module B-CAMS-IMX.', 6.0, 60.0, pcbnew.Cmts_User)
+note('Antenne Wi-Fi : bord droit (cote CN7), zone sans cuivre a definir (datasheet ST67W611M1).', 6.0, 58.0, pcbnew.Cmts_User)
+note('Trous camera H1/H2 (bord gauche, cote nappe) : entraxe a mesurer sur le module B-CAMS-IMX.', 6.0, 60.0, pcbnew.Cmts_User)
 
 board.Save(OUT)
 print('ok', OUT, len(parts), 'empreintes,', len(nets), 'nets')

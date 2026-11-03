@@ -2,7 +2,7 @@
 	(version 20260306)
 	(generator "eeschema")
 	(generator_version "10.0")
-	(uuid "708596af-9576-4958-b3f8-ef8d132f6106")
+	(uuid "8f87f5e6-3327-45dd-b099-b1eea8d5350a")
 	(paper "A3")
 	(title_block
 		(title "Mecanique")
@@ -117,7 +117,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "de029b4c-5f76-469d-a935-1ba54f74e89a")
+		(uuid "fce1a676-dd95-45a3-9398-1202809240fb")
 		(property "Reference" "H1"
 			(at 52.3 62.5 0)
 			(effects
@@ -156,7 +156,7 @@
 		)
 		(instances
 			(project "carte_fille_A"
-				(path "/934c48b0-8c89-4e59-a503-57b2b8386cf5/708596af-9576-4958-b3f8-ef8d132f6106"
+				(path "/7e093b58-161d-43ca-851b-9965f4c911ec/8f87f5e6-3327-45dd-b099-b1eea8d5350a"
 					(reference "H1")
 					(unit 1)
 				)
@@ -171,7 +171,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "c5542faa-28de-41fd-acf4-c27cf58bc0a9")
+		(uuid "df70e52d-0cdc-4dd4-a4de-e348d7e46042")
 		(property "Reference" "H2"
 			(at 77.7 62.5 0)
 			(effects
@@ -210,7 +210,7 @@
 		)
 		(instances
 			(project "carte_fille_A"
-				(path "/934c48b0-8c89-4e59-a503-57b2b8386cf5/708596af-9576-4958-b3f8-ef8d132f6106"
+				(path "/7e093b58-161d-43ca-851b-9965f4c911ec/8f87f5e6-3327-45dd-b099-b1eea8d5350a"
 					(reference "H2")
 					(unit 1)
 				)
@@ -226,7 +226,7 @@
 			)
 			(justify left top)
 		)
-		(uuid "50b5c9cd-f793-46d4-bf39-ed9192a3f79f")
+		(uuid "d55cf03b-c323-4e4f-92cc-53b38e0c01f6")
 	)
 	(embedded_fonts no)
 )

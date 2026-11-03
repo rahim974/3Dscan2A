@@ -66,8 +66,8 @@ Une carte 2 couches au format shield Arduino Uno R3, sans microcontrôleur, sans
 - **I3C sur D14/D15** : dans CubeMX, vérifier que PC1/PH9 (ou PF3/PB10) peuvent être en I3C. Sinon, revoir l'affectation.
 - **P3A9606** : j'ai créé son symbole sans le datasheet sous la main. Le brochage et le boîtier (X2SON-8 mis par défaut) sont **à vérifier**.
 - **Sens de la carte** : en vue de dessus, CN8/CN7 sont en bas et D15…D0 en haut, comme une Uno vue de dessus et comme sur la photo du dessous du kit. L'empreinte KiCad `Module:Arduino_UNO_R3` met l'alimentation en haut, ce qui donnerait une carte en miroir : je ne l'ai pas utilisée. À contrôler en posant un tirage papier 1:1 sur le kit.
-- **Antenne Wi-Fi** au bord gauche : sens de l'antenne sur l'empreinte et zone sans cuivre à définir.
-- **Trous de la caméra** (H1, H2) : entraxe à mesurer sur le module.
+- **Antenne Wi-Fi** au bord côté CN7, loin de la nappe caméra (avec J5 juste en dessous) : sens de l'antenne sur l'empreinte et zone sans cuivre à définir.
+- **Trous de la caméra** (H1, H2) au bord opposé, côté nappe, à côté du lidar : entraxe à mesurer sur le module.
 
 **Orientation retenue (d'après les photos du kit)**
 
