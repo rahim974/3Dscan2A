@@ -95,7 +95,7 @@ class Project:
         else: rot = {90: 0, 180: 90, 270: 180, 0: 270}[ang]
         self.pwr += 1
         return self._symbol(sh, dict(lib_id=lib_id, ref=f'#PWR{self.pwr:03d}', value=net, x=x, y=y,
-                                     fp=None, dnp=False, pins=[{'num': '1'}], props={}), rot, power=True)
+                                     fp=None, dnp=False, pins=[{'num': '1'}], props={}, body=ang), rot, power=True)
 
     def _symbol(self, sh, p, rot=0, power=False):
         x, y = p['x'], p['y']
@@ -105,8 +105,23 @@ class Project:
                ['uuid', q(p.get('uuid') or U())]]
         if power:
             sym.append(prop('Reference', p['ref'], x, y, 0, hide=True))
-            sym.append(prop('Value', p['value'], x, y + (3.8 if p['lib_id'] in DOWN_BODY else -3.8), 0,
-                            hide=p['lib_id'] == 'power:PWR_FLAG' and False))
+            # texte au-delà du corps du symbole, dans le sens du fil : il ne chevauche plus les valeurs voisines
+            body = p.get('body', 270 if p['lib_id'] in DOWN_BODY else 90)
+            dx, dy, ta, just = {0: (3.2, 0, 90, 'left'), 180: (-3.2, 0, 90, 'right'),
+                                90: (0, -3.4, 90, 'left'), 270: (0, 3.4, 90, 'right')}[body]
+            if rot in (90, 180):
+                just = {'left': 'right', 'right': 'left'}[just]    # KiCad inverse la justification avec la rotation
+            sym.append(prop('Value', p['value'], x + dx, y + dy, ta, just=just))
+        elif len(p['pins']) > 2:
+            # circuits intégrés : textes au-dessus du boîtier, au-delà des symboles d'alimentation
+            left = min(x + q_['x'] for q_ in p['pins'])
+            top = min(y - q_['y'] for q_ in p['pins'])
+            sym.append(prop('Reference', p['ref'], left, top - 15.0, 0, just='left'))
+            sym.append(prop('Value', p['value'], left, top - 13.0, 0, just='left'))
+        elif len({q_['y'] for q_ in p['pins']}) == 1:
+            # composant horizontal (LED) : textes en dessous
+            sym.append(prop('Reference', p['ref'], x - 2.0, y + 3.0, 0, just='left'))
+            sym.append(prop('Value', p['value'], x - 2.0, y + 5.0, 0, just='left'))
         else:
             sym.append(prop('Reference', p['ref'], x + 1.5, y - 1.0, 0, just='left'))
             sym.append(prop('Value', p['value'], x + 1.5, y + 1.0, 0, just='left'))

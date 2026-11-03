@@ -5,7 +5,7 @@
   "fp": "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical",
   "dnp": false,
   "sheet": "Connecteurs Arduino",
-  "path": "/11d9e033-68a9-4746-9693-afe06e137716/09a8750e-7ff5-455a-809a-523da9734dc1",
+  "path": "/fa99e1d7-f210-47f7-8656-8cfdd647d13d/3cb357eb-034a-43d2-9d04-2dbbacc178da",
   "sheetfile": "connecteurs.kicad_sch",
   "pins": {
    "2": "IOREF",
@@ -31,7 +31,7 @@
   "fp": "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical",
   "dnp": false,
   "sheet": "Connecteurs Arduino",
-  "path": "/11d9e033-68a9-4746-9693-afe06e137716/d290f9b6-f937-4b3a-b154-396639ee7427",
+  "path": "/fa99e1d7-f210-47f7-8656-8cfdd647d13d/2f3e6bed-46f0-4c99-8421-fc1c3ebab8a4",
   "sheetfile": "connecteurs.kicad_sch",
   "pins": {
    "5": "ARD_A4",
@@ -53,7 +53,7 @@
   "fp": "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical",
   "dnp": false,
   "sheet": "Connecteurs Arduino",
-  "path": "/11d9e033-68a9-4746-9693-afe06e137716/aec0c6e3-d067-45e3-963a-53e1e2ee83a9",
+  "path": "/fa99e1d7-f210-47f7-8656-8cfdd647d13d/44458ccd-19d5-4442-afe8-5706a0f571b3",
   "sheetfile": "connecteurs.kicad_sch",
   "pins": {
    "1": "ARD_D0_RX",
@@ -82,7 +82,7 @@
   "fp": "Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical",
   "dnp": false,
   "sheet": "Connecteurs Arduino",
-  "path": "/11d9e033-68a9-4746-9693-afe06e137716/d28bb8b2-20b9-444d-bdbe-d787b6e75443",
+  "path": "/fa99e1d7-f210-47f7-8656-8cfdd647d13d/5897e36f-cb51-4b2c-9e38-97cc535b5d2c",
   "sheetfile": "connecteurs.kicad_sch",
   "pins": {
    "1": "LIDAR_XSHUT_3V3",
@@ -115,7 +115,7 @@
   "fp": "TestPoint:TestPoint_Pad_D1.5mm",
   "dnp": false,
   "sheet": "Connecteurs Arduino",
-  "path": "/11d9e033-68a9-4746-9693-afe06e137716/9aeb84a0-fd1e-446d-b9c4-5df76cc8ad02",
+  "path": "/fa99e1d7-f210-47f7-8656-8cfdd647d13d/df9d23ac-f07a-4477-96a2-a17043d53350",
   "sheetfile": "connecteurs.kicad_sch",
   "pins": {
    "1": "IOREF"
@@ -131,7 +131,7 @@
   "fp": "Package_TO_SOT_SMD:TO-252-3_TabPin2",
   "dnp": false,
   "sheet": "Alimentation",
-  "path": "/6ac52a2a-a3d9-4ffb-ac0a-2a2c1f116ae1/e0449764-4ba3-467d-b025-994c5b58746b",
+  "path": "/a64c300f-542a-4c73-925c-4a8902fa96cc/cd7ec5d6-476e-40a1-bd37-7dc9167a53b8",
   "sheetfile": "alimentation.kicad_sch",
   "pins": {
    "1": "+5V",
@@ -151,7 +151,7 @@
   "fp": "Package_TO_SOT_SMD:SOT-23-5",
   "dnp": false,
   "sheet": "Alimentation",
-  "path": "/6ac52a2a-a3d9-4ffb-ac0a-2a2c1f116ae1/b9d25a6a-856c-4a98-9fbe-80cf77ea9be1",
+  "path": "/a64c300f-542a-4c73-925c-4a8902fa96cc/a9591076-2307-47f2-88b6-ae4b734516ce",
   "sheetfile": "alimentation.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -174,7 +174,7 @@
   "fp": "Package_TO_SOT_SMD:SOT-23-5",
   "dnp": false,
   "sheet": "Alimentation",
-  "path": "/6ac52a2a-a3d9-4ffb-ac0a-2a2c1f116ae1/91c9d873-ab94-48f4-98ab-dfa934f7231c",
+  "path": "/a64c300f-542a-4c73-925c-4a8902fa96cc/acb35a61-e2fa-4db3-9561-18abc3bfb46c",
   "sheetfile": "alimentation.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -197,7 +197,7 @@
   "fp": "Capacitor_SMD:C_0603_1608Metric",
   "dnp": false,
   "sheet": "Alimentation",
-  "path": "/6ac52a2a-a3d9-4ffb-ac0a-2a2c1f116ae1/fd10fa6e-7834-4924-8045-89add3f9a055",
+  "path": "/a64c300f-542a-4c73-925c-4a8902fa96cc/a0ccc40a-aa59-48fb-8990-29769a1e8bce",
   "sheetfile": "alimentation.kicad_sch",
   "pins": {
    "1": "+5V",
@@ -215,7 +215,7 @@
   "fp": "Capacitor_SMD:C_0805_2012Metric",
   "dnp": false,
   "sheet": "Alimentation",
-  "path": "/6ac52a2a-a3d9-4ffb-ac0a-2a2c1f116ae1/8ecbdaa1-e218-4fe0-817c-4e4463826bc8",
+  "path": "/a64c300f-542a-4c73-925c-4a8902fa96cc/46ec05c4-8bea-4996-b98a-928d1f84eb1e",
   "sheetfile": "alimentation.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -233,7 +233,7 @@
   "fp": "Capacitor_SMD:C_0805_2012Metric",
   "dnp": false,
   "sheet": "Alimentation",
-  "path": "/6ac52a2a-a3d9-4ffb-ac0a-2a2c1f116ae1/6fcc7a08-e563-4d45-930f-58d7aaf95af0",
+  "path": "/a64c300f-542a-4c73-925c-4a8902fa96cc/be9f2fb8-cc3a-45ac-a423-4ba68adf917d",
   "sheetfile": "alimentation.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -251,7 +251,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Alimentation",
-  "path": "/6ac52a2a-a3d9-4ffb-ac0a-2a2c1f116ae1/e253ca6d-7fce-4cf9-a5b9-25a435ba19a5",
+  "path": "/a64c300f-542a-4c73-925c-4a8902fa96cc/f55c49a8-25e5-4ce4-bb23-1232b87a51c3",
   "sheetfile": "alimentation.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -269,7 +269,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Alimentation",
-  "path": "/6ac52a2a-a3d9-4ffb-ac0a-2a2c1f116ae1/f9e847b5-5e5c-4fbf-a709-81b80d4cae82",
+  "path": "/a64c300f-542a-4c73-925c-4a8902fa96cc/98e1e3a5-26a8-48ad-8608-6b768672dc74",
   "sheetfile": "alimentation.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -287,7 +287,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Alimentation",
-  "path": "/6ac52a2a-a3d9-4ffb-ac0a-2a2c1f116ae1/8b3ad1f9-712c-4e63-b883-6fc61ae69bab",
+  "path": "/a64c300f-542a-4c73-925c-4a8902fa96cc/ce8f0f1f-d1aa-46d7-9e8f-6c5813587845",
   "sheetfile": "alimentation.kicad_sch",
   "pins": {
    "1": "+1V8",
@@ -305,7 +305,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Alimentation",
-  "path": "/6ac52a2a-a3d9-4ffb-ac0a-2a2c1f116ae1/de736029-155d-4572-8d22-eaa41ce610b6",
+  "path": "/a64c300f-542a-4c73-925c-4a8902fa96cc/6cb37c64-68ba-4a5d-aa71-568d2c308e45",
   "sheetfile": "alimentation.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -323,7 +323,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Alimentation",
-  "path": "/6ac52a2a-a3d9-4ffb-ac0a-2a2c1f116ae1/44796dbf-d929-4d95-9940-d615049f9314",
+  "path": "/a64c300f-542a-4c73-925c-4a8902fa96cc/568dc9bc-0642-483b-bb8a-b4fa53744667",
   "sheetfile": "alimentation.kicad_sch",
   "pins": {
    "1": "+1V2",
@@ -341,7 +341,7 @@
   "fp": "Resistor_SMD:R_0402_1005Metric",
   "dnp": false,
   "sheet": "Alimentation",
-  "path": "/6ac52a2a-a3d9-4ffb-ac0a-2a2c1f116ae1/e74b9638-e080-4235-be16-25d8bd06158d",
+  "path": "/a64c300f-542a-4c73-925c-4a8902fa96cc/52168b5c-c07d-44c9-8ad1-2e78b044b200",
   "sheetfile": "alimentation.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -359,7 +359,7 @@
   "fp": "LED_SMD:LED_0603_1608Metric",
   "dnp": false,
   "sheet": "Alimentation",
-  "path": "/6ac52a2a-a3d9-4ffb-ac0a-2a2c1f116ae1/44ad7105-dcb6-4b9f-a8ab-ee8ab4450284",
+  "path": "/a64c300f-542a-4c73-925c-4a8902fa96cc/a47ef235-0e92-43b9-a6da-62061083d810",
   "sheetfile": "alimentation.kicad_sch",
   "pins": {
    "2": "/Alimentation/LED_PWR_A",
@@ -377,7 +377,7 @@
   "fp": "TestPoint:TestPoint_Pad_D1.5mm",
   "dnp": false,
   "sheet": "Alimentation",
-  "path": "/6ac52a2a-a3d9-4ffb-ac0a-2a2c1f116ae1/f91877ef-1fb5-458a-9df8-c93878f94755",
+  "path": "/a64c300f-542a-4c73-925c-4a8902fa96cc/d5c29a24-8a76-4f43-b19c-1aeeb8436b26",
   "sheetfile": "alimentation.kicad_sch",
   "pins": {
    "1": "+5V"
@@ -393,7 +393,7 @@
   "fp": "TestPoint:TestPoint_Pad_D1.5mm",
   "dnp": false,
   "sheet": "Alimentation",
-  "path": "/6ac52a2a-a3d9-4ffb-ac0a-2a2c1f116ae1/a31dfdf3-a4bd-4c87-9e9e-607abd7d7cc1",
+  "path": "/a64c300f-542a-4c73-925c-4a8902fa96cc/1f615175-fe4e-4b37-a9e7-54f900d423f2",
   "sheetfile": "alimentation.kicad_sch",
   "pins": {
    "1": "+3V3"
@@ -409,7 +409,7 @@
   "fp": "TestPoint:TestPoint_Pad_D1.5mm",
   "dnp": false,
   "sheet": "Alimentation",
-  "path": "/6ac52a2a-a3d9-4ffb-ac0a-2a2c1f116ae1/b0a93b3c-fc09-4bec-be6e-5619f8edf6f6",
+  "path": "/a64c300f-542a-4c73-925c-4a8902fa96cc/0b495275-37e9-46d7-a891-117d7bbe5b1a",
   "sheetfile": "alimentation.kicad_sch",
   "pins": {
    "1": "+1V8"
@@ -425,7 +425,7 @@
   "fp": "TestPoint:TestPoint_Pad_D1.5mm",
   "dnp": false,
   "sheet": "Alimentation",
-  "path": "/6ac52a2a-a3d9-4ffb-ac0a-2a2c1f116ae1/e755f5c2-1e75-4842-a8ce-e3a73f39edf0",
+  "path": "/a64c300f-542a-4c73-925c-4a8902fa96cc/82cbc0cf-aa36-4d65-8488-6a131506d3fc",
   "sheetfile": "alimentation.kicad_sch",
   "pins": {
    "1": "+1V2"
@@ -441,7 +441,7 @@
   "fp": "TestPoint:TestPoint_Pad_D1.5mm",
   "dnp": false,
   "sheet": "Alimentation",
-  "path": "/6ac52a2a-a3d9-4ffb-ac0a-2a2c1f116ae1/a566ff14-c9e6-422c-83d7-e1229c988b07",
+  "path": "/a64c300f-542a-4c73-925c-4a8902fa96cc/e479aa01-c548-402e-872d-3cdcc804545e",
   "sheetfile": "alimentation.kicad_sch",
   "pins": {
    "1": "GND"
@@ -457,7 +457,7 @@
   "fp": "custom_fp:VL53L9CX",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/4a8980d6-2886-47c1-8349-94afe604dd42",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/bbab9add-2e56-4437-9dae-7bfebb1cdfb8",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "A11": "/Lidar/LIDAR_SCL",
@@ -549,7 +549,7 @@
   "fp": "Package_SON:X2SON-8_1.4x1mm_P0.35mm",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/79a0925b-9155-4ce7-b7f0-93b6a953e499",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/47321bfe-83a5-4d2f-a918-ef4ca39ebb32",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "3": "+3V3",
@@ -579,7 +579,7 @@
   "fp": "Package_TO_SOT_SMD:SOT-23-6",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/3fbe6d5e-9125-4726-99ca-53f8f7e9654d",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/230e93a0-72da-496c-b108-aaad90f98b52",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -605,7 +605,7 @@
   "fp": "Package_TO_SOT_SMD:SOT-23-6",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/3ead07e6-ce54-4095-9924-267d5b66e3a7",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/9cbbf5ab-862a-479a-b246-3b0fce7ebff2",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -631,7 +631,7 @@
   "fp": "Package_TO_SOT_SMD:SOT-23-6",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/cb8a9b74-24dd-4c60-94cc-7e51ca2af6b2",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/ce2c131d-05e6-4b5f-a666-5ecd81e9a9b5",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+1V8",
@@ -657,7 +657,7 @@
   "fp": "Oscillator:Oscillator_SMD_ECS_2520MV-xxx-xx-4Pin_2.5x2.0mm",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/0dbdef80-b085-4611-9029-06762601c609",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/fb94e670-749e-470d-880c-95fc5ef39eec",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "4": "+1V8",
@@ -679,7 +679,7 @@
   "fp": "Resistor_SMD:R_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/bcd506c5-1bbc-45ac-aaad-45ec2b59377f",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/63998413-3061-4c56-af93-f15d2c8a6da2",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "/Lidar/OSC_24M",
@@ -697,7 +697,7 @@
   "fp": "Resistor_SMD:R_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/fb84ad47-c3d8-4460-a128-ab2d4a1a5e1f",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/d0cade8f-a1f2-4d1d-b237-cd42729e89ee",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "/Lidar/I3C_SCL",
@@ -715,7 +715,7 @@
   "fp": "Resistor_SMD:R_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/c4650249-b9c2-4ce8-81a6-8f65c15d6aa5",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/19ace3a3-5893-472f-83af-ab1ee98a9721",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "/Lidar/I3C_SDA",
@@ -733,7 +733,7 @@
   "fp": "Resistor_SMD:R_0402_1005Metric",
   "dnp": true,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/a7042665-282a-49eb-8324-9157a3c86e3c",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/6f7f1219-305b-4829-8d70-2e69a20a4f83",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "/Lidar/I3C_SCL",
@@ -751,7 +751,7 @@
   "fp": "Resistor_SMD:R_0402_1005Metric",
   "dnp": true,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/b00d2403-c3a0-4e4a-b512-e01344d5c86e",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/7bb2b00d-e55b-4de1-9d63-6cea158cb7c9",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "/Lidar/I3C_SDA",
@@ -769,7 +769,7 @@
   "fp": "Resistor_SMD:R_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/3caaa0f3-a549-4337-94a8-d6afe033f9bc",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/9109e08f-d203-446e-aa3c-8910bce35b68",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "LIDAR_XSHUT_3V3",
@@ -787,7 +787,7 @@
   "fp": "Resistor_SMD:R_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/e0fe7f8f-c97e-4b16-a521-6046b1424731",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/d1de4492-319a-4ebe-b5e5-ed7e49f9bbc2",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "/Lidar/LIDAR_XSHUT",
@@ -805,7 +805,7 @@
   "fp": "Resistor_SMD:R_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/f56105bf-e647-4773-be85-4c7c7b235e86",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/250072ca-572c-4ad7-a47c-89ee385d4a05",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "LIDAR_SYNC_3V3",
@@ -823,7 +823,7 @@
   "fp": "Resistor_SMD:R_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/ab88caac-0618-4a95-a0df-109f64b7fec4",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/b3c9008a-c5ce-4466-bef5-07159cc30066",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "/Lidar/LIDAR_INT",
@@ -841,7 +841,7 @@
   "fp": "Resistor_SMD:R_0402_1005Metric",
   "dnp": true,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/4dcbfbdb-cdc0-4222-90cb-541b6affbafd",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/207e18b6-7e72-4439-be1e-9ab0828b88e9",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "/Lidar/LIDAR_SDA",
@@ -859,7 +859,7 @@
   "fp": "Resistor_SMD:R_0402_1005Metric",
   "dnp": true,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/2c95aa80-aba4-49c5-8f65-c0d4c9d5a31c",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/a312ccc8-02a7-4068-bd81-55639b83db44",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "/Lidar/LIDAR_SCL",
@@ -877,7 +877,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/d7cd15f7-387f-4e8d-8cc6-21a7c4f457d9",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/bbfa8d48-d2c5-40e0-9bc8-d7676b31ad8b",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -895,7 +895,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/feef00c6-de8e-4719-b141-5a0310096f3c",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/3213c1f2-efd0-4b1d-ac98-4746a9875f01",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -913,7 +913,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/6b1ac4f0-965d-4acb-a033-3fa0fe7dda53",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/d81e122a-9b4e-4b5c-9162-5e5f936be85c",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -931,7 +931,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/8aaecd58-767f-4d64-ab9a-5ea396b416c6",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/b52f9e64-7d77-4243-8314-6c1973d60e26",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -949,7 +949,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/01cb9f2a-9a05-4f69-85d8-ac26c109c18f",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/c8fc508f-c5b9-40f7-88e3-e484a3fa4136",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -967,7 +967,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/976db4aa-7acb-4e08-819f-e81d93e04dab",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/99e26dd0-ed4b-4796-907e-90d0c2bd92a5",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+1V8",
@@ -985,7 +985,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/f08e5aa1-cd42-44cb-8116-74c865d114c0",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/787c7a21-063f-40e8-aa52-4804c9696396",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+1V8",
@@ -1003,7 +1003,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/63f5cd34-92ee-4a56-ac55-95404dd7e40f",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/734b7e40-4168-4eb5-8e58-54daa24fd1a0",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+1V8",
@@ -1021,7 +1021,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/f0a529d4-8054-4fa1-8ca8-39a1101348b6",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/aede7acd-60f5-4691-aa88-c754b9d077f6",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+1V8",
@@ -1039,7 +1039,7 @@
   "fp": "Capacitor_SMD:C_0805_2012Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/9f6977e6-c67a-41b1-8a51-686569f4bdb3",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/ba7596e6-759f-4985-828b-b29d840fd358",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -1057,7 +1057,7 @@
   "fp": "Capacitor_SMD:C_0805_2012Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/31891ec4-1bbb-4405-b6fb-e23ec907db51",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/e5e40129-85de-4ab6-9dd8-fdc143a774a0",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -1075,7 +1075,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/a51bbf9b-f378-4085-b075-316b572e1784",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/5c20be4a-25f9-46b0-9b07-ebd888c3eb29",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -1093,7 +1093,7 @@
   "fp": "Capacitor_SMD:C_0603_1608Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/5004c692-1538-4466-b1b4-3c3fca69fe22",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/13aac130-0e54-4544-8d5e-cec787e00159",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -1111,7 +1111,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/480ce62e-d96b-4488-bbbf-7a24597630f4",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/b6427864-c558-44ac-b5f8-89fb301728b0",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -1129,7 +1129,7 @@
   "fp": "Capacitor_SMD:C_0603_1608Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/c1add0df-7823-43d0-9592-ead0c4ac2ecd",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/1494724e-c684-4ff6-91a9-b32222280e23",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -1147,7 +1147,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/b78b0814-c12b-4a7c-ab5e-b03358e654d9",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/67b6de5c-d96f-455c-a30e-934d18231c9d",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -1165,7 +1165,7 @@
   "fp": "Capacitor_SMD:C_0603_1608Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/11dc6248-c514-45a5-ac17-5207305c0fa7",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/d68f2dc9-519e-455c-a275-ea85256e268b",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+1V2",
@@ -1183,7 +1183,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/263ac660-b6a0-46b9-acac-cc2954cf1b54",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/25f0c678-f4eb-4553-b128-e120181230fc",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+1V2",
@@ -1201,7 +1201,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/3b985ef1-150c-4358-a3d4-e4742e8e9870",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/5ac5329a-c3c0-4891-a0dd-8a86750ae786",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+1V8",
@@ -1219,7 +1219,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "Lidar",
-  "path": "/8ebcd0df-4034-4311-8e5e-34013c336ff1/77072443-79b9-4634-844e-8f244875e3e6",
+  "path": "/09c1cd38-c486-4fbf-ab89-5ad4a64b5c45/d1c14705-0566-428c-b06f-b737d8e7cba3",
   "sheetfile": "lidar.kicad_sch",
   "pins": {
    "1": "+1V8",
@@ -1237,7 +1237,7 @@
   "fp": "custom_fp:LGA14_LSM6_STM",
   "dnp": false,
   "sheet": "IMU",
-  "path": "/18113c2d-0e0c-4e67-80c5-bdc34c5e396a/bb9261d5-1a3c-47b1-b468-40dd95b9e0d4",
+  "path": "/d7112b21-42ec-49fb-8413-5ca86164a440/36d25720-4380-4d89-8ac5-db2b7d7b725f",
   "sheetfile": "imu.kicad_sch",
   "pins": {
    "14": "ARD_SDA",
@@ -1277,7 +1277,7 @@
   "fp": "Resistor_SMD:R_0402_1005Metric",
   "dnp": true,
   "sheet": "IMU",
-  "path": "/18113c2d-0e0c-4e67-80c5-bdc34c5e396a/8dcdbb0f-65b3-409c-999e-adaa33d1dcbe",
+  "path": "/d7112b21-42ec-49fb-8413-5ca86164a440/d5d98c19-7d75-40cd-9c45-46b4494f16ee",
   "sheetfile": "imu.kicad_sch",
   "pins": {
    "1": "ARD_SDA",
@@ -1295,7 +1295,7 @@
   "fp": "Resistor_SMD:R_0402_1005Metric",
   "dnp": true,
   "sheet": "IMU",
-  "path": "/18113c2d-0e0c-4e67-80c5-bdc34c5e396a/b32208b1-381d-4667-82e4-dec9233117c4",
+  "path": "/d7112b21-42ec-49fb-8413-5ca86164a440/9d46d4b8-4a6a-4ca1-9037-138cb900b0f9",
   "sheetfile": "imu.kicad_sch",
   "pins": {
    "1": "ARD_SCL",
@@ -1313,7 +1313,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "IMU",
-  "path": "/18113c2d-0e0c-4e67-80c5-bdc34c5e396a/6ef2a0ec-7e46-4258-b1fc-b0315f5f8dc2",
+  "path": "/d7112b21-42ec-49fb-8413-5ca86164a440/a242a705-9752-4125-ab21-b74710425c84",
   "sheetfile": "imu.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -1331,7 +1331,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "IMU",
-  "path": "/18113c2d-0e0c-4e67-80c5-bdc34c5e396a/e3bb2200-8a5a-482c-9d68-555c7d0bcd78",
+  "path": "/d7112b21-42ec-49fb-8413-5ca86164a440/f3ac95e1-470d-48a1-9053-5923659b26e1",
   "sheetfile": "imu.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -1349,7 +1349,7 @@
   "fp": "Capacitor_SMD:C_0603_1608Metric",
   "dnp": false,
   "sheet": "IMU",
-  "path": "/18113c2d-0e0c-4e67-80c5-bdc34c5e396a/1bfb4715-4d0a-48d3-a521-47537b47d7bc",
+  "path": "/d7112b21-42ec-49fb-8413-5ca86164a440/504017a9-5cb3-4d01-88e3-248687252cfe",
   "sheetfile": "imu.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -1367,7 +1367,7 @@
   "fp": "custom_fp:ST67W611M1A6B",
   "dnp": false,
   "sheet": "WiFi BLE",
-  "path": "/2ffaa9c5-45ce-4e55-97fd-491702baa6eb/ddb38e4f-6957-4269-ba7b-1323b4154875",
+  "path": "/7d1fc102-f15b-4cf4-ae03-07c7981fcdf9/1c453b0a-0e63-4e44-9cbf-5fdaa7a4d10a",
   "sheetfile": "wifi.kicad_sch",
   "pins": {
    "3": "/WiFi BLE/WIFI_BOOT",
@@ -1439,7 +1439,7 @@
   "fp": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
   "dnp": false,
   "sheet": "WiFi BLE",
-  "path": "/2ffaa9c5-45ce-4e55-97fd-491702baa6eb/ca2d5ac2-f926-4fef-8c98-f3456c69e00b",
+  "path": "/7d1fc102-f15b-4cf4-ae03-07c7981fcdf9/3fab8cbb-005f-427e-adf8-e80c810d124c",
   "sheetfile": "wifi.kicad_sch",
   "pins": {
    "1": "GND",
@@ -1461,7 +1461,7 @@
   "fp": "Resistor_SMD:R_0402_1005Metric",
   "dnp": false,
   "sheet": "WiFi BLE",
-  "path": "/2ffaa9c5-45ce-4e55-97fd-491702baa6eb/f6929d81-310a-48bf-bbe6-e6cbac99cc9e",
+  "path": "/7d1fc102-f15b-4cf4-ae03-07c7981fcdf9/13765dfc-69ec-4bd5-b776-8f5e8164e28d",
   "sheetfile": "wifi.kicad_sch",
   "pins": {
    "1": "WIFI_EN",
@@ -1479,7 +1479,7 @@
   "fp": "Resistor_SMD:R_0402_1005Metric",
   "dnp": false,
   "sheet": "WiFi BLE",
-  "path": "/2ffaa9c5-45ce-4e55-97fd-491702baa6eb/a1551226-0158-4426-aea6-70b7884b1d5f",
+  "path": "/7d1fc102-f15b-4cf4-ae03-07c7981fcdf9/0832b9fa-6e86-46bd-9053-521e2a2c234e",
   "sheetfile": "wifi.kicad_sch",
   "pins": {
    "1": "/WiFi BLE/WIFI_BOOT",
@@ -1497,7 +1497,7 @@
   "fp": "Resistor_SMD:R_0402_1005Metric",
   "dnp": false,
   "sheet": "WiFi BLE",
-  "path": "/2ffaa9c5-45ce-4e55-97fd-491702baa6eb/36d2306d-f412-4064-bfc1-e410437b03e0",
+  "path": "/7d1fc102-f15b-4cf4-ae03-07c7981fcdf9/8f17a6a3-8875-4d9e-9b7d-437a98759483",
   "sheetfile": "wifi.kicad_sch",
   "pins": {
    "1": "/WiFi BLE/WIFI_UART_TX",
@@ -1515,7 +1515,7 @@
   "fp": "Resistor_SMD:R_0402_1005Metric",
   "dnp": false,
   "sheet": "WiFi BLE",
-  "path": "/2ffaa9c5-45ce-4e55-97fd-491702baa6eb/be1a8921-1b8e-4c0d-a673-4d1500cce1e1",
+  "path": "/7d1fc102-f15b-4cf4-ae03-07c7981fcdf9/88176937-0528-4ed0-8eda-224ff117c058",
   "sheetfile": "wifi.kicad_sch",
   "pins": {
    "1": "/WiFi BLE/WIFI_UART_RX",
@@ -1533,7 +1533,7 @@
   "fp": "Capacitor_SMD:C_0603_1608Metric",
   "dnp": false,
   "sheet": "WiFi BLE",
-  "path": "/2ffaa9c5-45ce-4e55-97fd-491702baa6eb/c49f380c-3747-4be5-a79b-1022fa7f93b3",
+  "path": "/7d1fc102-f15b-4cf4-ae03-07c7981fcdf9/ca2da505-eb33-4457-85ab-01b042f75421",
   "sheetfile": "wifi.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -1551,7 +1551,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "WiFi BLE",
-  "path": "/2ffaa9c5-45ce-4e55-97fd-491702baa6eb/b1fc9545-5b06-4e07-ab23-b8265c95027e",
+  "path": "/7d1fc102-f15b-4cf4-ae03-07c7981fcdf9/ebf221bf-cb4d-4bd2-bf98-6cc67fb24243",
   "sheetfile": "wifi.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -1569,7 +1569,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "WiFi BLE",
-  "path": "/2ffaa9c5-45ce-4e55-97fd-491702baa6eb/140b45c2-38f7-4daf-aa4f-123c0fe84a27",
+  "path": "/7d1fc102-f15b-4cf4-ae03-07c7981fcdf9/10e31361-9791-4391-9229-86dd3019f980",
   "sheetfile": "wifi.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -1587,7 +1587,7 @@
   "fp": "Capacitor_SMD:C_0402_1005Metric",
   "dnp": false,
   "sheet": "WiFi BLE",
-  "path": "/2ffaa9c5-45ce-4e55-97fd-491702baa6eb/39822a42-39a4-439f-ac0b-7b24fcf8262d",
+  "path": "/7d1fc102-f15b-4cf4-ae03-07c7981fcdf9/abc95f74-9f12-4316-879a-8d70ff127967",
   "sheetfile": "wifi.kicad_sch",
   "pins": {
    "1": "+3V3",
@@ -1605,7 +1605,7 @@
   "fp": "MountingHole:MountingHole_2.2mm_M2",
   "dnp": false,
   "sheet": "Mecanique",
-  "path": "/ff10e5eb-038b-4721-80f0-84f33dab6c64/27e0fc74-aa77-42c2-ad26-8083a13eb633",
+  "path": "/cb527290-6002-4da8-9733-91a4bd696a22/1d1952e7-7df2-43e8-8b1f-3592f521c931",
   "sheetfile": "mecanique.kicad_sch",
   "pins": {},
   "pinnames": {},
@@ -1617,7 +1617,7 @@
   "fp": "MountingHole:MountingHole_2.2mm_M2",
   "dnp": false,
   "sheet": "Mecanique",
-  "path": "/ff10e5eb-038b-4721-80f0-84f33dab6c64/b1e7571a-2141-4ace-b0b8-5b1fd8674227",
+  "path": "/cb527290-6002-4da8-9733-91a4bd696a22/40ffb10c-d32f-4e32-aec0-08597ace588a",
   "sheetfile": "mecanique.kicad_sch",
   "pins": {},
   "pinnames": {},

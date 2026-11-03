@@ -52,7 +52,7 @@ s.text('BARRETTES ARDUINO UNO R3 (males) - la carte s enfiche SOUS le STM32N6570
        '  D14/D15 : I2C1 PC1/PH9 a priori (pull-ups 1,5k au VDDIO sur le kit), A4 PF3, A5 PB10\n'
        'I3C sur D14/D15 : verifie dans CubeMX le 03/11/2026. Option A4/A5 conservee (resistances 0R DNP, feuille Lidar).\n'
        'EXTI : PD0 (ligne 0), PH5 (5), PE10 (10), PE14 (14). IMU INT2 sur D9 (PE14) et non D6 (PE13) :\n'
-       '  la ligne EXTI 13 est prise par le bouton USER1 du kit (PC13). I3C sur D14/D15 verifie dans CubeMX.\n'
+       '  la ligne EXTI 13 est prise par le bouton USER1 du kit (PC13).\n'
        'A VERIFIER : timer sur PE9 (SYNC_IN), autres peripheriques du kit sur le bus I2C1 (PH9/PC1).\n'
        'Alimentation : seul le 5 V du kit est utilise (LDO 3,3 V local). Le 3V3 du kit et VIN ne sont pas utilises.',
        20.32, 15.24)
@@ -97,7 +97,7 @@ cap(s, g, '1uF', '+1V8')
 cap(s, g, '1uF', '+3V3')
 cap(s, g, '1uF', '+1V2')
 res(s, g, '1k', '+3V3', 'LED_PWR_A')
-x, y = g(); P.part(s, LED, 'D', 'LED 3V3 verte', x, y, {'2': 'LED_PWR_A', '1': 'GND'}, fp='LED_SMD:LED_0603_1608Metric')
+g(); x, y = g(); P.part(s, LED, 'D', 'LED 3V3 verte', x, y, {'2': 'LED_PWR_A', '1': 'GND'}, fp='LED_SMD:LED_0603_1608Metric')
 g = Grid(20.32, 220.98)
 for net in ('+5V', '+3V3', '+1V8', '+1V2', 'GND'): testpoint(s, g, net)
 
@@ -118,19 +118,19 @@ P.part(s, 'Lidar:VL53L9CX_large', 'U', 'VL53L9CX', 101.6, 114.3, {
     'D12': 'LIDAR_SYNC', 'A10': 'LIDAR_INT', 're:VSS.*': 'GND',
     'B1': '+3V3', 'D1': '+3V3', 'E6': '+3V3', 'E7': '+3V3', 'C12': '+1V2', 'E8': '+1V8'},
     nc=('A5', 'A6', 'A8', 'A9', 'E3', 'E12'), fp='custom_fp:VL53L9CX')
-P.part(s, 'Custom:P3A9606', 'U', 'P3A9606', 228.6, 63.5, {
+P.part(s, 'Custom:P3A9606', 'U', 'P3A9606', 228.6, 50.8, {
     '3': '+3V3', '6': '+1V8', '5': '+3V3', '1': 'I3C_SCL', '2': 'I3C_SDA',
     '8': 'LIDAR_SCL', '7': 'LIDAR_SDA', '4': 'GND'})
 TR = 'Logic_LevelTranslator:SN74LVC1T45DBV'
-P.part(s, TR, 'U', 'SN74LVC1T45 XSHUT', 228.6, 114.3, {
+P.part(s, TR, 'U', 'SN74LVC1T45 XSHUT', 228.6, 101.6, {
     '1': '+3V3', '6': '+1V8', '5': '+3V3', '3': 'LIDAR_XSHUT_3V3', '4': 'LIDAR_XSHUT', '2': 'GND'})
 P.part(s, TR, 'U', 'SN74LVC1T45 SYNC', 228.6, 152.4, {
     '1': '+3V3', '6': '+1V8', '5': '+3V3', '3': 'LIDAR_SYNC_3V3', '4': 'LIDAR_SYNC', '2': 'GND'})
-P.part(s, TR, 'U', 'SN74LVC1T45 INTR', 228.6, 190.5, {
+P.part(s, TR, 'U', 'SN74LVC1T45 INTR', 228.6, 203.2, {
     '1': '+1V8', '6': '+3V3', '5': '+1V8', '3': 'LIDAR_INT', '4': 'LIDAR_INT_3V3', '2': 'GND'})
-P.part(s, 'Oscillator:ECS-2520MV-xxx-xx', 'Y', '24MHz 1V8', 25.4, 190.5, {
+P.part(s, 'Oscillator:ECS-2520MV-xxx-xx', 'Y', '24MHz 1V8', 60.96, 203.2, {
     '4': '+1V8', '1': '+1V8', '2': 'GND', '3': 'OSC_24M'})
-g = Grid(20.32, 236.22, cols=16)
+g = Grid(20.32, 254.0, cols=11)
 res(s, g, '33R', 'OSC_24M', 'LIDAR_APCLK')
 res(s, g, '0R', 'I3C_SCL', 'ARD_SCL')
 res(s, g, '0R', 'I3C_SDA', 'ARD_SDA')
@@ -143,9 +143,9 @@ res(s, g, '10k', 'LIDAR_INT', '+1V8')
 res(s, g, '2.2k DNP', 'LIDAR_SDA', '+1V8', dnp=True)
 res(s, g, '2.2k DNP', 'LIDAR_SCL', '+1V8', dnp=True)
 for _ in range(5): cap(s, g, '100nF', '+3V3')                  # P3A9606 A, 3 x LVC1T45, osc
-g = Grid(20.32, 284.48, cols=16)
+g = Grid(20.32, 332.74, cols=11)
 for v in ('100nF',) * 4: cap(s, g, v, '+1V8')                  # cotes 1,8 V des translateurs
-g = Grid(190.5, 236.22, cols=10)
+g = Grid(20.32, 381.0, cols=13)
 for v in ('22uF', '22uF', '100nF'): cap(s, g, v, '+3V3')       # VBAT_LDD
 for v in ('10uF', '100nF'): cap(s, g, v, '+3V3')               # VBAT_RX
 for v in ('4.7uF', '100nF'): cap(s, g, v, '+3V3')              # AVDD
