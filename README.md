@@ -18,6 +18,12 @@ Le prototype C (carte autonome STM32H7S3, LQFP-144) viendra ensuite et réutilis
                                                  PC : reconstruction 3D
 ```
 
+**Répartition du traitement** (décidée le 03/11/2026) :
+
+- **Sur le kit** : l'IA tourne sur le NPU et détecte ou segmente les objets sur l'image caméra. Elle fusionne le résultat avec la profondeur du lidar et l'orientation de l'IMU. L'**écran du kit** affiche en direct l'image, la profondeur et les objets détectés : c'est le retour visuel pendant le scan.
+- **Sur le PC** : il reçoit les données déjà traitées par **Wi-Fi** (profondeur + étiquettes + orientation, horodatées) et assemble le **modèle 3D complet de la pièce** (recalage des nuages de points, maillage). Le N6 n'a ni la mémoire ni la puissance pour cette étape.
+- L'USB du kit reste une solution de repli filaire pour envoyer les mêmes données.
+
 ---
 
 ## 1. Le PCB KiCad à concevoir
