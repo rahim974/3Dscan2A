@@ -8,8 +8,8 @@ Composants du schéma `carte_fille_A.kicad_sch`, état du 03/11/2026 (commit 668
 |---|---|---|---|
 | J1 | Barrette mâle 1×8 (CN8) | 2,54 mm, traversant | Prend le **5 V** et la masse du kit. Donne aussi IOREF, la tension des E/S du kit. |
 | J2 | Barrette mâle 1×6 (CN7) | 2,54 mm | A4/A5 : **bus I3C de repli** si D14/D15 ne conviennent pas. A0–A3 non utilisées. |
-| J3 | Barrette mâle 1×8 (CN11) | 2,54 mm | D0–D7 : UART du Wi-Fi, SPI_RDY, SYNC_IN et INTR du lidar, INT1/INT2 de l'IMU, CHIP_EN du Wi-Fi |
-| J4 | Barrette mâle 1×10 (CN12) | 2,54 mm | D8 = XSHUT du lidar, D10–D13 = **SPI5 vers le Wi-Fi**, D14/D15 = **bus I3C/I²C** du lidar et de l'IMU, GND |
+| J3 | Barrette mâle 1×8 (CN11) | 2,54 mm | D0–D7 : UART du Wi-Fi, SPI_RDY, SYNC_IN et INTR du lidar, INT1 de l'IMU, CHIP_EN du Wi-Fi |
+| J4 | Barrette mâle 1×10 (CN12) | 2,54 mm | D8 = XSHUT du lidar, D9 = INT2 de l'IMU, D10–D13 = **SPI5 vers le Wi-Fi**, D14/D15 = **bus I3C/I²C** du lidar et de l'IMU, GND |
 | TP1 | Point de test | Pastille Ø 1,5 mm | Mesurer IOREF pour vérifier que le kit est bien en 3,3 V |
 
 ## Page 3 : Alimentation

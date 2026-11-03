@@ -50,8 +50,10 @@ s.text('BARRETTES ARDUINO UNO R3 (males) - la carte s enfiche SOUS le STM32N6570
        '  D0 PF6, D1 PD5, D2 PD0, D3 PE9, D4 PH5, D5 PE10, D6 PE13, D7 PD6\n'
        '  D8 PE7, D9 PE14, D10 PA3 (SPI5_NSS), D11 PG2 (SPI5_MOSI), D12 PH8 (SPI5_MISO), D13 PE15 (SPI5_SCK)\n'
        '  D14/D15 : I2C1 PC1/PH9 a priori (pull-ups 1,5k au VDDIO sur le kit), A4 PF3, A5 PB10\n'
-       'A VERIFIER (CubeMX) : I3C disponible sur D14/D15 ? sinon option A4/A5 (resistances 0R DNP, feuille Lidar).\n'
-       'A VERIFIER : timer sur PE9 (SYNC_IN), EXTI distinctes (PD0, PH5, PE10, PE13), conflits avec les fonctions du kit.\n'
+       'I3C sur D14/D15 : verifie dans CubeMX le 03/11/2026. Option A4/A5 conservee (resistances 0R DNP, feuille Lidar).\n'
+       'EXTI : PD0 (ligne 0), PH5 (5), PE10 (10), PE14 (14). IMU INT2 sur D9 (PE14) et non D6 (PE13) :\n'
+       '  la ligne EXTI 13 est prise par le bouton USER1 du kit (PC13). I3C sur D14/D15 verifie dans CubeMX.\n'
+       'A VERIFIER : timer sur PE9 (SYNC_IN), autres peripheriques du kit sur le bus I2C1 (PH9/PC1).\n'
        'Alimentation : seul le 5 V du kit est utilise (LDO 3,3 V local). Le 3V3 du kit et VIN ne sont pas utilises.',
        20.32, 15.24)
 P.part(s, 'Connector:Conn_01x08_Pin', 'J', 'CN8 alim', 50.8, 101.6, {
@@ -60,10 +62,10 @@ P.part(s, 'Connector:Conn_01x06_Pin', 'J', 'CN7 A0-A5', 50.8, 160.02, {
     '5': 'ARD_A4', '6': 'ARD_A5'}, nc=('1', '2', '3', '4'), fp=HDR.format(6))
 P.part(s, 'Connector:Conn_01x08_Pin', 'J', 'CN11 D0-D7', 152.4, 101.6, {
     '1': 'ARD_D0_RX', '2': 'ARD_D1_TX', '3': 'WIFI_RDY', '4': 'LIDAR_SYNC_3V3', '5': 'LIDAR_INT_3V3',
-    '6': 'IMU_INT1', '7': 'IMU_INT2', '8': 'WIFI_EN'}, fp=HDR.format(8))
+    '6': 'IMU_INT1', '8': 'WIFI_EN'}, nc=('7',), fp=HDR.format(8))
 P.part(s, 'Connector:Conn_01x10_Pin', 'J', 'CN12 D8-D15', 152.4, 165.1, {
-    '1': 'LIDAR_XSHUT_3V3', '3': 'WIFI_CS', '4': 'WIFI_MOSI', '5': 'WIFI_MISO', '6': 'WIFI_SCK',
-    '7': 'GND', '9': 'ARD_SDA', '10': 'ARD_SCL'}, nc=('2', '8'), fp=HDR.format(10))
+    '1': 'LIDAR_XSHUT_3V3', '2': 'IMU_INT2', '3': 'WIFI_CS', '4': 'WIFI_MOSI', '5': 'WIFI_MISO', '6': 'WIFI_SCK',
+    '7': 'GND', '9': 'ARD_SDA', '10': 'ARD_SCL'}, nc=('8',), fp=HDR.format(10))
 g = Grid(228.6, 101.6, cols=6)
 testpoint(s, g, 'IOREF')
 for net, xx in (('+5V', 254), ('GND', 274.32)):
@@ -157,7 +159,7 @@ s.paper = 'A2'
 s = P.sheet('IMU', 'imu.kicad_sch')
 s.text('IMU LSM6DSV16X sur le bus D14/D15 du kit (3,3 V), adresse 0x6A (CS = VDDIO, SA0 = GND).\n'
        'Pull-ups deja presentes sur le kit (1,5k sur I2C1) : les 2,2k locales sont DNP.\n'
-       'INT1 -> D5 (PE10), INT2 -> D6 (PE13). Sensor hub inutilise (SDx/SCx a la masse).\n'
+       'INT1 -> D5 (PE10), INT2 -> D9 (PE14). Sensor hub inutilise (SDx/SCx a la masse).\n'
        'Placer l IMU pres du lidar, sur la meme carte rigide, loin du LDO 3V3.', 20.32, 15.24)
 P.part(s, 'IMU_symbole:LSM6DSV16X', 'U', 'LSM6DSV16X', 76.2, 88.9, {
     '14': 'ARD_SDA', '13': 'ARD_SCL', '12': '+3V3', '1': 'GND', '4': 'IMU_INT1', '9': 'IMU_INT2',

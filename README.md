@@ -53,17 +53,20 @@ Une carte 2 couches au format shield Arduino Uno R3, sans microcontrôleur, sans
 | D2 | PD0 | Wi-Fi SPI_RDY (EXTI) |
 | D3 | PE9 | SYNC_IN du lidar (sortie timer, TIM1_CH1 à confirmer) |
 | D4 | PH5 | INTR du lidar (EXTI) |
-| D5 / D6 | PE10 / PE13 | INT1 / INT2 de l'IMU (EXTI) |
+| D5 | PE10 | INT1 de l'IMU (EXTI 10) |
 | D7 | PD6 | CHIP_EN du Wi-Fi |
 | D8 | PE7 | XSHUT du lidar |
+| D9 | PE14 | INT2 de l'IMU (EXTI 14). Pas D6/PE13 : l'EXTI 13 sert au bouton USER1 du kit (PC13). |
 | D10–D13 | PA3, PG2, PH8, PE15 | SPI5 vers le Wi-Fi (NSS, MOSI, MISO, SCK) |
-| D14 / D15 | PC1 / PH9 (à confirmer) | Bus I3C du lidar et de l'IMU |
+| D14 / D15 | PC1 / PH9 | Bus I3C du lidar et de l'IMU (I3C vérifié dans CubeMX le 03/11/2026) |
 | A4 / A5 | PF3 / PB10 | Bus I3C de repli (0 Ω non montées) |
 | CN8 5V / GND | | Alimentation de la carte |
 
 **Points à vérifier avant le routage**
 
-- **I3C sur D14/D15** : dans CubeMX, vérifier que PC1/PH9 (ou PF3/PB10) peuvent être en I3C. Sinon, revoir l'affectation.
+- ~~**I3C sur D14/D15**~~ : vérifié dans CubeMX. Reste à voir **quels composants du kit sont déjà sur I2C1 (PH9/PC1)** : un composant I²C sans filtre anti-parasites de 50 ns peut perturber l'I3C.
+- **Timer sur PE9** (D3) pour SYNC_IN : vérifier dans CubeMX qu'une sortie timer y est disponible (TIM1_CH1 ?).
+- **EXTI** : D2 = ligne 0, D4 = ligne 5, D5 = ligne 10, D9 = ligne 14. Ne pas activer en interruption le TOF_INT de la caméra (PQ0, ligne 0), qui est en conflit avec D2.
 - **P3A9606** : j'ai créé son symbole sans le datasheet sous la main. Le brochage et le boîtier (X2SON-8 mis par défaut) sont **à vérifier**.
 - **Sens de la carte** : en vue de dessus, CN8/CN7 sont en bas et D15…D0 en haut, comme une Uno vue de dessus et comme sur la photo du dessous du kit. L'empreinte KiCad `Module:Arduino_UNO_R3` met l'alimentation en haut, ce qui donnerait une carte en miroir : je ne l'ai pas utilisée. À contrôler en posant un tirage papier 1:1 sur le kit.
 - **Antenne Wi-Fi** au bord côté CN7, loin de la nappe caméra (avec J5 juste en dessous) : sens de l'antenne sur l'empreinte et zone sans cuivre à définir.
