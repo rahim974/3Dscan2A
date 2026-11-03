@@ -1,0 +1,1626 @@
+[
+ {
+  "ref": "J1",
+  "value": "CN8 alim",
+  "fp": "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical",
+  "dnp": false,
+  "sheet": "Connecteurs Arduino",
+  "path": "/7fe4ad3f-0d9e-42be-b2f2-1e2f32a43156/609f5927-4a68-48f2-9c71-4ce350bbbac1",
+  "sheetfile": "connecteurs.kicad_sch",
+  "pins": {
+   "2": "IOREF",
+   "5": "+5V",
+   "6": "GND",
+   "7": "GND"
+  },
+  "pinnames": {
+   "1": "Pin_1",
+   "2": "Pin_2",
+   "3": "Pin_3",
+   "4": "Pin_4",
+   "5": "Pin_5",
+   "6": "Pin_6",
+   "7": "Pin_7",
+   "8": "Pin_8"
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "J2",
+  "value": "CN7 A0-A5",
+  "fp": "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical",
+  "dnp": false,
+  "sheet": "Connecteurs Arduino",
+  "path": "/7fe4ad3f-0d9e-42be-b2f2-1e2f32a43156/41bf3277-4e15-4f00-8ce4-acf733fc1340",
+  "sheetfile": "connecteurs.kicad_sch",
+  "pins": {
+   "5": "ARD_A4",
+   "6": "ARD_A5"
+  },
+  "pinnames": {
+   "1": "Pin_1",
+   "2": "Pin_2",
+   "3": "Pin_3",
+   "4": "Pin_4",
+   "5": "Pin_5",
+   "6": "Pin_6"
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "J3",
+  "value": "CN11 D0-D7",
+  "fp": "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical",
+  "dnp": false,
+  "sheet": "Connecteurs Arduino",
+  "path": "/7fe4ad3f-0d9e-42be-b2f2-1e2f32a43156/e29b4d02-a101-4f4c-a8a5-c6f2b24ca544",
+  "sheetfile": "connecteurs.kicad_sch",
+  "pins": {
+   "1": "ARD_D0_RX",
+   "2": "ARD_D1_TX",
+   "3": "WIFI_RDY",
+   "4": "LIDAR_SYNC_3V3",
+   "5": "LIDAR_INT_3V3",
+   "6": "IMU_INT1",
+   "7": "IMU_INT2",
+   "8": "WIFI_EN"
+  },
+  "pinnames": {
+   "1": "Pin_1",
+   "2": "Pin_2",
+   "3": "Pin_3",
+   "4": "Pin_4",
+   "5": "Pin_5",
+   "6": "Pin_6",
+   "7": "Pin_7",
+   "8": "Pin_8"
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "J4",
+  "value": "CN12 D8-D15",
+  "fp": "Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical",
+  "dnp": false,
+  "sheet": "Connecteurs Arduino",
+  "path": "/7fe4ad3f-0d9e-42be-b2f2-1e2f32a43156/a5d65a11-5c15-4389-ac87-d57bf1c64bcd",
+  "sheetfile": "connecteurs.kicad_sch",
+  "pins": {
+   "1": "LIDAR_XSHUT_3V3",
+   "3": "WIFI_CS",
+   "4": "WIFI_MOSI",
+   "5": "WIFI_MISO",
+   "6": "WIFI_SCK",
+   "7": "GND",
+   "9": "ARD_SDA",
+   "10": "ARD_SCL"
+  },
+  "pinnames": {
+   "1": "Pin_1",
+   "2": "Pin_2",
+   "3": "Pin_3",
+   "4": "Pin_4",
+   "5": "Pin_5",
+   "6": "Pin_6",
+   "7": "Pin_7",
+   "8": "Pin_8",
+   "9": "Pin_9",
+   "10": "Pin_10"
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "TP1",
+  "value": "IOREF",
+  "fp": "TestPoint:TestPoint_Pad_D1.5mm",
+  "dnp": false,
+  "sheet": "Connecteurs Arduino",
+  "path": "/7fe4ad3f-0d9e-42be-b2f2-1e2f32a43156/a33ce91d-9332-4458-aeee-3ce45c7c61cd",
+  "sheetfile": "connecteurs.kicad_sch",
+  "pins": {
+   "1": "IOREF"
+  },
+  "pinnames": {
+   "1": "1"
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "U1",
+  "value": "LD39150DT33",
+  "fp": "Package_TO_SOT_SMD:TO-252-3_TabPin2",
+  "dnp": false,
+  "sheet": "Alimentation",
+  "path": "/f4633e4c-41a7-4cfa-929f-00d7480b14ac/718ffa2e-cea7-4e1e-803e-660523548a6d",
+  "sheetfile": "alimentation.kicad_sch",
+  "pins": {
+   "1": "+5V",
+   "3": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "VI",
+   "2": "GND",
+   "3": "VO"
+  },
+  "datasheet": "https://www.st.com/resource/en/datasheet/ld39150.pdf"
+ },
+ {
+  "ref": "U2",
+  "value": "LDK130-18",
+  "fp": "Package_TO_SOT_SMD:SOT-23-5",
+  "dnp": false,
+  "sheet": "Alimentation",
+  "path": "/f4633e4c-41a7-4cfa-929f-00d7480b14ac/2d0b0def-3232-41e3-beea-022c4d0771a3",
+  "sheetfile": "alimentation.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "3": "+3V3",
+   "5": "+1V8",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "IN",
+   "2": "GND",
+   "3": "EN",
+   "4": "BP",
+   "5": "OUT"
+  },
+  "datasheet": "http://www.st.com/content/ccc/resource/technical/document/datasheet/29/10/f7/87/2f/66/47/f4/DM00076097.pdf/files/DM00076097.pdf/jcr:content/translations/en.DM00076097.pdf"
+ },
+ {
+  "ref": "U3",
+  "value": "LDK130-12",
+  "fp": "Package_TO_SOT_SMD:SOT-23-5",
+  "dnp": false,
+  "sheet": "Alimentation",
+  "path": "/f4633e4c-41a7-4cfa-929f-00d7480b14ac/94810683-9ba8-4e50-992a-36fad4307e04",
+  "sheetfile": "alimentation.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "3": "+3V3",
+   "5": "+1V2",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "IN",
+   "2": "GND",
+   "3": "EN",
+   "4": "BP",
+   "5": "OUT"
+  },
+  "datasheet": "http://www.st.com/content/ccc/resource/technical/document/datasheet/29/10/f7/87/2f/66/47/f4/DM00076097.pdf/files/DM00076097.pdf/jcr:content/translations/en.DM00076097.pdf"
+ },
+ {
+  "ref": "C1",
+  "value": "10uF",
+  "fp": "Capacitor_SMD:C_0603_1608Metric",
+  "dnp": false,
+  "sheet": "Alimentation",
+  "path": "/f4633e4c-41a7-4cfa-929f-00d7480b14ac/56a8c6f3-49c3-441a-89ff-25a95a82ee51",
+  "sheetfile": "alimentation.kicad_sch",
+  "pins": {
+   "1": "+5V",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C2",
+  "value": "22uF",
+  "fp": "Capacitor_SMD:C_0805_2012Metric",
+  "dnp": false,
+  "sheet": "Alimentation",
+  "path": "/f4633e4c-41a7-4cfa-929f-00d7480b14ac/1f59e75c-6938-4e79-a42d-bf15d46ed591",
+  "sheetfile": "alimentation.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C3",
+  "value": "22uF",
+  "fp": "Capacitor_SMD:C_0805_2012Metric",
+  "dnp": false,
+  "sheet": "Alimentation",
+  "path": "/f4633e4c-41a7-4cfa-929f-00d7480b14ac/d7a1c3a7-9797-477f-9f90-c4400b1f48ce",
+  "sheetfile": "alimentation.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C4",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Alimentation",
+  "path": "/f4633e4c-41a7-4cfa-929f-00d7480b14ac/bf8623fe-fd70-405a-a3d9-21f54be09716",
+  "sheetfile": "alimentation.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C5",
+  "value": "1uF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Alimentation",
+  "path": "/f4633e4c-41a7-4cfa-929f-00d7480b14ac/3b8c09bf-ce63-4742-ba37-d037e11c4006",
+  "sheetfile": "alimentation.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C6",
+  "value": "1uF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Alimentation",
+  "path": "/f4633e4c-41a7-4cfa-929f-00d7480b14ac/17ad0126-0d50-49ad-863b-d4cdafe09126",
+  "sheetfile": "alimentation.kicad_sch",
+  "pins": {
+   "1": "+1V8",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C7",
+  "value": "1uF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Alimentation",
+  "path": "/f4633e4c-41a7-4cfa-929f-00d7480b14ac/de11a91c-7a72-44d3-9437-664e52825409",
+  "sheetfile": "alimentation.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C8",
+  "value": "1uF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Alimentation",
+  "path": "/f4633e4c-41a7-4cfa-929f-00d7480b14ac/c60cafbf-23b6-490b-9c65-09925baad5d2",
+  "sheetfile": "alimentation.kicad_sch",
+  "pins": {
+   "1": "+1V2",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "R1",
+  "value": "1k",
+  "fp": "Resistor_SMD:R_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Alimentation",
+  "path": "/f4633e4c-41a7-4cfa-929f-00d7480b14ac/53bdab75-20c2-4105-87b7-190d2df572e1",
+  "sheetfile": "alimentation.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "/Alimentation/LED_PWR_A"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "D1",
+  "value": "LED 3V3 verte",
+  "fp": "LED_SMD:LED_0603_1608Metric",
+  "dnp": false,
+  "sheet": "Alimentation",
+  "path": "/f4633e4c-41a7-4cfa-929f-00d7480b14ac/680e8c32-083d-4d70-99f3-3c5cb3e9669d",
+  "sheetfile": "alimentation.kicad_sch",
+  "pins": {
+   "2": "/Alimentation/LED_PWR_A",
+   "1": "GND"
+  },
+  "pinnames": {
+   "1": "K",
+   "2": "A"
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "TP2",
+  "value": "+5V",
+  "fp": "TestPoint:TestPoint_Pad_D1.5mm",
+  "dnp": false,
+  "sheet": "Alimentation",
+  "path": "/f4633e4c-41a7-4cfa-929f-00d7480b14ac/e2a9fc79-8edf-4e4b-a0be-bcc3aa95c6f3",
+  "sheetfile": "alimentation.kicad_sch",
+  "pins": {
+   "1": "+5V"
+  },
+  "pinnames": {
+   "1": "1"
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "TP3",
+  "value": "+3V3",
+  "fp": "TestPoint:TestPoint_Pad_D1.5mm",
+  "dnp": false,
+  "sheet": "Alimentation",
+  "path": "/f4633e4c-41a7-4cfa-929f-00d7480b14ac/c6e15eb3-58ef-43bb-88bc-52d44521f1b3",
+  "sheetfile": "alimentation.kicad_sch",
+  "pins": {
+   "1": "+3V3"
+  },
+  "pinnames": {
+   "1": "1"
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "TP4",
+  "value": "+1V8",
+  "fp": "TestPoint:TestPoint_Pad_D1.5mm",
+  "dnp": false,
+  "sheet": "Alimentation",
+  "path": "/f4633e4c-41a7-4cfa-929f-00d7480b14ac/c101447a-e3f7-4f00-89b3-dee176f43d82",
+  "sheetfile": "alimentation.kicad_sch",
+  "pins": {
+   "1": "+1V8"
+  },
+  "pinnames": {
+   "1": "1"
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "TP5",
+  "value": "+1V2",
+  "fp": "TestPoint:TestPoint_Pad_D1.5mm",
+  "dnp": false,
+  "sheet": "Alimentation",
+  "path": "/f4633e4c-41a7-4cfa-929f-00d7480b14ac/80f62af5-9be9-4466-8775-376143122c49",
+  "sheetfile": "alimentation.kicad_sch",
+  "pins": {
+   "1": "+1V2"
+  },
+  "pinnames": {
+   "1": "1"
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "TP6",
+  "value": "GND",
+  "fp": "TestPoint:TestPoint_Pad_D1.5mm",
+  "dnp": false,
+  "sheet": "Alimentation",
+  "path": "/f4633e4c-41a7-4cfa-929f-00d7480b14ac/680c28bb-35ef-4757-a556-c158f6fa4f6f",
+  "sheetfile": "alimentation.kicad_sch",
+  "pins": {
+   "1": "GND"
+  },
+  "pinnames": {
+   "1": "1"
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "U4",
+  "value": "VL53L9CX",
+  "fp": "custom_fp:VL53L9CX",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/99389cb2-6a06-4a38-9c88-1f26662d83d0",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "A11": "/Lidar/LIDAR_SCL",
+   "A12": "/Lidar/LIDAR_SDA",
+   "E11": "/Lidar/LIDAR_APCLK",
+   "B12": "/Lidar/LIDAR_XSHUT",
+   "D12": "/Lidar/LIDAR_SYNC",
+   "A10": "/Lidar/LIDAR_INT",
+   "A1": "GND",
+   "A2": "GND",
+   "A3": "GND",
+   "A4": "GND",
+   "A7": "GND",
+   "B4": "GND",
+   "B5": "GND",
+   "B6": "GND",
+   "B7": "GND",
+   "B8": "GND",
+   "B9": "GND",
+   "C1": "GND",
+   "D4": "GND",
+   "D5": "GND",
+   "D6": "GND",
+   "D7": "GND",
+   "D8": "GND",
+   "D9": "GND",
+   "E1": "GND",
+   "E2": "GND",
+   "E4": "GND",
+   "E5": "GND",
+   "E9": "GND",
+   "E10": "GND",
+   "B1": "+3V3",
+   "D1": "+3V3",
+   "E6": "+3V3",
+   "E7": "+3V3",
+   "C12": "+1V2",
+   "E8": "+1V8"
+  },
+  "pinnames": {
+   "A1": "VSS",
+   "A2": "VSS_DRIVER",
+   "A3": "VSS_DRIVER",
+   "A4": "VSS",
+   "A5": "DATA_P",
+   "A6": "DATA_N",
+   "A7": "VSS",
+   "A8": "CLK_P",
+   "A9": "CLK_N",
+   "A10": "INTR",
+   "A11": "SCL",
+   "A12": "SDA",
+   "B1": "VBAT_LDD",
+   "B4": "VSS",
+   "B5": "VSS",
+   "B6": "VSS",
+   "B7": "VSS",
+   "B8": "VSS",
+   "B9": "VSS",
+   "B12": "XSHUT",
+   "C1": "VSS",
+   "C12": "DVDD",
+   "D1": "VBAT_RX",
+   "D4": "VSS",
+   "D5": "VSS",
+   "D6": "VSS",
+   "D7": "VSS",
+   "D8": "VSS",
+   "D9": "VSS",
+   "D12": "SYNC_IN",
+   "E1": "VSS",
+   "E2": "VSS",
+   "E3": "RSVD1",
+   "E4": "VSS",
+   "E5": "VSS",
+   "E6": "AVDD",
+   "E7": "AVDD",
+   "E8": "IOVDD",
+   "E9": "VSS",
+   "E10": "VSS",
+   "E11": "AP_CLK",
+   "E12": "RSVD2"
+  },
+  "datasheet": "https://www.st.com/en/imaging-and-photonics-solutions/vl53l9cx.html"
+ },
+ {
+  "ref": "U5",
+  "value": "P3A9606",
+  "fp": "Package_SON:X2SON-8_1.4x1mm_P0.35mm",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/84be9ff4-6daa-464c-bc73-d94e5081b485",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "3": "+3V3",
+   "6": "+1V8",
+   "5": "+3V3",
+   "1": "/Lidar/I3C_SCL",
+   "2": "/Lidar/I3C_SDA",
+   "8": "/Lidar/LIDAR_SCL",
+   "7": "/Lidar/LIDAR_SDA",
+   "4": "GND"
+  },
+  "pinnames": {
+   "3": "VCCA",
+   "6": "VCCB",
+   "5": "EN",
+   "1": "A1",
+   "2": "A2",
+   "8": "B1",
+   "7": "B2",
+   "4": "GND"
+  },
+  "datasheet": "https://www.nxp.com/docs/en/data-sheet/P3A9606.pdf"
+ },
+ {
+  "ref": "U6",
+  "value": "SN74LVC1T45 XSHUT",
+  "fp": "Package_TO_SOT_SMD:SOT-23-6",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/a37bfde6-89bd-4343-85f8-c4983b075c58",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "6": "+1V8",
+   "5": "+3V3",
+   "3": "LIDAR_XSHUT_3V3",
+   "4": "/Lidar/LIDAR_XSHUT",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "VCCA",
+   "2": "GND",
+   "3": "A",
+   "4": "B",
+   "5": "DIR",
+   "6": "VCCB"
+  },
+  "datasheet": "http://www.ti.com/lit/ds/symlink/sn74lvc1t45.pdf"
+ },
+ {
+  "ref": "U7",
+  "value": "SN74LVC1T45 SYNC",
+  "fp": "Package_TO_SOT_SMD:SOT-23-6",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/93d177c3-9121-405c-ac68-b4da9576dc9f",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "6": "+1V8",
+   "5": "+3V3",
+   "3": "LIDAR_SYNC_3V3",
+   "4": "/Lidar/LIDAR_SYNC",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "VCCA",
+   "2": "GND",
+   "3": "A",
+   "4": "B",
+   "5": "DIR",
+   "6": "VCCB"
+  },
+  "datasheet": "http://www.ti.com/lit/ds/symlink/sn74lvc1t45.pdf"
+ },
+ {
+  "ref": "U8",
+  "value": "SN74LVC1T45 INTR",
+  "fp": "Package_TO_SOT_SMD:SOT-23-6",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/df6b394b-5249-4553-aff9-921e43e5d81d",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+1V8",
+   "6": "+3V3",
+   "5": "+1V8",
+   "3": "/Lidar/LIDAR_INT",
+   "4": "LIDAR_INT_3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "VCCA",
+   "2": "GND",
+   "3": "A",
+   "4": "B",
+   "5": "DIR",
+   "6": "VCCB"
+  },
+  "datasheet": "http://www.ti.com/lit/ds/symlink/sn74lvc1t45.pdf"
+ },
+ {
+  "ref": "Y1",
+  "value": "24MHz 1V8",
+  "fp": "Oscillator:Oscillator_SMD_ECS_2520MV-xxx-xx-4Pin_2.5x2.0mm",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/d1e93f31-7fca-4fb9-8fa6-9d1208957192",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "4": "+1V8",
+   "1": "+1V8",
+   "2": "GND",
+   "3": "/Lidar/OSC_24M"
+  },
+  "pinnames": {
+   "1": "Tri-State",
+   "2": "GND",
+   "3": "OUT",
+   "4": "VDD"
+  },
+  "datasheet": "https://www.ecsxtal.com/store/pdf/ECS-2520MV.pdf"
+ },
+ {
+  "ref": "R2",
+  "value": "33R",
+  "fp": "Resistor_SMD:R_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/e6dbab94-10f4-4551-96f5-91d22a9cb795",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "/Lidar/OSC_24M",
+   "2": "/Lidar/LIDAR_APCLK"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "R3",
+  "value": "0R",
+  "fp": "Resistor_SMD:R_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/4e15ad94-d210-45ab-b2be-e7b63d468c83",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "/Lidar/I3C_SCL",
+   "2": "ARD_SCL"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "R4",
+  "value": "0R",
+  "fp": "Resistor_SMD:R_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/e567c30b-5ff1-4f15-9a9b-a16d8108cc47",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "/Lidar/I3C_SDA",
+   "2": "ARD_SDA"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "R5",
+  "value": "0R DNP",
+  "fp": "Resistor_SMD:R_0402_1005Metric",
+  "dnp": true,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/43ed0766-5050-4428-83d3-962938f48a56",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "/Lidar/I3C_SCL",
+   "2": "ARD_A5"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "R6",
+  "value": "0R DNP",
+  "fp": "Resistor_SMD:R_0402_1005Metric",
+  "dnp": true,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/282eeca3-19ac-4edd-8cce-8bb8675362f5",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "/Lidar/I3C_SDA",
+   "2": "ARD_A4"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "R7",
+  "value": "10k",
+  "fp": "Resistor_SMD:R_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/14d3eb75-98c0-4746-8c89-48caf032e33e",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "LIDAR_XSHUT_3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "R8",
+  "value": "10k",
+  "fp": "Resistor_SMD:R_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/6ee8b508-1e4e-4eb0-a7a0-dcbee876e6fa",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "/Lidar/LIDAR_XSHUT",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "R9",
+  "value": "10k",
+  "fp": "Resistor_SMD:R_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/39619df7-6633-401d-b896-02dce66561eb",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "LIDAR_SYNC_3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "R10",
+  "value": "10k",
+  "fp": "Resistor_SMD:R_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/0f7ee56a-6a4b-4cbf-b160-773d52818580",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "/Lidar/LIDAR_INT",
+   "2": "+1V8"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "R11",
+  "value": "2.2k DNP",
+  "fp": "Resistor_SMD:R_0402_1005Metric",
+  "dnp": true,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/dbb07305-62b4-4e96-b863-ef6e90e651f3",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "/Lidar/LIDAR_SDA",
+   "2": "+1V8"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "R12",
+  "value": "2.2k DNP",
+  "fp": "Resistor_SMD:R_0402_1005Metric",
+  "dnp": true,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/dcb1308c-139b-499f-9114-cd7953135165",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "/Lidar/LIDAR_SCL",
+   "2": "+1V8"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C9",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/f0b10642-4c8d-4bcb-98ac-5448c45e5b77",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C10",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/0e270461-cda1-4c5b-9ac8-1ff2d23167ad",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C11",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/cf087ed9-60c2-4d6c-bac5-7aeaac94a351",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C12",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/48b244c4-7fe7-4384-9304-b0450e554d90",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C13",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/ade567f6-dcda-4838-8645-3c4a78c471ac",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C14",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/d52db9e5-4a1a-4703-b2fd-9e48beaaae0c",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+1V8",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C15",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/d1de052e-47df-4a89-b476-5affa2e2b619",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+1V8",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C16",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/16d3fffe-640f-4221-aeb0-22dbce971109",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+1V8",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C17",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/cdbcbf6c-1ba1-4ca8-bb23-c3e4666b99fa",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+1V8",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C18",
+  "value": "22uF",
+  "fp": "Capacitor_SMD:C_0805_2012Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/b7cfd1ea-8219-4a7b-9cbd-810e7956f3bd",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C19",
+  "value": "22uF",
+  "fp": "Capacitor_SMD:C_0805_2012Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/45cc29a2-6443-4e1b-94f2-17f394054d33",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C20",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/3093e628-2083-4939-9d48-e75c01c093e8",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C21",
+  "value": "10uF",
+  "fp": "Capacitor_SMD:C_0603_1608Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/8225b9c1-0c81-4a1f-af7d-cf8c2cac3118",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C22",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/5d62ace5-9ab5-493d-b99f-e98fd362bcf1",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C23",
+  "value": "4.7uF",
+  "fp": "Capacitor_SMD:C_0603_1608Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/68e791d3-c80a-46f3-b60e-e7cc5f6ef4fe",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C24",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/4cf0467e-d589-4ac3-9136-340e53926566",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C25",
+  "value": "4.7uF",
+  "fp": "Capacitor_SMD:C_0603_1608Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/b47cdef8-17e3-4401-a2df-3e1861154ca0",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+1V2",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C26",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/a33f2089-8833-4118-bfd5-3ce4d2d12028",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+1V2",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C27",
+  "value": "1uF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/ee242545-ed85-4d42-831f-05397a0982a2",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+1V8",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C28",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "Lidar",
+  "path": "/d2211acc-5bb1-4bdc-9f7b-c7b980f7e9cc/429255db-3450-449d-bc21-ce3dfa2a7912",
+  "sheetfile": "lidar.kicad_sch",
+  "pins": {
+   "1": "+1V8",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "U9",
+  "value": "LSM6DSV16X",
+  "fp": "custom_fp:LGA14_LSM6_STM",
+  "dnp": false,
+  "sheet": "IMU",
+  "path": "/64332169-e539-4e1e-957d-60b84fa9c677/2a4c745a-3d2e-4d4c-b082-cf811ff32519",
+  "sheetfile": "imu.kicad_sch",
+  "pins": {
+   "14": "ARD_SDA",
+   "13": "ARD_SCL",
+   "12": "+3V3",
+   "1": "GND",
+   "4": "IMU_INT1",
+   "9": "IMU_INT2",
+   "2": "GND",
+   "3": "GND",
+   "5": "+3V3",
+   "8": "+3V3",
+   "6": "GND",
+   "7": "GND"
+  },
+  "pinnames": {
+   "1": "SDO/SA0",
+   "2": "DSX/AH1/QVAR1",
+   "3": "SCX/AH2/QVAR2",
+   "4": "INT1",
+   "5": "VDD_IO",
+   "6": "GND",
+   "7": "GND",
+   "8": "VDD",
+   "9": "INT2",
+   "10": "OCS_AUX",
+   "11": "SDA_AUX",
+   "12": "CS",
+   "13": "SCL",
+   "14": "SDA"
+  },
+  "datasheet": "LSM6DSV16X"
+ },
+ {
+  "ref": "R13",
+  "value": "2.2k DNP",
+  "fp": "Resistor_SMD:R_0402_1005Metric",
+  "dnp": true,
+  "sheet": "IMU",
+  "path": "/64332169-e539-4e1e-957d-60b84fa9c677/2d5d2a59-f8c0-4158-a1bc-966c716b151d",
+  "sheetfile": "imu.kicad_sch",
+  "pins": {
+   "1": "ARD_SDA",
+   "2": "+3V3"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "R14",
+  "value": "2.2k DNP",
+  "fp": "Resistor_SMD:R_0402_1005Metric",
+  "dnp": true,
+  "sheet": "IMU",
+  "path": "/64332169-e539-4e1e-957d-60b84fa9c677/f74eb620-bb25-4a22-90b3-0d201664fe74",
+  "sheetfile": "imu.kicad_sch",
+  "pins": {
+   "1": "ARD_SCL",
+   "2": "+3V3"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C29",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "IMU",
+  "path": "/64332169-e539-4e1e-957d-60b84fa9c677/1aec88ae-5fca-4002-8949-17ebe28c4cef",
+  "sheetfile": "imu.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C30",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "IMU",
+  "path": "/64332169-e539-4e1e-957d-60b84fa9c677/be682236-996f-4123-b01f-4b8b3a9ae25c",
+  "sheetfile": "imu.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C31",
+  "value": "10uF",
+  "fp": "Capacitor_SMD:C_0603_1608Metric",
+  "dnp": false,
+  "sheet": "IMU",
+  "path": "/64332169-e539-4e1e-957d-60b84fa9c677/13da4b36-da4d-42f3-82d4-35f7b5adde36",
+  "sheetfile": "imu.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "IC1",
+  "value": "ST67W611M1A6B",
+  "fp": "custom_fp:ST67W611M1A6B",
+  "dnp": false,
+  "sheet": "WiFi BLE",
+  "path": "/161b6e1d-21c8-4a3c-8454-1edf77c1996e/376fc26e-2430-4b19-a10b-d2fd3d276f69",
+  "sheetfile": "wifi.kicad_sch",
+  "pins": {
+   "3": "/WiFi BLE/WIFI_BOOT",
+   "9": "+3V3",
+   "25": "+3V3",
+   "16": "+3V3",
+   "10": "GND",
+   "15": "GND",
+   "18": "GND",
+   "26": "GND",
+   "30": "GND",
+   "32": "GND",
+   "33": "GND",
+   "34": "GND",
+   "35": "GND",
+   "36": "GND",
+   "17": "WIFI_EN",
+   "21": "WIFI_RDY",
+   "22": "/WiFi BLE/WIFI_UART_TX",
+   "23": "/WiFi BLE/WIFI_UART_RX",
+   "24": "WIFI_CS",
+   "27": "WIFI_MOSI",
+   "28": "WIFI_SCK",
+   "29": "WIFI_MISO"
+  },
+  "pinnames": {
+   "1": "RESERVED_1",
+   "2": "RESERVED_2",
+   "3": "BOOT",
+   "4": "RESERVED_3",
+   "5": "RESERVED_4",
+   "6": "RESERVED_5",
+   "7": "RESERVED_6",
+   "8": "RESERVED_7",
+   "9": "VDDIO_1",
+   "10": "GND_1",
+   "11": "RESERVED_8",
+   "12": "RESERVED_9",
+   "13": "XTAL32K_OUT",
+   "14": "XTAL32K_IN",
+   "15": "GND_2",
+   "16": "VDD33",
+   "17": "CHIP_EN",
+   "18": "GND_3",
+   "19": "RESERVED_10",
+   "20": "RESERVED_11",
+   "21": "SPI_RDY",
+   "22": "UART_TX",
+   "23": "UART_RX",
+   "24": "SPI_CS",
+   "25": "VDDIO_2",
+   "26": "GND_4",
+   "27": "SPI_MOSI",
+   "28": "SPI_CLK",
+   "29": "SPI_MISO",
+   "30": "GND_5",
+   "31": "NC",
+   "32": "GND_6",
+   "33": "GND_7",
+   "34": "GND_8",
+   "35": "GND_9",
+   "36": "GND_10"
+  },
+  "datasheet": "https://www.st.com/resource/en/datasheet/st67w611m1.pdf"
+ },
+ {
+  "ref": "J5",
+  "value": "UART/BOOT Wi-Fi",
+  "fp": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
+  "dnp": false,
+  "sheet": "WiFi BLE",
+  "path": "/161b6e1d-21c8-4a3c-8454-1edf77c1996e/1de8f526-f70e-4cd2-acb1-54985ca9bf73",
+  "sheetfile": "wifi.kicad_sch",
+  "pins": {
+   "1": "GND",
+   "2": "/WiFi BLE/WIFI_UART_TX",
+   "3": "/WiFi BLE/WIFI_UART_RX",
+   "4": "/WiFi BLE/WIFI_BOOT"
+  },
+  "pinnames": {
+   "1": "Pin_1",
+   "2": "Pin_2",
+   "3": "Pin_3",
+   "4": "Pin_4"
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "R15",
+  "value": "100k",
+  "fp": "Resistor_SMD:R_0402_1005Metric",
+  "dnp": false,
+  "sheet": "WiFi BLE",
+  "path": "/161b6e1d-21c8-4a3c-8454-1edf77c1996e/ccad84b1-4a3b-4c1c-a174-7963ffe6bbf6",
+  "sheetfile": "wifi.kicad_sch",
+  "pins": {
+   "1": "WIFI_EN",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "R16",
+  "value": "10k",
+  "fp": "Resistor_SMD:R_0402_1005Metric",
+  "dnp": false,
+  "sheet": "WiFi BLE",
+  "path": "/161b6e1d-21c8-4a3c-8454-1edf77c1996e/903f5d48-633e-4262-acda-1500620fdb55",
+  "sheetfile": "wifi.kicad_sch",
+  "pins": {
+   "1": "/WiFi BLE/WIFI_BOOT",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "R17",
+  "value": "0R",
+  "fp": "Resistor_SMD:R_0402_1005Metric",
+  "dnp": false,
+  "sheet": "WiFi BLE",
+  "path": "/161b6e1d-21c8-4a3c-8454-1edf77c1996e/999c917f-94d7-420f-9967-3136ca855356",
+  "sheetfile": "wifi.kicad_sch",
+  "pins": {
+   "1": "/WiFi BLE/WIFI_UART_TX",
+   "2": "ARD_D0_RX"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "R18",
+  "value": "0R",
+  "fp": "Resistor_SMD:R_0402_1005Metric",
+  "dnp": false,
+  "sheet": "WiFi BLE",
+  "path": "/161b6e1d-21c8-4a3c-8454-1edf77c1996e/d0cf641e-b5d4-4d64-a185-d493fac4f8a9",
+  "sheetfile": "wifi.kicad_sch",
+  "pins": {
+   "1": "/WiFi BLE/WIFI_UART_RX",
+   "2": "ARD_D1_TX"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C32",
+  "value": "10uF",
+  "fp": "Capacitor_SMD:C_0603_1608Metric",
+  "dnp": false,
+  "sheet": "WiFi BLE",
+  "path": "/161b6e1d-21c8-4a3c-8454-1edf77c1996e/a481d52d-b6a4-43a5-835a-caa39c45b557",
+  "sheetfile": "wifi.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C33",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "WiFi BLE",
+  "path": "/161b6e1d-21c8-4a3c-8454-1edf77c1996e/948b35e9-2754-4479-8af8-b5b0af47f02c",
+  "sheetfile": "wifi.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C34",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "WiFi BLE",
+  "path": "/161b6e1d-21c8-4a3c-8454-1edf77c1996e/698aafd9-64a7-4310-a2a5-3d1698590c93",
+  "sheetfile": "wifi.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "C35",
+  "value": "100nF",
+  "fp": "Capacitor_SMD:C_0402_1005Metric",
+  "dnp": false,
+  "sheet": "WiFi BLE",
+  "path": "/161b6e1d-21c8-4a3c-8454-1edf77c1996e/78de0b66-2c46-4a28-9c56-83cff137d42c",
+  "sheetfile": "wifi.kicad_sch",
+  "pins": {
+   "1": "+3V3",
+   "2": "GND"
+  },
+  "pinnames": {
+   "1": "",
+   "2": ""
+  },
+  "datasheet": ""
+ },
+ {
+  "ref": "H1",
+  "value": "Camera M2",
+  "fp": "MountingHole:MountingHole_2.2mm_M2",
+  "dnp": false,
+  "sheet": "Mecanique",
+  "path": "/708596af-9576-4958-b3f8-ef8d132f6106/de029b4c-5f76-469d-a935-1ba54f74e89a",
+  "sheetfile": "mecanique.kicad_sch",
+  "pins": {},
+  "pinnames": {},
+  "datasheet": ""
+ },
+ {
+  "ref": "H2",
+  "value": "Camera M2",
+  "fp": "MountingHole:MountingHole_2.2mm_M2",
+  "dnp": false,
+  "sheet": "Mecanique",
+  "path": "/708596af-9576-4958-b3f8-ef8d132f6106/c5542faa-28de-41fd-acf4-c27cf58bc0a9",
+  "sheetfile": "mecanique.kicad_sch",
+  "pins": {},
+  "pinnames": {},
+  "datasheet": ""
+ }
+]

@@ -22,17 +22,46 @@ Le prototype C (carte autonome STM32H7S3, LQFP-144) viendra ensuite et réutilis
 
 ## 1. Le PCB KiCad à concevoir
 
-Une carte 2 couches (4 si le module Wi-Fi l'exige), au format shield Arduino, sans microcontrôleur, sans BGA et sans mémoire externe.
+Une carte 2 couches au format shield Arduino Uno R3, sans microcontrôleur, sans BGA et sans mémoire externe. Elle s'enfiche sur les 4 barrettes Arduino du kit (CN8, CN7, CN11, CN12).
 
-**Feuilles de schéma prévues**
+**État (03/11/2026)** : le projet KiCad est dans [`carte_fille_A/`](carte_fille_A/). Il part du schéma du prototype 1 (mêmes symboles et empreintes pour le lidar, l'IMU et le Wi-Fi).
+
+- **Schéma** : 6 feuilles, ERC sans erreur ni avertissement.
+- **PCB** : contour Uno R3 (68,6 × 53,3 mm), les 4 barrettes en place côté B, empreintes pré-placées par bloc et reliées au schéma (test de parité sans écart), plan de masse sur B.Cu. **Pas encore routé.**
+- Le schéma et le placement sont générés par `carte_fille_A/generateur/design_A.py` puis `pcb_A.py` (Python de KiCad). Une fois qu'on retouche à la main dans KiCad, on ne relance plus les scripts.
 
 | Feuille | Contenu |
 |---|---|
-| `connecteurs` | Connecteurs Arduino Uno R3 (mâles, vers le kit), points de test |
-| `alimentation` | LDO 3V3 depuis le 5 V du kit (si le 3V3 du kit ne suffit pas), LDO 1V8 et 1V2 pour le lidar, LED de présence |
-| `lidar` | VL53L9CX, découplage (figure 7 du datasheet), oscillateur 24 MHz, translateurs de niveau I3C et GPIO |
-| `imu` | LSM6DSV16X, pull-ups I²C si besoin, INT1/INT2 |
-| `wifi` | ST67W611M1, SPI + SPI_RDY + CHIP_EN, header UART/BOOT pour sa mise à jour, zone d'antenne dégagée |
+| `connecteurs` | 4 barrettes Arduino mâles (CN8, CN7, CN11, CN12), point de test IOREF |
+| `alimentation` | 5 V du kit → LD39150 (+3V3) → LDK130 (+1V8, +1V2), LED de présence, points de test |
+| `lidar` | VL53L9CX, translateur I3C P3A9606, 3 × SN74LVC1T45 (XSHUT, SYNC_IN, INTR), oscillateur 24 MHz, choix D14/D15 ou A4/A5 par résistances 0 Ω |
+| `imu` | LSM6DSV16X sur le bus D14/D15, INT1/INT2 |
+| `wifi` | ST67W611M1 sur le SPI5 (D10–D13), SPI_RDY, CHIP_EN, UART vers D0/D1 et header UART/BOOT |
+| `mecanique` | 2 trous M2 pour le module caméra |
+
+**Affectation des broches Arduino**
+
+| Broche | Port N6 | Signal |
+|---|---|---|
+| D0 / D1 | PF6 / PD5 | UART du module Wi-Fi (par 0 Ω) |
+| D2 | PD0 | Wi-Fi SPI_RDY (EXTI) |
+| D3 | PE9 | SYNC_IN du lidar (sortie timer, TIM1_CH1 à confirmer) |
+| D4 | PH5 | INTR du lidar (EXTI) |
+| D5 / D6 | PE10 / PE13 | INT1 / INT2 de l'IMU (EXTI) |
+| D7 | PD6 | CHIP_EN du Wi-Fi |
+| D8 | PE7 | XSHUT du lidar |
+| D10–D13 | PA3, PG2, PH8, PE15 | SPI5 vers le Wi-Fi (NSS, MOSI, MISO, SCK) |
+| D14 / D15 | PC1 / PH9 (à confirmer) | Bus I3C du lidar et de l'IMU |
+| A4 / A5 | PF3 / PB10 | Bus I3C de repli (0 Ω non montées) |
+| CN8 5V / GND | | Alimentation de la carte |
+
+**Points à vérifier avant le routage**
+
+- **I3C sur D14/D15** : dans CubeMX, vérifier que PC1/PH9 (ou PF3/PB10) peuvent être en I3C. Sinon, revoir l'affectation.
+- **P3A9606** : j'ai créé son symbole sans le datasheet sous la main. Le brochage et le boîtier (X2SON-8 mis par défaut) sont **à vérifier**.
+- **Sens de la carte** : en vue de dessus, CN8/CN7 sont en bas et D15…D0 en haut, comme une Uno vue de dessus et comme sur la photo du dessous du kit. L'empreinte KiCad `Module:Arduino_UNO_R3` met l'alimentation en haut, ce qui donnerait une carte en miroir : je ne l'ai pas utilisée. À contrôler en posant un tirage papier 1:1 sur le kit.
+- **Antenne Wi-Fi** au bord gauche : sens de l'antenne sur l'empreinte et zone sans cuivre à définir.
+- **Trous de la caméra** (H1, H2) : entraxe à mesurer sur le module.
 
 **Orientation retenue (d'après les photos du kit)**
 
@@ -138,7 +167,7 @@ Relevé du schéma MB1939 page 3 :
 1. **Relevés sur le kit** (§3) : cotes mécaniques, tension des I/O, courant disponible, broches I3C/SPI. Les noter dans `docs/kit_mesures.md`.
 2. **Tests sans PCB** sur le kit : faire tourner un exemple ST caméra + IA, puis brancher l'IMU (X-NUCLEO-IKS4A1) et le module Wi-Fi (X-NUCLEO-67W61M1) sur l'Arduino pour valider les broches et les drivers.
 3. **Lidar** : kit d'évaluation VL53L9CX relié au kit par un translateur I3C, ou en I²C si l'I3C n'est pas sorti.
-4. **Schéma KiCad** de la carte fille (feuilles du §1), ERC sans erreur, revue des valeurs avec les datasheets.
+4. ~~**Schéma KiCad** de la carte fille, ERC sans erreur~~ (fait le 03/11/2026). Reste la revue des valeurs avec les datasheets (P3A9606, découplage du lidar).
 5. **Placement et routage** : contour issu des cotes du §3, lidar aligné avec la caméra, antenne en bord de carte, DRC sans erreur.
 6. **Fabrication** (Gerbers, BOM, fichiers de placement), commande des composants, montage.
 7. **Mise en route** : rails d'alimentation, puis IMU, Wi-Fi, lidar un par un, puis fusion lidar + IMU + caméra et IA sur le NPU, envoi au PC.

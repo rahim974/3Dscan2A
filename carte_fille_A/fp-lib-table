@@ -1,0 +1,4 @@
+(fp_lib_table
+	(version 7)
+	(lib (name "custom_fp") (type "KiCad") (uri "${KIPRJMOD}/libs/custom_fp.pretty") (options "") (descr "IMU, lidar, module Wi-Fi"))
+)
