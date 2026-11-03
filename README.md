@@ -34,9 +34,25 @@ Une carte 2 couches (4 si le module Wi-Fi l'exige), au format shield Arduino, sa
 | `imu` | LSM6DSV16X, pull-ups I²C si besoin, INT1/INT2 |
 | `wifi` | ST67W611M1, SPI + SPI_RDY + CHIP_EN, header UART/BOOT pour sa mise à jour, zone d'antenne dégagée |
 
+**Orientation retenue (d'après les photos du kit)**
+
+Les connecteurs Arduino (CN8 alimentation, CN7 A0–A5, D0–D15) sont **sous le kit**, sur la face opposée à l'écran. Le STMod+ (CN4) est sur la face de l'écran, au bord haut. La caméra n'est pas soudée au kit : c'est un module séparé relié par une **nappe** au bord haut.
+
+On tient donc le scanner comme un appareil photo, écran vers l'utilisateur :
+
+```
+   utilisateur  →  [ écran ]  kit MB1939  [ carte fille ]  →  lidar + caméra  →  scène
+                                  (Arduino dessous)
+```
+
+- La carte fille s'enfiche **sous le kit**, et le lidar est sur sa face extérieure. Il regarde la scène, à l'opposé de l'écran : c'est le bon sens.
+- Le **module caméra est fixé sur la carte fille**, à côté du lidar, avec des entretoises. La nappe fait le tour du bord haut du kit. Le lidar et la caméra sont alors rigidement liés et regardent dans la même direction, ce qui simplifie l'étalonnage.
+- Le STMod+ n'est pas utilisé pour la carte fille : il est côté écran, le lidar y regarderait vers l'utilisateur.
+
 **Contraintes de placement**
 
-- Le lidar doit regarder **dans la même direction que la caméra** du kit, sans masquer l'écran ni les boutons. Sa position sur la carte dépend des mesures du §3.
+- Le lidar doit regarder **dans la même direction que la caméra**. Avec l'orientation ci-dessus, la carte fille doit prévoir les trous de fixation du module caméra à côté du lidar.
+- La carte fille doit éviter les composants hauts du dessous du kit : prise Ethernet, USB-A, jack audio, lecteur micro-SD, et laisser l'accès aux USB-C (ST-LINK et USB1). Les entretoises du kit (pieds en laiton aux coins) donnent la hauteur minimale.
 - L'**antenne PCB** du module Wi-Fi doit être en bord de carte, sans cuivre ni composant dessous ni autour (voir le datasheet du module), et loin des parties métalliques du kit.
 - L'IMU près du lidar, sur la même carte rigide, pour que la transformation lidar ↔ IMU reste fixe.
 - Les pistes I3C courtes et sans stub, le translateur au plus près du lidar.
@@ -80,11 +96,12 @@ Les valeurs exactes sont reprises de la nomenclature du schéma H563 (`Nomenclat
 
 ### Mécanique
 
-- [ ] **Face des connecteurs Arduino et STMod+** : dessus ou dessous du kit, par rapport à l'écran et à la caméra.
-- [ ] **Position exacte** des quatre barrettes Arduino (cote depuis un coin de la carte, entraxe) et du STMod+.
-- [ ] **Position et orientation de la caméra** IMX335 (module B-CAMS-IMX sur nappe) : direction de visée, possibilité de la fixer à côté du lidar.
-- [ ] **Encombrement** au-dessus des barrettes : écran, boutons, connecteurs USB, nappe caméra, jack audio. En déduire la hauteur des barrettes et la zone libre pour la carte fille.
-- [ ] Trous de fixation disponibles et hauteur des composants les plus hauts du kit sous la carte fille.
+- [x] **Face des connecteurs** (photos du 03/11/2026) : Arduino CN7/CN8 et D0–D15 **sous le kit**, STMod+ CN4 **côté écran** (bord haut), caméra sur nappe au bord haut.
+- [ ] **Position exacte** des barrettes Arduino (cote depuis un coin de la carte, entraxe) au pied à coulisse.
+- [ ] **Module caméra** (MB1854 / B-CAMS-IMX) : dimensions, entraxe de ses trous de fixation, côté de l'objectif, **longueur de la nappe** (elle doit faire le tour du bord haut jusqu'à la carte fille). Prévoir une nappe FFC plus longue si elle est trop courte.
+- [ ] **Hauteur sous le kit** : hauteur des entretoises en laiton et des composants les plus hauts (Ethernet, USB-A, jack audio). En déduire la hauteur des barrettes (empilables ou rallongées) et la zone libre pour la carte fille.
+- [ ] Accès aux USB-C ST-LINK et USB1 et au lecteur micro-SD une fois la carte fille montée.
+- [ ] Le module caméra semble porter son propre capteur ToF et une IMU (lignes TOF_INT / IMU_INT du connecteur) : identifier les références sur la carte.
 
 ### Électrique
 
