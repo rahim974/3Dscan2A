@@ -1,8 +1,6 @@
 # Carte fille du prototype A : composants spécifiques à commander
 
-Projet ENSEA 2A, scanner 3D portable. Carte fille enfichée sur le kit ST STM32N6570-DK (déjà disponible).
-
-Cette liste ne contient que les composants qu'on ne trouvera probablement pas au magasin de l'école. Les références sont celles des fabricants : elles sont à rechercher chez un distributeur (Mouser, DigiKey, Farnell) ou sur le site du fabricant. Je propose une pièce de rechange pour les petits boîtiers difficiles à souder.
+Projet ENSEA 2A, scanner 3D portable. Carte fille enfichée sur le kit ST STM32N6570-DK.
 
 ## Circuits intégrés et modules
 
@@ -18,21 +16,3 @@ Cette liste ne contient que les composants qu'on ne trouvera probablement pas au
 | Régulateur LDO 1,2 V 300 mA | **LDK130M12R** | STMicroelectronics | SOT-23-5 | 1 | 2 | Rail 1,2 V (cœur du lidar) |
 | Oscillateur 24 MHz | **ECS-2520MV-240-BN-TR** *(vérifier qu'il fonctionne en 1,8 V)* | ECS Inc. | 2,5 × 2,0 mm | 1 | 2 | Horloge du lidar |
 
-## Passifs et connectique (à commander si l'école n'en a pas)
-
-| Composant | Valeur / référence | Boîtier | Qté carte |
-|---|---|---|---|
-| Condensateurs céramiques X5R/X7R | 100 nF (×20), 1 µF (×5), 4,7 µF (×2), 10 µF (×4), 22 µF (×4) | 0402, 0603 et 0805 | 35 |
-| Résistances 1 % | 10 kΩ (×5), 100 kΩ, 1 kΩ, 33 Ω, 0 Ω (×2) | 0402 | 10 |
-| LED verte | — | 0603 | 1 |
-| Barrettes mâles 2,54 mm (pour Arduino) | 1×10, 1×8 (×2), 1×6 | Traversant | 4 |
-| Barrette mâle 2,54 mm | 1×4 | Traversant | 1 |
-| Vis et entretoises M2 | Fixation du module caméra | — | 2 |
-
-Les passifs sont en 0402 pour gagner de la place. Si l'école n'a que du 0603, on peut adapter les empreintes.
-
-## Points à signaler
-
-- **Soudure** : le lidar, le module Wi-Fi et l'IMU sont en boîtier LGA (pastilles sous le composant). Ils se soudent au **four de refusion ou à la plaque chauffante, avec un pochoir de pâte à braser**, et pas au fer. Le P3A9606 (pas de 0,35 mm) demande la même méthode.
-- **PCB** : 2 couches, 68,6 × 53,3 mm (format shield Arduino Uno), isolation minimale 0,127 mm à cause des pas fins.
-- **Alimentation pour l'utilisation portable** : une batterie externe USB-C 5 V / 3 A pour alimenter le kit sans PC.
