@@ -17,8 +17,8 @@ Composants du schéma `carte_fille_A.kicad_sch`, état du 03/11/2026. Tous les c
 | Repère | Composant | Boîtier | Utilité |
 |---|---|---|---|
 | U1 | ST **LD39150DT33**, LDO 3,3 V 1,5 A | DPAK (TO-252) | Fabrique le **+3V3** à partir du 5 V du kit : Wi-Fi, lidar (AVDD, VBAT), IMU, translateurs |
-| U2 | ST **LDK130-18**, LDO 1,8 V 300 mA | SOT-23-5 | Fabrique le **+1V8** : E/S du lidar (IOVDD), oscillateur, côté lidar des translateurs |
-| U3 | ST **LDK130-12**, LDO 1,2 V 300 mA | SOT-23-5 | Fabrique le **+1V2** : cœur numérique du lidar (DVDD) |
+| U2 | ST **LDK130-18**, LDO 1,8 V 300 mA (à commander : **LDK130M18R**) | SOT-23-5 | Fabrique le **+1V8** : E/S du lidar (IOVDD), oscillateur, côté lidar des translateurs |
+| U3 | ST **LDK130-12**, LDO 1,2 V 300 mA (à commander : **LDK130M12R**) | SOT-23-5 | Fabrique le **+1V2** : cœur numérique du lidar (DVDD) |
 | C1 | 10 µF | 0603 | Découplage de l'entrée 5 V du LD39150 |
 | C2, C3 | 22 µF | 0805 | Sortie du LD39150 : stabilité du LDO et réserve pour les pics de courant du lidar et du Wi-Fi |
 | C4 | 100 nF | 0402 | Filtrage haute fréquence du +3V3 |

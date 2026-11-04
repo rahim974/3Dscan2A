@@ -12,7 +12,7 @@ Projet ENSEA 2A, scanner 3D portable. Carte fille enfichée sur le kit ST STM32N
 | Translateur de niveau I3C 2 bits | **P3A9606** *(suffixe de commande et boîtier à confirmer dans le datasheet)* | NXP | XSON/X2SON-8 | 1 | 2 | Bus I3C 3,3 V ↔ 1,8 V entre le kit et le lidar |
 | Translateur de niveau 1 bit | **SN74LVC1T45DBVR** | Texas Instruments | SOT-23-6 | 3 | 4 | Signaux XSHUT, SYNC et INTR du lidar |
 | Régulateur LDO 3,3 V 1,5 A | **LD39150DT33-R** | STMicroelectronics | DPAK (TO-252) | 1 | 1 | Rail 3,3 V à partir du 5 V du kit |
-| Régulateur LDO 1,8 V 300 mA | **LDK130M18R** | STMicroelectronics | SOT-23-5 | 1 | 2 | Rail 1,8 V (entrées-sorties du lidar) |
+| Régulateur LDO 1,8 V 300 mA | **LDK130M18R** (version standard ; la LDK130M18RY, qualifiée automobile, n'est pas nécessaire) | STMicroelectronics | SOT-23-5 | 1 | 2 | Rail 1,8 V (entrées-sorties du lidar) |
 | Régulateur LDO 1,2 V 300 mA | **LDK130M12R** | STMicroelectronics | SOT-23-5 | 1 | 2 | Rail 1,2 V (cœur du lidar) |
 | Oscillateur 24 MHz | **ECS-2520MV-240-BN-TR** *(vérifier qu'il fonctionne en 1,8 V)* | ECS Inc. | 2,5 × 2,0 mm | 1 | 2 | Horloge du lidar |
 
