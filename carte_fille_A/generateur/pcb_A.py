@@ -69,7 +69,7 @@ def place_header(fp, x1, y1, step):
 board = pcbnew.CreateEmptyBoard()
 board.SetCopperLayerCount(2)
 nc = board.GetDesignSettings().m_NetSettings.GetDefaultNetclass()
-nc.SetClearance(mm(0.127)); nc.SetTrackWidth(mm(0.15))      # pas fins : IMU LGA 0,5 mm, P3A9606
+nc.SetClearance(mm(0.127)); nc.SetTrackWidth(mm(0.15))      # pas fins : IMU LGA 0,5 mm, TCA39306 VSSOP 0,5 mm
 parts = json.load(open(os.path.join(HERE, 'netlist_A.json')))
 nets = {}
 def net(name):

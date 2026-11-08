@@ -9,7 +9,7 @@
 		(company "Projet 2A")
 	)
 	(lib_symbols)
-	(text "CARTE FILLE PROTOTYPE A - SCANNER 3D PORTABLE\n\nShield Arduino Uno R3 enfiche SOUS le STM32N6570-DK : lidar VL53L9CX (I3C via translateur NXP P3A9606),\nIMU LSM6DSV16X, module Wi-Fi 6 / BLE ST67W611M1. Le calcul (IA sur NPU) et la camera sont sur le kit.\nLe lidar et le module camera sont sur la face exterieure et regardent la scene, a l oppose de l ecran.\nRails : +5V du kit -> LDO +3V3 -> LDO +1V8 / +1V2.\nSchema genere par generateur/design_A.py (base : schema du prototype 1), a reprendre a la main pour la mise en page."
+	(text "CARTE FILLE PROTOTYPE A - SCANNER 3D PORTABLE\n\nShield Arduino Uno R3 enfiche SOUS le STM32N6570-DK : lidar VL53L9CX (I3C via translateur TI TCA39306),\nIMU LSM6DSV16X, module Wi-Fi 6 / BLE ST67W611M1. Le calcul (IA sur NPU) et la camera sont sur le kit.\nLe lidar et le module camera sont sur la face exterieure et regardent la scene, a l oppose de l ecran.\nRails : +5V du kit -> LDO +3V3 -> LDO +1V8 / +1V2.\nSchema genere par generateur/design_A.py (base : schema du prototype 1), a reprendre a la main pour la mise en page."
 		(exclude_from_sim no)
 		(at 30.48 160.02 0)
 		(effects

@@ -6,7 +6,7 @@ Le prototype C (carte autonome STM32H7S3, LQFP-144) viendra ensuite et réutilis
 
 ```
             ┌──────────────────────── Carte fille (ce PCB) ────────────────────────┐
-            │  VL53L9CX ◄─ I3C 1,8 V ─ P3A9606 ─ I3C 3,3 V ─┐                      │
+            │  VL53L9CX ◄─ I3C 1,8 V ─ TCA39306 ─ I3C 3,3 V ┐                      │
             │  LSM6DSV16X ◄──────────── I²C 3,3 V ──────────┤                      │
             │  ST67W611M1 ◄──────────── SPI 3,3 V ──────────┤   connecteurs        │
             │  LDO 3V3 / 1V8 / 1V2, oscillateur 24 MHz      ├── Arduino            │
@@ -40,7 +40,7 @@ Une carte 2 couches au format shield Arduino Uno R3, sans microcontrôleur, sans
 |---|---|
 | `connecteurs` | 4 barrettes Arduino mâles (CN8, CN7, CN11, CN12), point de test IOREF |
 | `alimentation` | 5 V du kit → LD39150 (+3V3) → LDK130 (+1V8, +1V2), LED de présence, points de test |
-| `lidar` | VL53L9CX, translateur I3C P3A9606, 3 × SN74LVC1T45 (XSHUT, SYNC_IN, INTR), oscillateur 24 MHz |
+| `lidar` | VL53L9CX, translateur I3C TCA39306, 3 × SN74LVC1T45 (XSHUT, SYNC_IN, INTR), oscillateur 24 MHz |
 | `imu` | LSM6DSV16X sur le bus D14/D15, INT1/INT2 |
 | `wifi` | ST67W611M1 sur le SPI5 (D10–D13), SPI_RDY, CHIP_EN, UART vers D0/D1 et header UART/BOOT |
 | `mecanique` | 2 trous M2 pour le module caméra |
@@ -66,7 +66,7 @@ Une carte 2 couches au format shield Arduino Uno R3, sans microcontrôleur, sans
 - ~~**I3C sur D14/D15**~~ : vérifié dans CubeMX. Reste à voir **quels composants du kit sont déjà sur I2C1 (PH9/PC1)** : un composant I²C sans filtre anti-parasites de 50 ns peut perturber l'I3C. Les options de repli (I3C sur A4/A5, pull-ups I²C) ont été retirées de la carte le 03/11/2026 : en cas de problème, il faudra une nouvelle version du PCB.
 - **Timer sur PE9** (D3) pour SYNC_IN : vérifier dans CubeMX qu'une sortie timer y est disponible (TIM1_CH1 ?).
 - **EXTI** : D2 = ligne 0, D4 = ligne 5, D5 = ligne 10, D9 = ligne 14. Ne pas activer en interruption le TOF_INT de la caméra (PQ0, ligne 0), qui est en conflit avec D2.
-- **P3A9606** : j'ai créé son symbole sans le datasheet sous la main. Le brochage et le boîtier (X2SON-8 mis par défaut) sont **à vérifier**.
+- **Translateur I3C** : le NXP P3A9606 prévu au départ est limité à 1,98 V des deux côtés, donc incompatible avec le 3,3 V du kit. Il est remplacé par le **TI TCA39306DCUR** (VSSOP-8), câblé selon la figure 9-7 du datasheet : 200 kΩ + 100 pF sur VREF2/EN, pull-up 1 kΩ côté 1,8 V. C'est un FET passif : démarrer l'I3C en push-pull vers 5 MHz et monter en vérifiant les fronts (ST annonce 30 images/s en 54 × 42 sur I3C).
 - **Sens de la carte** : en vue de dessus, CN8/CN7 sont en bas et D15…D0 en haut, comme une Uno vue de dessus et comme sur la photo du dessous du kit. L'empreinte KiCad `Module:Arduino_UNO_R3` met l'alimentation en haut, ce qui donnerait une carte en miroir : je ne l'ai pas utilisée. À contrôler en posant un tirage papier 1:1 sur le kit.
 - ~~**Antenne Wi-Fi**~~ : au bord côté CN7, tournée vers l'extérieur, avec une zone sans cuivre sur toutes les couches (12,3 × 4,9 mm, DS14784 §6.2). ST conseille de mettre le module dans un coin de la carte, ce qui n'est pas possible ici à cause des barrettes. On le garde au milieu du bord.
 - ~~**Empreintes ST**~~ (vérifiées le 03/11/2026, elles viennent d'Ultra Librarian et SnapEDA, pas de ST) :
@@ -109,7 +109,7 @@ On tient donc le scanner comme un appareil photo, écran vers l'utilisateur :
 | Lidar 3D ToF | ST **VL53L9CX** | Module LGA | Carte de profondeur 54×42 zones, jusqu'à 8,8 m |
 | Centrale inertielle 6 axes | ST **LSM6DSV16X** | LGA-14 | Orientation et mouvement du scanner (fusion SFLP) |
 | Module Wi-Fi 6 / BLE 5.4 | ST **ST67W611M1** | Module LGA, antenne PCB | Envoi des scans au PC, commandes en BLE |
-| Translateur I3C 3,3 V ↔ 1,8 V | NXP **P3A9606** | — | Passe l'I3C du N6 (3,3 V) au lidar (1,8 V) à 12,5 MHz |
+| Translateur I3C 3,3 V ↔ 1,8 V | TI **TCA39306DCUR** | — | Passe l'I3C du N6 (3,3 V) au lidar (1,8 V), jusqu'à 12,5 MHz |
 | Translateur GPIO 3,3 V ↔ 1,8 V | à choisir (ex. TI SN74LVC2T45 ×2, ou NXP NTB0104) | SOT/XSON | XSHUT, INTR et SYNC_IN du lidar |
 | Oscillateur 24 MHz 1,8 V | ECS-2520MV-240 | 2520 | Horloge AP_CLK du lidar |
 | LDO 1,8 V 300 mA | ST **LDK130-18** | SOT-23-5 | IOVDD du lidar, côté 1,8 V des translateurs, oscillateur |
@@ -180,7 +180,7 @@ Relevé du schéma MB1939 page 3 :
 1. **Relevés sur le kit** (§3) : cotes mécaniques, tension des I/O, courant disponible, broches I3C/SPI. Les noter dans `docs/kit_mesures.md`.
 2. **Tests sans PCB** sur le kit : faire tourner un exemple ST caméra + IA, puis brancher l'IMU (X-NUCLEO-IKS4A1) et le module Wi-Fi (X-NUCLEO-67W61M1) sur l'Arduino pour valider les broches et les drivers.
 3. **Lidar** : kit d'évaluation VL53L9CX relié au kit par un translateur I3C, ou en I²C si l'I3C n'est pas sorti.
-4. ~~**Schéma KiCad** de la carte fille, ERC sans erreur~~ (fait le 03/11/2026). Reste la revue des valeurs avec les datasheets (P3A9606, découplage du lidar).
+4. ~~**Schéma KiCad** de la carte fille, ERC sans erreur~~ (fait le 03/11/2026). Reste la revue des valeurs avec les datasheets (translateur TCA39306, découplage du lidar).
 5. **Placement et routage** : contour issu des cotes du §3, lidar aligné avec la caméra, antenne en bord de carte, DRC sans erreur.
 6. **Fabrication** (Gerbers, BOM, fichiers de placement), commande des composants, montage.
 7. **Mise en route** : rails d'alimentation, puis IMU, Wi-Fi, lidar un par un, puis fusion lidar + IMU + caméra et IA sur le NPU, envoi au PC.

@@ -107,7 +107,8 @@ for net in ('+5V', '+3V3', '+1V8', '+1V2', 'GND'): testpoint(s, g, net)
 s = P.sheet('Lidar', 'lidar.kicad_sch')
 s.text('LIDAR VL53L9CX - IOVDD = 1,8 V, DVDD = 1,2 V, AVDD = 3,3 V, VBAT_LDD / VBAT_RX = +3V3 (plage 2,8-4,8 V).\n'
        'Le kit est en 3,3 V : translateurs entre le kit et le lidar.\n'
-       '  I3C SCL/SDA : NXP P3A9606 (translateur I3C 12,5 MHz). BROCHAGE ET BOITIER DU SYMBOLE A VERIFIER (datasheet NXP).\n'
+       '  I3C SCL/SDA : TI TCA39306 (FET passif, I3C 12,5 MHz max), montage fig. 9-7 : VREF1 = +1V8, EN = VREF2 -> 200k -> +3V3, 100 pF sur VREF2.\n'
+       '  Tirages 2,2k cote 1,8 V. Cote 3,3 V : tirages 1,5k deja sur le kit (I2C1).\n'
        '  XSHUT, SYNC_IN (kit -> lidar) et INTR (lidar -> kit) : SN74LVC1T45, sens fixe par DIR.\n'
        'Bus I3C sur D14/D15 (verifie dans CubeMX). L IMU partage ce bus (le LSM6DSV16X accepte l I3C).\n'
        'AP_CLK : oscillateur 24 MHz 1,8 V dedie. MIPI CSI du lidar non utilise.\n'
@@ -115,11 +116,12 @@ s.text('LIDAR VL53L9CX - IOVDD = 1,8 V, DVDD = 1,2 V, AVDD = 3,3 V, VBAT_LDD / V
 P.part(s, 'Lidar:VL53L9CX_large', 'U', 'VL53L9CX', 101.6, 114.3, {
     'A11': 'LIDAR_SCL', 'A12': 'LIDAR_SDA', 'E11': 'LIDAR_APCLK', 'B12': 'LIDAR_XSHUT',
     'D12': 'LIDAR_SYNC', 'A10': 'LIDAR_INT', 're:VSS.*': 'GND',
-    'B1': '+3V3', 'D1': '+3V3', 'E6': '+3V3', 'E7': '+3V3', 'C12': '+1V2', 'E8': '+1V8'},
+    'B1': '+3V3', 'D1': '+3V3', 'E6': '+3V3', 'E7': '+3V3', 'C12': '+1V2', 'E8': '+1V8',
+    'E5': 'LIDAR_E5'},   # E5 : VSS (datasheet rev 9), nommee VPP sur les cartes d eval -> masse par 0R
     nc=('A5', 'A6', 'A8', 'A9', 'E3', 'E12'), fp='custom_fp:VL53L9CX')
-P.part(s, 'Custom:P3A9606', 'U', 'P3A9606', 228.6, 50.8, {
-    '3': '+3V3', '6': '+1V8', '5': '+3V3', '1': 'ARD_SCL', '2': 'ARD_SDA',
-    '8': 'LIDAR_SCL', '7': 'LIDAR_SDA', '4': 'GND'})
+P.part(s, 'Custom:TCA39306', 'U', 'TCA39306', 228.6, 50.8, {
+    '7': 'TCA_VREF2', '8': 'TCA_VREF2', '2': '+1V8', '6': 'ARD_SCL', '5': 'ARD_SDA',
+    '3': 'LIDAR_SCL', '4': 'LIDAR_SDA', '1': 'GND'})
 TR = 'Logic_LevelTranslator:SN74LVC1T45DBV'
 P.part(s, TR, 'U', 'SN74LVC1T45 XSHUT', 228.6, 101.6, {
     '1': '+3V3', '6': '+1V8', '5': '+3V3', '3': 'LIDAR_XSHUT_3V3', '4': 'LIDAR_XSHUT', '2': 'GND'})
@@ -135,7 +137,13 @@ res(s, g, '10k', 'LIDAR_XSHUT_3V3', 'GND')
 res(s, g, '10k', 'LIDAR_XSHUT', 'GND')
 res(s, g, '10k', 'LIDAR_SYNC_3V3', 'GND')
 res(s, g, '10k', 'LIDAR_INT', '+1V8')
-for _ in range(5): cap(s, g, '100nF', '+3V3')                  # P3A9606 A, 3 x LVC1T45, osc
+for _ in range(3): cap(s, g, '100nF', '+3V3')                  # 3 x LVC1T45 (cote 3,3 V)
+cap(s, g, '100nF', '+1V8')                                     # oscillateur Y1 (alimente en 1,8 V)
+res(s, g, '200k', 'TCA_VREF2', '+3V3')                         # TCA39306 fig. 9-7
+cap(s, g, '100pF', 'TCA_VREF2')
+res(s, g, '2.2k', 'LIDAR_SCL', '+1V8')                        # 2,2k : VOL du lidar garanti a faible courant
+res(s, g, '2.2k', 'LIDAR_SDA', '+1V8')
+res(s, g, '0R', 'LIDAR_E5', 'GND')                             # E5 du lidar (R14)
 g = Grid(20.32, 332.74, cols=11)
 for v in ('100nF',) * 4: cap(s, g, v, '+1V8')                  # cotes 1,8 V des translateurs
 g = Grid(20.32, 381.0, cols=13)
@@ -170,16 +178,17 @@ s = P.sheet('WiFi BLE', 'wifi.kicad_sch')
 s.text('ST67W611M1A6B (Wi-Fi 6 / BLE 5.4) - VDD33 = VDDIO = 3,3 V (meme niveau que le kit).\n'
        'Hote : SPI5 du N6 sur D10-D13 (NSS PA3, MOSI PG2, MISO PH8, SCK PE15), SPI_RDY -> D2 (PD0, EXTI).\n'
        'CHIP_EN -> D7 (PD6), pull-down 100k : module arrete tant que le N6 ne l active pas.\n'
-       'UART du module : vers D0/D1 du kit par 0R, et sur le header J (GND, TX, RX, BOOT) pour la MAJ firmware.\n'
+       'UART du module : vers D0/D1 du kit par 0R, et sur le header J (GND, TX, RX, BOOT, +3V3) pour la MAJ firmware.\n'
+       'Mise a jour : cavalier entre BOOT et +3V3 (broches 4-5) pour forcer BOOT a 1.\n'
        'Antenne PCB en bord de carte, cote exterieur : zone sans cuivre sur toutes les couches, loin du kit.', 20.32, 15.24)
 P.part(s, 'carte_wifi:ST67W611M1A6B', 'IC', 'ST67W611M1A6B', 76.2, 76.2, {
     '3': 'WIFI_BOOT', '9': '+3V3', '25': '+3V3', '16': '+3V3', 're:GND_.*': 'GND',
     '17': 'WIFI_EN', '21': 'WIFI_RDY', '22': 'WIFI_UART_TX', '23': 'WIFI_UART_RX', '24': 'WIFI_CS',
     '27': 'WIFI_MOSI', '28': 'WIFI_SCK', '29': 'WIFI_MISO'},
     nc=('1', '2', '4', '5', '6', '7', '8', '11', '12', '13', '14', '19', '20'), fp='custom_fp:ST67W611M1A6B')
-P.part(s, 'Connector:Conn_01x04_Pin', 'J', 'UART/BOOT Wi-Fi', 203.2, 76.2, {
-    '1': 'GND', '2': 'WIFI_UART_TX', '3': 'WIFI_UART_RX', '4': 'WIFI_BOOT'},
-    fp='Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical')
+P.part(s, 'Connector:Conn_01x05_Pin', 'J', 'UART/BOOT Wi-Fi', 203.2, 76.2, {
+    '1': 'GND', '2': 'WIFI_UART_TX', '3': 'WIFI_UART_RX', '4': 'WIFI_BOOT', '5': '+3V3'},
+    fp='Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical')   # cavalier 4-5 = BOOT a 1
 g = Grid(20.32, 160.02, cols=14)
 res(s, g, '100k', 'WIFI_EN', 'GND')
 res(s, g, '10k', 'WIFI_BOOT', 'GND')
@@ -202,7 +211,7 @@ for i, x in enumerate((50.8, 76.2)):
 # ======================================================================
 os.makedirs(OUT, exist_ok=True)
 notes = [('CARTE FILLE PROTOTYPE A - SCANNER 3D PORTABLE\n\n'
-          'Shield Arduino Uno R3 enfiche SOUS le STM32N6570-DK : lidar VL53L9CX (I3C via translateur NXP P3A9606),\n'
+          'Shield Arduino Uno R3 enfiche SOUS le STM32N6570-DK : lidar VL53L9CX (I3C via translateur TI TCA39306),\n'
           'IMU LSM6DSV16X, module Wi-Fi 6 / BLE ST67W611M1. Le calcul (IA sur NPU) et la camera sont sur le kit.\n'
           'Le lidar et le module camera sont sur la face exterieure et regardent la scene, a l oppose de l ecran.\n'
           'Rails : +5V du kit -> LDO +3V3 -> LDO +1V8 / +1V2.\n'

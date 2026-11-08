@@ -2,31 +2,39 @@
 	(version 20251024)
 	(generator "kicad_symbol_editor")
 	(generator_version "10.0")
-	(symbol "P3A9606"
+	(symbol "TCA39306"
 		(pin_names
 			(offset 1.016)
 		)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
 		(property "Reference" "U"
 			(at 0 10.16 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "P3A9606"
-			(at 0 7.62 0)
+		(property "Value" "TCA39306"
+			(at 0 -0.762 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" "Package_SON:X2SON-8_1.4x1mm_P0.35mm"
-			(at 0 0 0)
+		(property "Footprint" "Package_SO:VSSOP-8_2.3x2mm_P0.5mm"
+			(at 15.494 -18.034 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(hide yes)
 			(effects
 				(font
@@ -34,8 +42,10 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.nxp.com/docs/en/data-sheet/P3A9606.pdf"
-			(at 0 0 0)
+		(property "Datasheet" "https://www.ti.com/lit/ds/symlink/tca39306.pdf"
+			(at 12.192 -14.224 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(hide yes)
 			(effects
 				(font
@@ -43,8 +53,10 @@
 				)
 			)
 		)
-		(property "Description" "Translateur de niveau I3C/I2C 2 bits NXP. BROCHAGE ET BOITIER A VERIFIER dans le datasheet"
-			(at 0 0 0)
+		(property "Description" "Translateur de niveau I2C/I3C 2 bits TI (FET passif, 12,5 MHz I3C), VSSOP-8 DCU. VREF1 (bas) <= VREF2 - 0,6 V. Montage fig. 9-7 : EN relie a VREF2, 200k vers VDPU, 100 pF sur VREF2."
+			(at 11.684 -10.16 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(hide yes)
 			(effects
 				(font
@@ -52,7 +64,7 @@
 				)
 			)
 		)
-		(symbol "P3A9606_0_1"
+		(symbol "TCA39306_0_1"
 			(rectangle
 				(start -7.62 6.35)
 				(end 7.62 -6.35)
@@ -65,29 +77,11 @@
 				)
 			)
 		)
-		(symbol "P3A9606_1_1"
-			(pin power_in line
-				(at -2.54 8.89 270)
+		(symbol "TCA39306_1_1"
+			(pin bidirectional line
+				(at -10.16 2.54 0)
 				(length 2.54)
-				(name "VCCA"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(number "3"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-			)
-			(pin power_in line
-				(at 2.54 8.89 270)
-				(length 2.54)
-				(name "VCCB"
+				(name "SCL2"
 					(effects
 						(font
 							(size 1.27 1.27)
@@ -102,10 +96,10 @@
 					)
 				)
 			)
-			(pin input line
-				(at -10.16 -3.81 0)
+			(pin bidirectional line
+				(at -10.16 0 0)
 				(length 2.54)
-				(name "EN"
+				(name "SDA2"
 					(effects
 						(font
 							(size 1.27 1.27)
@@ -120,64 +114,10 @@
 					)
 				)
 			)
-			(pin bidirectional line
-				(at -10.16 2.54 0)
+			(pin power_in line
+				(at -2.54 8.89 270)
 				(length 2.54)
-				(name "A1"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(number "1"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-			)
-			(pin bidirectional line
-				(at -10.16 0 0)
-				(length 2.54)
-				(name "A2"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(number "2"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-			)
-			(pin bidirectional line
-				(at 10.16 2.54 180)
-				(length 2.54)
-				(name "B1"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(number "8"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-			)
-			(pin bidirectional line
-				(at 10.16 0 180)
-				(length 2.54)
-				(name "B2"
+				(name "VREF2"
 					(effects
 						(font
 							(size 1.27 1.27)
@@ -202,6 +142,60 @@
 						)
 					)
 				)
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin input line
+				(at -10.16 -3.81 0)
+				(length 2.54)
+				(name "EN"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "8"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin power_in line
+				(at 2.54 8.89 270)
+				(length 2.54)
+				(name "VREF1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin bidirectional line
+				(at 10.16 0 180)
+				(length 2.54)
+				(name "SDA1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
 				(number "4"
 					(effects
 						(font
@@ -210,6 +204,25 @@
 					)
 				)
 			)
+			(pin bidirectional line
+				(at 10.16 2.54 180)
+				(length 2.54)
+				(name "SCL1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
 		)
+		(embedded_fonts no)
 	)
 )

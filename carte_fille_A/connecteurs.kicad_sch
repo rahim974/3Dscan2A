@@ -2518,8 +2518,9 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Generic connector, single row, 01x06, script generated"
 			(at 50.8 160.02 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2610,8 +2611,9 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
 			(at 160.02 170.18 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2644,7 +2646,7 @@
 		(dnp no)
 		(uuid "585cb9b3-da83-48eb-87aa-2d8f12b8edcc")
 		(property "Reference" "#FLG1"
-			(at 252 168.1 0)
+			(at 256.032 156.972 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2655,7 +2657,7 @@
 			)
 		)
 		(property "Value" "PWR_FLAG"
-			(at 252 170.1 0)
+			(at 242.824 165.1 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2687,8 +2689,9 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Special symbol for telling ERC where power comes from"
 			(at 254 165.1 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2764,8 +2767,9 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Generic connector, single row, 01x08, script generated"
 			(at 50.8 101.6 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2862,8 +2866,9 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
 			(at 58.42 109.22 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2939,8 +2944,9 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power symbol creates a global label with name \"+5V\""
 			(at 254 167.64 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3016,8 +3022,9 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Generic connector, single row, 01x08, script generated"
 			(at 152.4 101.6 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3114,8 +3121,9 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
 			(at 58.42 106.68 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3148,7 +3156,7 @@
 		(dnp no)
 		(uuid "bddd27de-1373-4e0d-bf30-6532112c273c")
 		(property "Reference" "#FLG2"
-			(at 272.32 168.1 0)
+			(at 280.162 160.02 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3159,7 +3167,7 @@
 			)
 		)
 		(property "Value" "PWR_FLAG"
-			(at 272.32 170.1 0)
+			(at 283.464 164.846 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3191,8 +3199,9 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Special symbol for telling ERC where power comes from"
 			(at 274.32 165.1 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3268,8 +3277,9 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Generic connector, single row, 01x10, script generated"
 			(at 152.4 165.1 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3329,7 +3339,7 @@
 		(dnp no)
 		(uuid "db247fdf-7c4e-4638-827a-799e186e7710")
 		(property "Reference" "TP1"
-			(at 226.6 104.6 0)
+			(at 237.236 92.71 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3340,7 +3350,7 @@
 			)
 		)
 		(property "Value" "IOREF"
-			(at 226.6 106.6 0)
+			(at 235.204 96.266 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3372,8 +3382,9 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "test point"
 			(at 228.6 101.6 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3449,8 +3460,9 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
 			(at 274.32 167.64 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3526,8 +3538,9 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power symbol creates a global label with name \"+5V\""
 			(at 58.42 104.14 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
