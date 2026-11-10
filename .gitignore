@@ -4,3 +4,4 @@
 fp-info-cache
 *-backups/
 __pycache__/
+*.rpt
