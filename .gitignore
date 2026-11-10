@@ -1,0 +1,21 @@
+﻿# STM32CubeIDE build outputs
+Debug/
+Release/
+
+# Eclipse / STM32CubeIDE workspace metadata
+.metadata/
+
+# Generated binaries
+*.elf
+*.bin
+*.hex
+*.map
+*.list
+*.o
+*.d
+*.su
+
+# Temporary files
+*.tmp
+*.bak
+*~
