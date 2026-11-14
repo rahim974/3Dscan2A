@@ -1,0 +1,6 @@
+../Core/Src/lsm6dsv16x_test.c:45:13:uprintf	3
+../Core/Src/lsm6dsv16x_test.c:57:26:rd	1
+../Core/Src/lsm6dsv16x_test.c:62:26:wr	1
+../Core/Src/lsm6dsv16x_test.c:67:13:i2c_scan	4
+../Core/Src/lsm6dsv16x_test.c:82:16:le16	1
+../Core/Src/lsm6dsv16x_test.c:84:6:LSM6_Test_Run	16
