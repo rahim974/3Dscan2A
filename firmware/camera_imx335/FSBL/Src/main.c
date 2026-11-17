@@ -537,10 +537,17 @@ static ISP_StatusTypeDef GetSensorExposureHelper(uint32_t Instance, int32_t *Exp
   return ISP_OK;
 }
 
-void HAL_DCMIPP_PIPE_FrameEventCallback(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe)
+
+void HAL_DCMIPP_PIPE_FrameEventCallback(
+    DCMIPP_HandleTypeDef *hdcmipp,
+    uint32_t Pipe)
 {
-  NbMainFrames++;
+    NbMainFrames++;
+
+    g_camera_frame.frame_id = NbMainFrames;
+    g_camera_frame.timestamp_ms = HAL_GetTick();
 }
+
 
 /**
  * @brief  Vsync Event callback on pipe
