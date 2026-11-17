@@ -127,8 +127,22 @@ void LSM6_Test_Run(I2C_HandleTypeDef *hi2c, UART_HandleTypeDef *huart)
     uint8_t buf[6];
     int32_t ax = 0, ay = 0, az = 0, gx = 0, gy = 0, gz = 0, tc = 0;
     uint32_t last_print = 0;
+    int paused = 0;
+    GPIO_PinState prev_btn = GPIO_PIN_SET;
+
+    uprintf("(Bouton bleu USER = pause / reprise de l'affichage)\r\n");
 
     for (;;) {
+        /* Bouton bleu B1 (PC13, actif à l'état bas) : bascule pause/reprise */
+        GPIO_PinState btn = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+        if (btn == GPIO_PIN_RESET && prev_btn == GPIO_PIN_SET) {
+            paused = !paused;
+            uprintf(paused ? "--- PAUSE (bouton bleu pour reprendre) ---\r\n"
+                           : "--- REPRISE ---\r\n");
+            HAL_Delay(30);                       /* anti-rebond */
+        }
+        prev_btn = btn;
+
         if (rd(REG_STATUS, &v, 1) != HAL_OK) {
             uprintf("Erreur I2C (STATUS)\r\n");
             HAL_Delay(500);
@@ -154,7 +168,7 @@ void LSM6_Test_Run(I2C_HandleTypeDef *hi2c, UART_HandleTypeDef *huart)
             tc = 2500 + (int32_t)le16(&buf[0]) * 100 / 256;
         }
 
-        if (HAL_GetTick() - last_print >= 200) { /* affichage à 5 Hz */
+        if (!paused && HAL_GetTick() - last_print >= 200) { /* affichage à 5 Hz */
             last_print = HAL_GetTick();
             uprintf("%6ld %6ld %6ld | %8ld %8ld %8ld | %ld.%02ld\r\n",
                     (long)ax, (long)ay, (long)az,
