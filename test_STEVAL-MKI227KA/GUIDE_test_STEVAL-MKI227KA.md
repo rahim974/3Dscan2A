@@ -20,6 +20,8 @@ Le code fourni ici n'utilise **pas** ces bibliothèques : il lit les registres d
 
 ## 2. Câblage (I2C)
 
+> **Le plus simple : suivre les noms sérigraphiés à côté des trous DIL24 de la carte** (VDD, VDDIO, GND, SCL, SDA, SDO, CS…). Les trous sont livrés nus : il faut y souder 2 barrettes mâles de 12 broches (pas de 2,54 mm). **Ne pas se brancher sur les petits connecteurs noirs** : celui du milieu est le cavalier de sélection (SEL/JQ) et JP1 (QV) sert aux électrodes Qvar.
+
 Brochage DIL24 standard des cartes STEVAL-MKIxxx (vue de dessus, broche 1 en haut à gauche, broches 1 à 12 à gauche et 13 à 24 à droite en remontant) :
 
 | Signal | Broche DIL24 | NUCLEO-F410RB |
