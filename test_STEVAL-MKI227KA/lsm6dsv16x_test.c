@@ -120,29 +120,6 @@ void LSM6_Test_Run(I2C_HandleTypeDef *hi2c, UART_HandleTypeDef *huart)
     wr(REG_CTRL1, ODR_30HZ);                   /* accéléro 30 Hz, mode haute perf. */
     wr(REG_CTRL2, ODR_30HZ);                   /* gyro 30 Hz, mode haute perf. */
 
-    /* 3b) Calibration du biais gyro : moyenne de 60 échantillons (~2 s à 30 Hz),
-     *     carte IMMOBILE. Le biais est ensuite soustrait de chaque mesure. */
-    int32_t bgx = 0, bgy = 0, bgz = 0;
-    {
-        uprintf("Calibration gyro : ne pas bouger la carte (2 s)...\r\n");
-        HAL_Delay(100);                         /* laisser le gyro démarrer */
-        int32_t sx = 0, sy = 0, sz = 0;
-        int n = 0;
-        uint32_t t0 = HAL_GetTick();
-        uint8_t b[6];
-        while (n < 60 && HAL_GetTick() - t0 < 5000) {
-            if (rd(REG_STATUS, &v, 1) == HAL_OK && (v & 0x02)) {
-                rd(REG_OUTX_L_G, b, 6);
-                sx += le16(&b[0]); sy += le16(&b[2]); sz += le16(&b[4]);
-                n++;
-            }
-            HAL_Delay(2);
-        }
-        if (n > 0) { bgx = sx / n; bgy = sy / n; bgz = sz / n; }
-        uprintf("Biais gyro (mdps) : %ld %ld %ld (sur %d echantillons)\r\n",
-                (long)(bgx * 70), (long)(bgy * 70), (long)(bgz * 70), n);
-    }
-
     uprintf("Config : XL ±2g 30Hz, G ±2000dps 30Hz. Unites : mg, mdps, centiemes de degC\r\n");
     uprintf("   ax     ay     az   |      gx       gy       gz  |  temp\r\n");
 
@@ -181,9 +158,9 @@ void LSM6_Test_Run(I2C_HandleTypeDef *hi2c, UART_HandleTypeDef *huart)
         if (v & 0x02) {                         /* GDA */
             rd(REG_OUTX_L_G, buf, 6);
             /* 70 mdps/LSB */
-            gx = ((int32_t)le16(&buf[0]) - bgx) * 70;
-            gy = ((int32_t)le16(&buf[2]) - bgy) * 70;
-            gz = ((int32_t)le16(&buf[4]) - bgz) * 70;
+            gx = (int32_t)le16(&buf[0]) * 70;
+            gy = (int32_t)le16(&buf[2]) * 70;
+            gz = (int32_t)le16(&buf[4]) * 70;
         }
         if (v & 0x04) {                         /* TDA */
             rd(REG_OUT_TEMP_L, buf, 2);
