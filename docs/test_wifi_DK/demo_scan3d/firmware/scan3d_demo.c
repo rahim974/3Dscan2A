@@ -63,9 +63,11 @@
 #define SCAN3D_RSSI_PENDANT_ENVOI 0
 #endif
 
-/* Priorités : sous les tâches du pilote W6X (24) */
+/* Priorités : la tâche réseau tourne à la même priorité que la tâche iperf de ST (40,
+ * au-dessus des tâches du pilote W6X à 24) : iperf tient 60 s sans décrochage alors
+ * qu'à 16 la démo décrochait en quelques secondes. Capteur et écran restent en dessous. */
 #define PRIO_CAPTEUR        18U
-#define PRIO_RESEAU         16U
+#define PRIO_RESEAU         40U
 #define PRIO_ECRAN          12U
 
 static uint8_t trame_capteur[FRAME_SIZE];   /* écrite par le capteur (sous mutex) */
@@ -341,7 +343,12 @@ static void tache_reseau(void *arg)
       {
         st.erreurs++;
         st.reconnexions++;
-        ncp_echec("envoi TCP");
+        /* Après « Failed to send command » le module ne répond plus jamais :
+         * inutile d'attendre 3 échecs, on le relance tout de suite. */
+        LogError("Scan3D: envoi TCP échoué, relance immédiate du module\n");
+        message("Module Wi-Fi bloque : relance...", LCD_ERREUR);
+        vTaskDelay(pdMS_TO_TICKS(300));
+        redemarrer_tout();
         st.lien = "perdu"; st.lien_niv = LCD_ERREUR;
         message("Liaison perdue, reconnexion...", LCD_ERREUR);
         break;
