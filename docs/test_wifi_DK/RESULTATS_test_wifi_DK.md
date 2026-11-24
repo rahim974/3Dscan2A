@@ -75,3 +75,17 @@ Code dans `demo_scan3d/` (README). Réseau « Scan3d » (partage 2,4 GHz), PC r�
 - Hypothèses éliminées : débit, réseau, Mac, contenu des données, lecture du RSSI, écran, priorité des tâches, mémoire et piles du STM32 (tas libre 160 Ko, piles < 15 % utilisées).
 - Version retenue (v7) : envoi continu par défaut, blocs de 1 520 octets, relance immédiate du module (CHIP_EN) en cas d'échec.
 - Pour le scanner : garder le lien occupé en continu, ou couper l'économie d'énergie si l'essai le confirme. La mise à jour du firmware du module en 2.0.106 n'est plus indispensable ; c'est une opération irréversible, à faire seulement avec l'accord de l'équipe.
+
+## Essai sur batterie externe et état en fin de séance (24/11/2026)
+
+- **v6 sur batterie** (USB-C ST-LINK, sans câble vers le Mac, BOOT0/BOOT1 sur L) : le DK se connecte seul au Wi-Fi puis au Mac et envoie 251 trames en environ 10 s, à 27-28 trames/s (≈ 2 Mbit/s), sans trame corrompue.
+  - La v6 envoie avec des pauses de 33 ms ; le module décroche ensuite comme prévu.
+  - Aucune reconnexion n'a été observée dans les 2 minutes qui ont suivi. Cause non vérifiée (écran non photographié).
+- **v7** (envoi continu par défaut, panneau d'état élargi) : flashée sur le DK, **pas encore testée sur batterie**. Au moment de l'essai, le Mac avait quitté le partage « Scan3d » (IP 192.168.1.244 au lieu de 10.62.127.197).
+
+**À faire à la prochaine séance**
+1. Connecter d'abord le Mac au partage « Scan3d », vérifier son IP (`ipconfig getifaddr en0`) et lancer `pc/recepteur_scan3d.py 5002`.
+2. Alimenter le DK sur batterie et vérifier que le flux v7 tient plusieurs minutes. Si l'IP du Mac a changé, il faut recompiler avec la nouvelle IP dans `wifi_secrets.h`.
+3. Améliorations possibles :
+   - découverte automatique du PC (diffusion UDP) pour ne plus compiler l'IP ;
+   - essai `powersave 0` avec envoi cadencé.
