@@ -1,4 +1,5 @@
 #include "lidar_simulator.h"
+#include "lidar_processing.h"
 #include <stddef.h>
 
 static uint32_t prng_next(LidarSimulator *sim)
@@ -276,62 +277,11 @@ void LidarSim_Generate(
     }
 }
 
+/* Compatibility entry point for the historical LiDAR firmware. */
 void LidarSim_ComputeStats(
     const LidarFrame *frame,
     LidarFrameStats *stats
 )
 {
-    uint32_t r;
-    uint32_t c;
-    uint64_t sum = 0u;
-
-    if ((frame == NULL) || (stats == NULL))
-    {
-        return;
-    }
-
-    stats->min_mm = 0xFFFFu;
-    stats->max_mm = 0u;
-    stats->mean_mm = 0u;
-    stats->invalid_count = 0u;
-    stats->valid_count = 0u;
-
-    for (r = 0u; r < LIDAR_HEIGHT; ++r)
-    {
-        for (c = 0u; c < LIDAR_WIDTH; ++c)
-        {
-            uint16_t d = frame->range_mm[r][c];
-
-            if (d == LIDAR_INVALID_MM)
-            {
-                stats->invalid_count++;
-                continue;
-            }
-
-            if (d < stats->min_mm)
-            {
-                stats->min_mm = d;
-            }
-
-            if (d > stats->max_mm)
-            {
-                stats->max_mm = d;
-            }
-
-            sum += d;
-            stats->valid_count++;
-        }
-    }
-
-    if (stats->valid_count > 0u)
-    {
-        stats->mean_mm =
-            (uint32_t)(sum / stats->valid_count);
-    }
-    else
-    {
-        stats->min_mm = 0u;
-        stats->max_mm = 0u;
-        stats->mean_mm = 0u;
-    }
+    LidarProcessing_ComputeStats(frame, stats);
 }

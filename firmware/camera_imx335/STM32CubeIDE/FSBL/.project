@@ -206,5 +206,10 @@
             <type>1</type>
             <locationURI>PARENT-3-PROJECT_LOC/lidar_sim/FSBL/Core/Src/lidar_simulator.c</locationURI>
         </link>
+        <link>
+            <name>Application/User/lidar_processing.c</name>
+            <type>1</type>
+            <locationURI>PARENT-3-PROJECT_LOC/lidar_sim/FSBL/Core/Src/lidar_processing.c</locationURI>
+        </link>
 	</linkedResources>
 </projectDescription>

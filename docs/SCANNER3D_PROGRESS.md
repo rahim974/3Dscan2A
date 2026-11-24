@@ -379,3 +379,52 @@
 - Quatre SVG P04 : matrice, scenes theoriques, pipeline et validation.
 - Roadmap actualisee ; handoff P05 prepare. P05 non commencee.
 - Publication : commit/push et verification de Note-de-Seb par le script de cloture ; aucun changement main.
+
+### 2026-11-24 - P05 : audit, conception et implementation locale
+
+- Branche exclusive : Note-de-Seb ; baseline locale et distante controlee : 8cc3395930605d7e1495617f92d618ee4984723f.
+- Roadmap, journal, rapport P04, handoff P05, protocole HTML, sources LiDAR, points d'integration et configurations CubeIDE examines sur GitHub.
+- Huit SVG P03/P04 identifies comme references visuelles.
+- Types communs deplaces sans changement de layout ; statistiques originales deplacees ; fonction historique conservee comme wrapper.
+- Traitements independants du simulateur et de HAL ; seuil strict, invalide 0xFFFF exclu, moyenne tronquee, centroide non pondere et indexe a partir de zero.
+- References recalculees en JS et Python : obstacle central 324 zones a 1200 mm ; gradient 251 zones, min 1137, moyenne 1333, sommes row/col 4795/636 au seuil 1500 mm.
+- Diagnostic P04 conserve et augmente de 19 essais P05, dont 5 essais synthetiques ; un seul buffer LiDAR, aucun consommateur snapshot ajoute.
+- Les six references P04 et les six comparaisons de compatibilite sont verifiees par le nouveau diagnostic lors de son execution future.
+- Firmware LiDAR historique : main.c conserve ; compilation du nouveau fichier via Core ; firmware camera : source liee supplementaire dans .project.
+- Statut : implementation locale ; compilation et validation STM32 non effectuees ; SVG P05 et rapport final a produire.
+- Prochaine action : compiler les deux projets Debug, verifier le map camera et tester la camera sur STM32.
+
+### 2026-11-24 - P05 : tests STM32 conformes
+
+- Nouveau firmware P05 execute sur STM32.
+- Detection : 19/19 essais conformes.
+- P05 pass_mask=524287, failures=0, done=1.
+- Compatibilite statistiques historiques : mask=63.
+- Non-regression P04 : 6/6, mask=63, failures=0.
+- Dimensions : 54x42 ; frame : 15880 octets.
+- Camera : 151 frames produites et 151 lues en 5000 ms.
+- Cadence mesuree : 30.20 FPS, identique a P04.
+- hdcmipp.ErrorCode=0 au releve precedent.
+- Diagnostic automatique termine.
+- Confirmation LCD et verification MAP a finaliser.
+- Compilation du firmware LiDAR historique a effectuer.
+- Statut : tests STM32 P05 conformes ; cloture en attente.
+
+### 2026-11-24 - P05 : confirmation LCD
+
+- Flux camera affiche correctement sur le LCD.
+- Confirmation visuelle par l'operateur.
+- Non-regression camera et LCD confirmee.
+- Controle memoire MAP en cours.
+
+### 2026-11-24 - P05 : clôture technique
+
+- Détection STM32 19/19 ; régression P04 6/6 ; compatibilité 6/6 ; aucun échec.
+- Camera 151/151 en 5000 ms ; 30,20 FPS ; LCD confirmé ; ErrorCode=0 au relevé.
+- Debug caméra : 0 erreur, 0 avertissement ; Text=153980, Data=324, BSS=793780.
+- Debug historique : 0 erreur, 1 avertissement ancien (variable test inutilisée) ; ELF/BIN générés, non flashé.
+- Premier script de clôture interrompu : deux occurrences .camera_snapshot dans le MAP ; aucun commit ni push. Parseur corrigé pour accepter seulement les occurrences de même adresse et taille.
+- MAP de clôture : tailles et absence de chevauchement contrôlées ; snapshot à 0x342E0000 conservé.
+- Statut : P05 validée STM32 dans le périmètre testé ; pas de validation Release ni de débit continu ni de snapshot retesté.
+- Rapport : docs/tests/LIDAR_PROCESSING_VALIDATION_2026-11-24.md ; quatre SVG P05 ; roadmap mise à jour.
+- Handoff P06 créé ; P06 non commencée. Publication à vérifier après push.

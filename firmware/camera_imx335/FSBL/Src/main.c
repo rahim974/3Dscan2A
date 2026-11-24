@@ -26,6 +26,7 @@
 #include "camera_types.h"
 #include "camera_source.h"
 #include "lidar_simulator.h"
+#include "lidar_processing.h"
 
 #define P03_SNAPSHOT_TEST_ENABLED 0
 /* USER CODE END Includes */
@@ -181,6 +182,123 @@ static uint32_t P04Hash(const LidarFrame *frame)
     return hash;
 }
 
+/* P05: additional checks on the existing P04 frame and schedule. */
+#define P05_CASE_COUNT 19u
+#define P05_CENTROID_EPS 0.0001f
+
+typedef struct
+{
+    uint32_t scene_index; /* P04 case index, 6 = independent synthetic frame */
+    uint16_t threshold_mm;
+    uint32_t count;
+    uint16_t nearest;
+    uint16_t mean;
+    float row;
+    float col;
+} P05Expected;
+
+static const P05Expected p05_expected[P05_CASE_COUNT] =
+{
+    {0, 1500, 0, 65535, 0, 0.0f, 0.0f},
+    {0, 2000, 0, 65535, 0, 0.0f, 0.0f},
+    {0, 2001, 2268, 2000, 2000, 20.5f, 26.5f},
+    {1, 1500, 324, 1200, 1200, 20.5f, 26.5f},
+    {1, 1200, 0, 65535, 0, 0.0f, 0.0f},
+    {1, 1201, 324, 1200, 1200, 20.5f, 26.5f},
+    {2, 1500, 251, 1137, 1333, 19.103585657f, 2.533864542f},
+    {3, 1500, 0, 65535, 0, 0.0f, 0.0f},
+    {3, 2500, 1066, 2450, 2474, 20.275797373f, 26.136960600f},
+    {4, 1500, 0, 65535, 0, 0.0f, 0.0f},
+    {4, 2500, 0, 65535, 0, 0.0f, 0.0f},
+    {4, 2501, 2189, 2500, 2500, 20.476016446f, 26.367291000f},
+    {5, 1500, 0, 65535, 0, 0.0f, 0.0f},
+    {5, 65535, 0, 65535, 0, 0.0f, 0.0f},
+    {6, 0, 0, 65535, 0, 0.0f, 0.0f},
+    {6, 1, 1, 0, 0, 0.0f, 0.0f},
+    {6, 1500, 2, 0, 749, 20.5f, 26.5f},
+    {6, 1501, 3, 0, 999, 13.666666667f, 35.333333333f},
+    {6, 65535, 5, 0, 14006, 16.6f, 21.4f}
+};
+
+typedef struct
+{
+    uint32_t scene_index;
+    uint32_t threshold_mm;
+    LidarObstacleInfo obstacle;
+    uint32_t elapsed_ms;
+    uint32_t passed;
+} P05Result;
+
+static volatile struct
+{
+    uint32_t completed;
+    uint32_t pass_mask;
+    uint32_t failures;
+    uint32_t legacy_stats_mask;
+    uint32_t done;
+    P05Result results[P05_CASE_COUNT];
+} g_p05 = {0};
+
+static uint32_t P05FloatEqual(float a, float b)
+{
+    float delta = a - b;
+    return (delta >= -P05_CENTROID_EPS) && (delta <= P05_CENTROID_EPS);
+}
+
+static uint32_t P05StatsEqual(const LidarFrameStats *a,
+                              const LidarFrameStats *b)
+{
+    return a->min_mm == b->min_mm && a->max_mm == b->max_mm &&
+           a->mean_mm == b->mean_mm && a->valid_count == b->valid_count &&
+           a->invalid_count == b->invalid_count;
+}
+
+static void P05TestScene(uint32_t scene_index, const LidarFrame *frame)
+{
+    for (uint32_t i = 0u; i < P05_CASE_COUNT; ++i)
+    {
+        const P05Expected *e = &p05_expected[i];
+        if (e->scene_index != scene_index)
+            continue;
+
+        P05Result result = {0};
+        uint32_t start = HAL_GetTick();
+        result.scene_index = scene_index;
+        result.threshold_mm = e->threshold_mm;
+        LidarProcessing_DetectObstacle(frame, e->threshold_mm, &result.obstacle);
+        result.elapsed_ms = HAL_GetTick() - start;
+        result.passed = result.obstacle.detected == (e->count != 0u) &&
+            result.obstacle.close_count == e->count &&
+            result.obstacle.nearest_mm == e->nearest &&
+            result.obstacle.mean_close_mm == e->mean &&
+            P05FloatEqual(result.obstacle.centroid_row, e->row) &&
+            P05FloatEqual(result.obstacle.centroid_col, e->col);
+        g_p05.results[i] = result;
+        if (result.passed)
+            g_p05.pass_mask |= (1u << i);
+        else
+            ++g_p05.failures;
+        ++g_p05.completed;
+    }
+}
+
+static void P05TestSynthetic(LidarFrame *frame)
+{
+    /* Run before generating P04 case 5; no additional frame allocation. */
+    for (uint32_t r = 0u; r < LIDAR_HEIGHT; ++r)
+        for (uint32_t c = 0u; c < LIDAR_WIDTH; ++c)
+            frame->range_mm[r][c] = LIDAR_INVALID_MM;
+
+    frame->range_mm[0][0] = 0u;
+    frame->range_mm[41][53] = 1499u;
+    frame->range_mm[0][53] = 1500u;
+    frame->range_mm[41][0] = 1501u;
+    frame->range_mm[1][1] = 65534u;
+    P05TestScene(6u, frame);
+
+    /* P04 case 5 will overwrite all maps and the timestamp. */
+}
+
 static void P04TestProcess(void)
 {
     uint32_t now = HAL_GetTick();
@@ -215,6 +333,9 @@ static void P04TestProcess(void)
         result.noise = e->noise;
         result.invalid_percent = e->invalid_percent;
 
+        if (i == P04_CASE_COUNT - 1u)
+            P05TestSynthetic(&g_p04_frame);
+
         LidarSim_Init(&g_p04_sim, 1234u);
 
         LidarSim_SetNoise(
@@ -234,10 +355,15 @@ static void P04TestProcess(void)
             &g_p04_frame
         );
 
-        LidarSim_ComputeStats(
+        LidarProcessing_ComputeStats(
             &g_p04_frame,
             &result.stats
         );
+        LidarFrameStats legacy_stats = {0};
+        LidarSim_ComputeStats(&g_p04_frame, &legacy_stats);
+        uint32_t legacy_ok = P05StatsEqual(&result.stats, &legacy_stats);
+        if (legacy_ok)
+            g_p05.legacy_stats_mask |= (1u << i);
 
         result.hash = P04Hash(&g_p04_frame);
 
@@ -258,7 +384,7 @@ static void P04TestProcess(void)
             result.stats.valid_count +
                 result.stats.invalid_count == P04_ZONE_COUNT &&
             result.hash == e->hash &&
-            result.timestamp_ok;
+            result.timestamp_ok && legacy_ok;
 
         g_p04.results[i] = result;
 
@@ -266,6 +392,10 @@ static void P04TestProcess(void)
             g_p04.pass_mask |= (1u << i);
         else
             g_p04.failures++;
+
+        P05TestScene(i, &g_p04_frame);
+        if (i == P04_CASE_COUNT - 1u)
+            g_p05.done = 1u;
 
         g_p04.last_tick = HAL_GetTick();
         g_p04.completed++;

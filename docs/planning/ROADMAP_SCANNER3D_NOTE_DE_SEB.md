@@ -28,7 +28,7 @@ Construire progressivement un scanner 3D portable sur STM32N6570-DK utilisant la
 | P02 | Déplacement progressif des appels IMX335/DCMIPP/ISP hors du code applicatif | `main.c` consomme l'API ; image et FPS maintenus sur STM32 | **Validee STM32** - 30.45 FPS |
 | P03 | Snapshot / capture à la demande et intégrité des buffers | Captures successives fiables ; pixels non réécrits pendant leur exploitation | **Validée STM32** - 5 captures, 4 cycles CRC sans échec, 30.20 FPS |
 | P04 | LiDAR simulé : statistiques et scènes 54×42 | Valeurs attendues vérifiées sur STM32 | **Validée STM32** - 6/6 cas, 30.20 FPS, LCD OK |
-| P05 | Détection obstacle ; `lidar_types` et `lidar_processing` | Tests STM32 ; traitements indépendants du simulateur | Prévu |
+| P05 | Détection obstacle ; `lidar_types` et `lidar_processing` | Tests STM32 ; traitements indépendants du simulateur | **Validée STM32** - 19/19 P05, 6/6 P04, 30.20 FPS |
 | P06 | `LidarSource` interchangeable, backend simulation | API et génération de frames testées sur STM32 | Prévu |
 | P07 | Bring-up VL53L9CX réel et interface matérielle confirmée | Acquisition physique vérifiée sur STM32 ; sinon *bloqué matériel* | Prévu |
 | P08 | Synchronisation caméra/LiDAR, `SensorPair`, protocole Stop-and-Scan | Paires horodatées et décalage temporel mesuré | Prévu |
@@ -58,3 +58,5 @@ Toute révision du planning doit être datée et motivée dans le journal perman
 Révision du 24/11/2026 : P03 validée dans le périmètre testé ; voir [rapport](../tests/CAMERA_SNAPSHOT_VALIDATION_2026-11-24.md). Les incidents CSI initiaux restent documentés. Les schémas techniques sont versionnés dans `docs/assets/diagrams/`.
 
 Revision du 24/11/2026 : P04 validee STM32 ; [rapport](../tests/LIDAR_SIMULATION_VALIDATION_2026-11-24.md). P05 prochaine passe, non commencee ; [handoff](../handoffs/HANDOFF_P05_LIDAR_PROCESSING_2026-11-24.md).
+
+Révision du 24/11/2026 : P05 validée STM32 ; [rapport](../tests/LIDAR_PROCESSING_VALIDATION_2026-11-24.md). P06 prévue, non commencée ; [handoff](../handoffs/HANDOFF_P06_LIDAR_SOURCE_2026-11-24.md).
