@@ -23,7 +23,7 @@
 
 #define PANEL_X  10U
 #define PANEL_Y  66U
-#define PANEL_W  338U
+#define PANEL_W  400U
 #define LIGNE_H  32U
 
 #define CARTE_X  356U
@@ -104,7 +104,7 @@ static void ligne(uint32_t row, const char *label, const char *val, uint16_t col
   const uint32_t y = PANEL_Y + 10U + row * LIGNE_H;
   fill(statut, PANEL_X + 8U, y, PANEL_W - 16U, Font20.Height, A_PANEL);
   draw_text(statut, PANEL_X + 10U, y, label, &Font20, A_DIM, A_PANEL);
-  draw_text(statut, PANEL_X + 10U + 7U * Font20.Width, y, (val != NULL) ? val : "-", &Font20, col, A_PANEL);
+  draw_text(statut, PANEL_X + 10U + 8U * Font20.Width, y, (val != NULL) ? val : "-", &Font20, col, A_PANEL);
 }
 
 static void ram_framebuffers_on(void)
@@ -176,7 +176,7 @@ void LcdStatus_Draw(const LcdStatus_t *s)
   ligne(3, "RSSI", v, (s->rssi_dbm > -70) ? A_OK : A_WARN);
   ligne(4, "PC", s->pc, A_TXT);
   ligne(5, "Lien", s->lien, couleur(s->lien_niv));
-  snprintf(v, sizeof(v), "%" PRIu32 " (%" PRIu32 " saut.)", s->trames, s->sautees);
+  snprintf(v, sizeof(v), "%" PRIu32, s->trames);
   ligne(6, "Trames", v, A_TXT);
   snprintf(v, sizeof(v), "%lu.%02lu Mb/s %lu.%lu/s",
            (unsigned long)(s->debit_kbps / 1000U), (unsigned long)((s->debit_kbps % 1000U) / 10U),
