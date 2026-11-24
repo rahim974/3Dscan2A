@@ -79,7 +79,11 @@ static volatile uint32_t ecran_actif = SCAN3D_ECRAN;          /* commande consol
 /* Envois par blocs de 1520 octets (= W61_MAX_SPI_XFER, comme iperf) : avec des appels de 9 Ko,
  * des trames entières arrivaient à zéro ; avec 1520, plus aucune (essai du 24/11/2026). */
 static volatile uint32_t taille_envoi = 1520U;     /* commande console : s3d_bloc <octets> */
-static volatile uint32_t periode_ms = FRAME_PERIOD_MS; /* commande console : s3d_cadence <ms> */
+/* Envoi continu : le capteur simulé produit en permanence et la tâche réseau envoie la
+ * dernière trame dès que l'envoi précédent est fini (~30 trames/s, ~2,2 Mbit/s).
+ * Avec des pauses de 33 ms entre trames, le module (firmware 2.0.89) décroche en 3 à 25 s ;
+ * en continu (comme iperf), 333 s sans aucun décrochage (essai du 24/11/2026). */
+static volatile uint32_t periode_ms = 1U;             /* commande console : s3d_cadence <ms> */
 #ifndef SCAN3D_MOTIF_DEFAUT
 #define SCAN3D_MOTIF_DEFAUT 0
 #endif

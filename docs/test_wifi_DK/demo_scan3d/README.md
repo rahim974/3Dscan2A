@@ -88,7 +88,7 @@ PB4 et PA15 (JTAG) sont pris par l'écran : il faut déboguer en SWD seulement, 
 
 - Compilation : OK (0 erreur, 0 warning).
 - Écran : OK (fond, carte simulée, panneau d'état superposé).
-- Wi-Fi : connexion automatique et envoi de 20 à 30 trames/s vers le PC. Le module décroche cependant après quelques secondes. La carte le relance alors automatiquement (CHIP_EN + redémarrage). Détails et pistes dans `../RESULTATS_test_wifi_DK.md`.
+- Wi-Fi : connexion automatique et envoi continu d'environ 30 trames/s (2,2 Mbit/s) vers le PC. Stable 333 s en essai, avec envoi continu par défaut depuis la v7. Avec des pauses entre trames (`s3d_cadence 33`), le module décrochait en quelques secondes. Si un décrochage survient quand même, la carte relance le module (CHIP_EN) et redémarre. Détails dans `../RESULTATS_test_wifi_DK.md`.
 
 ### Commandes console de diagnostic (921600 bauds)
 
@@ -96,7 +96,7 @@ PB4 et PA15 (JTAG) sont pris par l'écran : il faut déboguer en SWD seulement, 
 |---|---|
 | `s3d_ecran 0/1` | coupe ou relance le rafraîchissement de l'écran |
 | `s3d_bloc <octets>` | taille maximale par `W6X_Net_Send` (1520 par défaut ; au-delà, des trames entières arrivent nulles) |
-| `s3d_cadence <ms>` | période du capteur simulé (33 ms par défaut) |
+| `s3d_cadence <ms>` | période du capteur simulé (1 ms par défaut, c'est-à-dire envoi continu) |
 | `s3d_motif 0/1/2` | contenu des trames : carte simulée, zéros ou texte |
 
 `#define SCAN3D_ECRAN 0` compile une variante sans écran (LTDC non initialisé).

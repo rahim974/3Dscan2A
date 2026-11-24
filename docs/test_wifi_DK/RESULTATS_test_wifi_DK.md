@@ -65,15 +65,13 @@ Code dans `demo_scan3d/` (README). Réseau « Scan3d » (partage 2,4 GHz), PC r�
 | blocs 1 520 o | 1 520 o | non | **0** | ~25 s |
 | v5 (blocs 1 520 o) | 1 520 o | oui | 0 | 3 à 10 s (puis auto-réparation) |
 | iperf ST (`iperf -c … -t 60`) | 1 520 o, en continu | non | données iperf nulles | **aucun** : 59,5 Mo, 8,3 Mbit/s en 60 s |
+| v6 (tâche réseau en priorité 40, comme iperf) | 1 520 o, 30 trames/s avec pauses | oui | 0 | ~5 s : la priorité ne change rien |
+| **v6, envoi continu** (`s3d_cadence 1`) | 1 520 o, sans pause | non, puis oui | 2 recalages | **aucun en 333 s** : 10 225 trames, 93 Mo, 2,23 Mbit/s |
 
 **Conclusions**
 - Les trames nulles venaient des appels `W6X_Net_Send` de plus de 1 520 octets (`W61_MAX_SPI_XFER`). Elles disparaissent avec des blocs de 1 520 octets.
-- Hypothèses éliminées : débit, réseau, Mac, contenu des données, lecture du RSSI, mémoire et piles du STM32 (tas libre 160 Ko, piles < 15 % utilisées).
-- Le décrochage restant n'apparaît pas avec iperf (envoi continu, sans pauses ni autres tâches), et l'écran actif l'avance. Causes possibles, non tranchées :
-  1. firmware du module 2.0.89 (ST demande 2.0.106 pour x-cube-st67w61 v1.3.0) ;
-  2. interaction SPI ↔ charge du bus mémoire ;
-  3. envoi par rafales avec pauses.
-- Pistes :
-  - essayer `s3d_cadence` (10 trames/s) ;
-  - envoyer en continu comme iperf ;
-  - mettre à jour le firmware du module (opération irréversible, **uniquement avec l'accord de l'équipe**).
+- Le décrochage du module vient des **pauses entre les rafales d'envoi** (une trame toutes les 33 ms). En envoi continu, comme iperf, le flux a tenu 333 s (5,5 min) sans aucune erreur, écran allumé la dernière minute. L'arrêt est venu du débranchement de l'USB, pas d'un décrochage.
+- Hypothèse non vérifiée : l'économie d'énergie Wi-Fi du module se déclenche pendant les pauses et se réveille mal (firmware 2.0.89). Essai à faire : `powersave 0` avec des envois cadencés.
+- Hypothèses éliminées : débit, réseau, Mac, contenu des données, lecture du RSSI, écran, priorité des tâches, mémoire et piles du STM32 (tas libre 160 Ko, piles < 15 % utilisées).
+- Version retenue (v7) : envoi continu par défaut, blocs de 1 520 octets, relance immédiate du module (CHIP_EN) en cas d'échec.
+- Pour le scanner : garder le lien occupé en continu, ou couper l'économie d'énergie si l'essai le confirme. La mise à jour du firmware du module en 2.0.106 n'est plus indispensable ; c'est une opération irréversible, à faire seulement avec l'accord de l'équipe.
