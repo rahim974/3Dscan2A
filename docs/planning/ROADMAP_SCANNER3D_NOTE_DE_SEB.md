@@ -29,7 +29,7 @@ Construire progressivement un scanner 3D portable sur STM32N6570-DK utilisant la
 | P03 | Snapshot / capture à la demande et intégrité des buffers | Captures successives fiables ; pixels non réécrits pendant leur exploitation | **Validée STM32** - 5 captures, 4 cycles CRC sans échec, 30.20 FPS |
 | P04 | LiDAR simulé : statistiques et scènes 54×42 | Valeurs attendues vérifiées sur STM32 | **Validée STM32** - 6/6 cas, 30.20 FPS, LCD OK |
 | P05 | Détection obstacle ; `lidar_types` et `lidar_processing` | Tests STM32 ; traitements indépendants du simulateur | **Validée STM32** - 19/19 P05, 6/6 P04, 30.20 FPS |
-| P06 | `LidarSource` interchangeable, backend simulation | API et génération de frames testées sur STM32 | Prévu |
+| P06 | `LidarSource` interchangeable, backend simulation | API et génération de frames testées sur STM32 | **Validée STM32** - 22/22 API, 10 Hz LiDAR, 30,20 FPS caméra |
 | P07 | Bring-up VL53L9CX réel et interface matérielle confirmée | Acquisition physique vérifiée sur STM32 ; sinon *bloqué matériel* | Prévu |
 | P08 | Synchronisation caméra/LiDAR, `SensorPair`, protocole Stop-and-Scan | Paires horodatées et décalage temporel mesuré | Prévu |
 | P09 | Projection profondeur → XYZ et export d'un nuage de points | Géométrie de référence reproductible | Prévu |
@@ -60,3 +60,5 @@ Révision du 24/11/2026 : P03 validée dans le périmètre testé ; voir [rappor
 Revision du 24/11/2026 : P04 validee STM32 ; [rapport](../tests/LIDAR_SIMULATION_VALIDATION_2026-11-24.md). P05 prochaine passe, non commencee ; [handoff](../handoffs/HANDOFF_P05_LIDAR_PROCESSING_2026-11-24.md).
 
 Révision du 24/11/2026 : P05 validée STM32 ; [rapport](../tests/LIDAR_PROCESSING_VALIDATION_2026-11-24.md). P06 prévue, non commencée ; [handoff](../handoffs/HANDOFF_P06_LIDAR_SOURCE_2026-11-24.md).
+
+Révision du 24/11/2026 : P06 validée STM32 dans le périmètre simulé ; [rapport](../tests/LIDAR_SOURCE_VALIDATION_2026-11-24.md). P07 prévue, non commencée ; [handoff](../handoffs/HANDOFF_P07_LIDAR_HARDWARE_2026-11-24.md).

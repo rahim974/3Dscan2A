@@ -428,3 +428,73 @@
 - Statut : P05 validée STM32 dans le périmètre testé ; pas de validation Release ni de débit continu ni de snapshot retesté.
 - Rapport : docs/tests/LIDAR_PROCESSING_VALIDATION_2026-11-24.md ; quatre SVG P05 ; roadmap mise à jour.
 - Handoff P06 créé ; P06 non commencée. Publication à vérifier après push.
+
+
+### 2026-11-24 - P06-A : audit initial et conception
+
+- Branche exclusive : Note-de-Seb.
+- Baseline locale et distante verifiee :
+  b45ea57a3a5623b618dd0c337f42954bbcfb6ee4.
+- Roadmap, journal, rapports P04/P05, handoff P06, protocole HTML et sources LiDAR examines.
+- CameraSource et configurations CubeIDE des deux firmwares examines.
+- Douze SVG P03/P04/P05 inventories et examines comme references graphiques.
+- Index Git vide ; configurations locales residuelles controlees et exclues des futurs commits.
+- Architecture retenue : interface LidarSource independante de HAL et du backend, injection par fonctions.
+- Backend simulation : reutilisation de LidarSim sans duplication du generateur.
+- Propriete exclusive en lecture seule, acquisition et liberation explicites.
+- Format LidarFrame conserve ; identifiant porte par les metadonnees de source.
+- Reutilisation du buffer P04 apres le diagnostic P04/P05 ; aucune seconde frame allouee.
+- Cadence cible : 100 ms, soit 10 Hz ; pas de rattrapage en rafale.
+- Tests de propriete et erreurs separes de la mesure de cadence.
+- Validation prevue : P04/P05, API P06, 100 intervalles LiDAR, coexistence camera et LCD.
+- P03_SNAPSHOT_TEST_ENABLED reste a zero.
+- Statut : audit et conception ; implementation, compilation et validation STM32 non effectuees.
+- Prochaine action : implementation locale des modules et du diagnostic P06.
+
+### 2026-11-24 - P06-B : implementation locale
+
+- Modules lidar_source.h/.c et lidar_source_sim.h/.c crees dans Core ; liens CubeIDE camera ajoutes.
+- Interface generique sans HAL : backend init/start/poll, etats UNINITIALIZED/IDLE/ACQUIRING/READY/HELD/ERROR, metadonnees et compteurs.
+- Un seul buffer g_p04_frame : P04/P05 executes sans modification puis transfert au diagnostic P06 et au flux normal.
+- Backend simulation synchrone, periodique a 100 ms ; slots manques comptes, sans rattrapage en rafale ; PRNG conserve entre frames.
+- 22 controles API avec ticks artificiels, backend de test injecte et verification de l'empreinte du buffer ; aucun second buffer.
+- Mesure cible : 101 frames/100 intervalles, coexistence camera, statistiques et detection sur chaque frame. Resultats figes puis flux maintenu.
+- References theoriques sequence bruitee seed 1234 : hash 3424744673 puis 4087108911 ; 112 puis 113 zones invalides.
+- Test de coherence hors cible par GCC natif avec doublures du simulateur, traitements, horloge et camera : 22/22 controles, 101 frames, 10000 ms artificielles ; ne constitue pas une compilation des firmwares ni une mesure materielle.
+- Firmware historique main.c et chemins d'inclusion Debug/Release inchanges ; nouvelles sources dans Core.
+- P03_SNAPSHOT_TEST_ENABLED reste a zero ; aucun nouveau consommateur snapshot.
+- Statut : implementation locale, compilation CubeIDE et validation STM32 non effectuees.
+- Prochaine action : rafraichir les deux projets, compiler Debug, verifier le MAP puis lancer le test materiel camera.
+
+
+### 2026-11-24 - P06-C : compilation et controle MAP
+
+- Implementation locale P06-B reussie.
+- Debug camera : 16:52:21, 0 erreur, 0 avertissement.
+- Text=158900, Data=344, BSS=793992, total=953236 octets.
+- Surcout P05 : Text +4920, Data +20, BSS +212 octets.
+- Debug historique : 16:52:46, 0 erreur, 1 avertissement ancien.
+- Text=15028, Data=12, BSS=18500, total=33540 octets.
+- Nouveaux objets LidarSource presents dans les deux builds.
+- Symboles LidarSource controles dans le MAP camera.
+- Buffer LiDAR : 0x341C06B0, 15880 octets.
+- Contexte source : 0x341C48C0, 44 octets.
+- Diagnostic P06 : 0x341C4910, 136 octets.
+- Snapshot : 0x342E0000, 768000 octets.
+- Aucun chevauchement entre les regions controlees.
+- Statut : implemente et compile ; validation STM32 non effectuee.
+- Prochaine action : session materielle P06.
+
+### 2026-11-24 - P06-E : validation et cloture
+
+- Validation STM32 : 22/22 API, mask 4194303, aucun echec ; ticks artificiels pour les essais de contrat et doublure pour les chemins asynchrones.
+- P04 6/6, mask 63, 150/150 frames camera en 5000 ms ; P05 19/19, mask 524287 ; compatibilite 6/6, mask 63.
+- Mesure P06 : 101 frames, 100 intervalles, min=max=100 ms ; timestamps 6101/16101 ms, ID 1/101 ; 10,00 Hz ; erreurs ID/timestamp/donnees=0.
+- Hash 3424744673 puis 4087108911 ; generation max 2 ms, traitement 0 ms a la resolution de 1 ms.
+- Camera : 302/302 en 10000 ms, 30,20 FPS ; ErrorCode=0 au releve anterieur ; LCD explicitement confirme.
+- Flux apres diagnostic : 137/137/137 ; aucun slot manque ni erreur backend ; derniere frame 2160 valides, 108 invalides, min/moy/max 2450/2499/2550 mm, obstacle non detecte au seuil 1500 mm.
+- Premiere session Expressions en erreur ; relance sur le bon firmware reussie ; pas de cause racine demontrée.
+- MAP P06-C conforme ; buffer unique 0x341C06B0, snapshot reserve 0x342E0000 ; Debug des deux firmwares compile, historique non flashe.
+- Statut : P06 validee STM32 dans le perimetre teste ; capteur physique absent des essais, Release et endurance non validees, snapshot non reteste.
+- Rapport : docs/tests/LIDAR_SOURCE_VALIDATION_2026-11-24.md ; quatre SVG P06 ; roadmap actualisee ; handoff P07 cree.
+- Publication : commit/push exclusifs Note-de-Seb a verifier apres push ; P07 non commencee.

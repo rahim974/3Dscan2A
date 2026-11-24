@@ -27,6 +27,9 @@
 #include "camera_source.h"
 #include "lidar_simulator.h"
 #include "lidar_processing.h"
+#include "lidar_source.h"
+#include "lidar_source_sim.h"
+#include <string.h>
 
 #define P03_SNAPSHOT_TEST_ENABLED 0
 /* USER CODE END Includes */
@@ -420,6 +423,316 @@ static void P04TestProcess(void)
 }
 
 
+/* P06: same buffer as P04/P05, used only after g_p04.done. */
+#define P06_PERIOD_MS 100u
+#define P06_SAMPLE_COUNT 101u
+#define P06_API_COUNT 22u
+#define P06_API_MASK ((1u << P06_API_COUNT) - 1u)
+
+static LidarSource g_p06_source;
+static LidarSourceSim g_p06_sim = {
+    .scene = LIDAR_SCENE_NOISY_INVALID, .seed = 1234u,
+    .noise_mm = 50u, .invalid_percent = 2u
+};
+static volatile LidarFrameStats g_p06_live_stats;
+static volatile LidarObstacleInfo g_p06_live_obstacle;
+static volatile struct {
+    uint32_t started, done, runtime_fault;
+    uint32_t api_completed, api_pass_mask, api_failures;
+    uint32_t samples, interval_count, interval_min_ms, interval_max_ms;
+    uint32_t first_timestamp_ms, last_timestamp_ms, elapsed_ms;
+    uint32_t first_id, last_id, id_failures, timestamp_failures;
+    uint32_t hash_first, hash_second, data_failures;
+    uint32_t max_generate_ms, max_processing_ms;
+    uint32_t start_camera_frames, start_camera_reads;
+    uint32_t camera_frames, camera_reads, camera_elapsed_ms, camera_start_ms;
+    uint32_t produced, acquired, released, missed_slots, backend_errors;
+    uint32_t measurement_pass;
+} g_p06;
+
+static void P06Check(uint32_t bit, bool passed)
+{
+    ++g_p06.api_completed;
+    if (passed) g_p06.api_pass_mask |= (1u << bit);
+    else ++g_p06.api_failures;
+}
+
+typedef struct {
+    bool init_ok;
+    LidarBackendResult start_result, poll_result;
+    uint32_t start_ms;
+} P06Fake;
+
+static bool P06FakeInit(void *context)
+{
+    return ((P06Fake *)context)->init_ok;
+}
+
+static LidarBackendResult P06FakeStart(void *context, LidarFrame *frame,
+                                     uint32_t now_ms)
+{
+    P06Fake *f = context;
+    f->start_ms = now_ms;
+    if (f->start_result == LIDAR_BACKEND_COMPLETE) {
+        memset(frame, 0, sizeof(*frame));
+        frame->timestamp_ms = now_ms;
+    }
+    return f->start_result;
+}
+
+static LidarBackendResult P06FakePoll(void *context, LidarFrame *frame)
+{
+    P06Fake *f = context;
+    if (f->poll_result == LIDAR_BACKEND_COMPLETE) {
+        memset(frame, 0, sizeof(*frame));
+        frame->timestamp_ms = f->start_ms;
+    }
+    return f->poll_result;
+}
+
+static const LidarBackendOps p06_fake_ops = {
+    P06FakeInit, P06FakeStart, P06FakePoll
+};
+
+static void P06TestAPI(void)
+{
+    /* Simulated ticks here are deliberate, not measured STM32 time. */
+    LidarFrameView v = {0};
+    LidarSourceCounters c = {0};
+    LidarSourceResult r;
+    {
+        LidarSource s = {0};
+        LidarSourceSim sim = {.scene = LIDAR_SCENE_CENTRAL_OBSTACLE,
+            .seed = 1234u, .noise_mm = 50u, .invalid_percent = 2u};
+        P06Check(0, !LidarSource_IsFrameReady(&s) &&
+            LidarSource_GetState(&s) == LIDAR_SOURCE_UNINITIALIZED &&
+            LidarSource_Process(&s, 0u) == LIDAR_SOURCE_INVALID_STATE &&
+            LidarSource_AcquireFrame(&s, &v) == LIDAR_SOURCE_INVALID_STATE &&
+            LidarSource_ReleaseFrame(&s) == LIDAR_SOURCE_INVALID_STATE &&
+            LidarSource_GetCounters(&s, &c) == LIDAR_SOURCE_INVALID_STATE);
+        P06Check(1, LidarSource_Init(&s, &LidarSourceSim_Ops, &sim,
+            &g_p04_frame, 0u, 0u) == LIDAR_SOURCE_INVALID_ARGUMENT &&
+            LidarSource_Init(&s, &LidarSourceSim_Ops, &sim,
+            NULL, 100u, 0u) == LIDAR_SOURCE_INVALID_ARGUMENT &&
+            LidarSource_Process(NULL, 0u) == LIDAR_SOURCE_INVALID_ARGUMENT);
+        r = LidarSource_Init(&s, &LidarSourceSim_Ops, &sim,
+                            &g_p04_frame, 100u, UINT32_MAX - 49u);
+        P06Check(2, r == LIDAR_SOURCE_OK &&
+            LidarSource_GetState(&s) == LIDAR_SOURCE_IDLE);
+        r = LidarSource_Process(&s, 49u);
+        P06Check(3, r == LIDAR_SOURCE_NOT_READY &&
+            !LidarSource_IsFrameReady(&s) &&
+            LidarSource_AcquireFrame(&s, &v) == LIDAR_SOURCE_NOT_READY);
+        r = LidarSource_Process(&s, 50u);
+        P06Check(4, r == LIDAR_SOURCE_OK && LidarSource_IsFrameReady(&s) &&
+            P04Hash(&g_p04_frame) == 1354660117u &&
+            g_p04_frame.timestamp_ms == 50u);
+        P06Check(5, LidarSource_AcquireFrame(&s, NULL) ==
+            LIDAR_SOURCE_INVALID_ARGUMENT && LidarSource_IsFrameReady(&s));
+        r = LidarSource_Process(&s, 150u);
+        P06Check(6, r == LIDAR_SOURCE_NOT_READY && LidarSource_IsFrameReady(&s) &&
+            P04Hash(&g_p04_frame) == 1354660117u &&
+            g_p04_frame.timestamp_ms == 50u);
+        r = LidarSource_AcquireFrame(&s, &v);
+        P06Check(7, r == LIDAR_SOURCE_OK && v.frame == &g_p04_frame &&
+            v.frame_id == 1u && v.timestamp_ms == 50u &&
+            LidarSource_GetState(&s) == LIDAR_SOURCE_HELD &&
+            !LidarSource_IsFrameReady(&s));
+        r = LidarSource_AcquireFrame(&s, &v);
+        P06Check(8, r == LIDAR_SOURCE_INVALID_STATE &&
+            v.frame == &g_p04_frame && v.frame_id == 1u &&
+            v.timestamp_ms == 50u &&
+            LidarSource_Init(&s, &LidarSourceSim_Ops, &sim,
+                &g_p04_frame, 100u, 150u) == LIDAR_SOURCE_INVALID_STATE);
+        r = LidarSource_Process(&s, 350u);
+        P06Check(9, r == LIDAR_SOURCE_NOT_READY &&
+            LidarSource_GetState(&s) == LIDAR_SOURCE_HELD &&
+            P04Hash(&g_p04_frame) == 1354660117u &&
+            g_p04_frame.timestamp_ms == 50u && s.counters.missed_slots == 3u);
+        r = LidarSource_ReleaseFrame(&s);
+        v = (LidarFrameView){0};
+        P06Check(10, r == LIDAR_SOURCE_OK &&
+            LidarSource_ReleaseFrame(&s) == LIDAR_SOURCE_INVALID_STATE &&
+            LidarSource_GetState(&s) == LIDAR_SOURCE_IDLE);
+        bool ok = LidarSource_Process(&s, 449u) == LIDAR_SOURCE_NOT_READY;
+        r = LidarSource_Process(&s, 450u); ok &= (r == LIDAR_SOURCE_OK);
+        r = LidarSource_AcquireFrame(&s, &v); ok &= (r == LIDAR_SOURCE_OK);
+        ok &= v.frame_id == 2u && v.timestamp_ms == 450u;
+        r = LidarSource_ReleaseFrame(&s); ok &= (r == LIDAR_SOURCE_OK);
+        v = (LidarFrameView){0};
+        P06Check(11, ok);
+        r = LidarSource_Process(&s, 750u); ok = (r == LIDAR_SOURCE_OK);
+        r = LidarSource_AcquireFrame(&s, &v); ok &= (r == LIDAR_SOURCE_OK);
+        ok &= v.frame_id == 3u && v.timestamp_ms == 750u;
+        r = LidarSource_ReleaseFrame(&s); ok &= (r == LIDAR_SOURCE_OK);
+        v = (LidarFrameView){0};
+        P06Check(12, ok && LidarSource_Process(&s, 750u) == LIDAR_SOURCE_NOT_READY);
+        r = LidarSource_GetCounters(&s, &c);
+        P06Check(13, r == LIDAR_SOURCE_OK && c.produced == 3u &&
+            c.acquired == 3u && c.released == 3u && c.missed_slots == 5u &&
+            c.backend_errors == 0u);
+    }
+    {
+        LidarSource s = {0};
+        LidarSourceSim bad = {.scene = LIDAR_SCENE_FLAT_WALL,
+                             .invalid_percent = 101u};
+        r = LidarSource_Init(&s, &LidarSourceSim_Ops, &bad,
+                            &g_p04_frame, 100u, 0u);
+        P06Check(14, r == LIDAR_SOURCE_BACKEND_ERROR &&
+            LidarSource_GetState(&s) == LIDAR_SOURCE_ERROR &&
+            LidarSource_Process(&s, 100u) == LIDAR_SOURCE_BACKEND_ERROR &&
+            s.counters.backend_errors == 1u);
+        P06Fake f = {true, LIDAR_BACKEND_PENDING, LIDAR_BACKEND_PENDING, 0u};
+        r = LidarSource_Init(&s, &p06_fake_ops, &f, &g_p04_frame, 100u, 0u);
+        P06Check(15, r == LIDAR_SOURCE_OK && s.counters.backend_errors == 0u);
+        r = LidarSource_Process(&s, 100u);
+        P06Check(16, r == LIDAR_SOURCE_NOT_READY &&
+            LidarSource_GetState(&s) == LIDAR_SOURCE_ACQUIRING &&
+            LidarSource_AcquireFrame(&s, &v) == LIDAR_SOURCE_NOT_READY);
+        r = LidarSource_Process(&s, 200u);
+        P06Check(17, r == LIDAR_SOURCE_NOT_READY && s.counters.missed_slots == 1u);
+        f.poll_result = LIDAR_BACKEND_COMPLETE;
+        r = LidarSource_Process(&s, 201u);
+        bool ok = r == LIDAR_SOURCE_OK;
+        r = LidarSource_AcquireFrame(&s, &v); ok &= (r == LIDAR_SOURCE_OK);
+        ok &= v.frame_id == 1u && v.timestamp_ms == 100u;
+        r = LidarSource_ReleaseFrame(&s); ok &= (r == LIDAR_SOURCE_OK);
+        v = (LidarFrameView){0};
+        P06Check(18, ok);
+        f.start_result = LIDAR_BACKEND_FAILED;
+        r = LidarSource_Process(&s, 300u);
+        P06Check(19, r == LIDAR_SOURCE_BACKEND_ERROR &&
+            LidarSource_GetState(&s) == LIDAR_SOURCE_ERROR &&
+            s.counters.backend_errors == 1u && !LidarSource_IsFrameReady(&s));
+        f.start_result = LIDAR_BACKEND_PENDING;
+        f.poll_result = LIDAR_BACKEND_FAILED;
+        r = LidarSource_Init(&s, &p06_fake_ops, &f, &g_p04_frame, 100u, 300u);
+        ok = r == LIDAR_SOURCE_OK;
+        r = LidarSource_Process(&s, 400u); ok &= (r == LIDAR_SOURCE_NOT_READY);
+        r = LidarSource_Process(&s, 401u); ok &= (r == LIDAR_SOURCE_BACKEND_ERROR);
+        P06Check(20, ok && s.counters.produced == 0u &&
+            s.counters.backend_errors == 1u &&
+            LidarSource_AcquireFrame(&s, &v) == LIDAR_SOURCE_BACKEND_ERROR);
+        f.init_ok = false;
+        r = LidarSource_Init(&s, &p06_fake_ops, &f, &g_p04_frame, 100u, 500u);
+        P06Check(21, r == LIDAR_SOURCE_BACKEND_ERROR &&
+            s.counters.backend_errors == 1u &&
+            LidarSource_GetState(&s) == LIDAR_SOURCE_ERROR);
+    }
+}
+
+static void P06Process(void)
+{
+    if (!g_p04.done || g_p06.runtime_fault) return;
+    if (!g_p06.started) {
+        P06TestAPI();
+        g_p06.started = 1u;
+        if (g_p06.api_pass_mask != P06_API_MASK || g_p06.api_failures != 0u ||
+            LidarSource_Init(&g_p06_source, &LidarSourceSim_Ops, &g_p06_sim,
+                &g_p04_frame, P06_PERIOD_MS, HAL_GetTick()) != LIDAR_SOURCE_OK) {
+            g_p06.runtime_fault = 1u;
+            g_p06.done = 1u;
+        }
+        return;
+    }
+
+    uint32_t now = HAL_GetTick();
+    LidarSourceResult r = LidarSource_Process(&g_p06_source, now);
+    uint32_t generate_ms = HAL_GetTick() - now;
+    if (r != LIDAR_SOURCE_OK && r != LIDAR_SOURCE_NOT_READY) {
+        g_p06.runtime_fault = 2u;
+        g_p06.done = 1u;
+        return;
+    }
+    if (!LidarSource_IsFrameReady(&g_p06_source)) return;
+    LidarFrameView view = {0};
+    if (LidarSource_AcquireFrame(&g_p06_source, &view) != LIDAR_SOURCE_OK) {
+        g_p06.runtime_fault = 3u;
+        g_p06.done = 1u;
+        return;
+    }
+    uint32_t process_start = HAL_GetTick();
+    LidarFrameStats stats;
+    LidarObstacleInfo obstacle;
+    LidarProcessing_ComputeStats(view.frame, &stats);
+    LidarProcessing_DetectObstacle(view.frame, 1500u, &obstacle);
+    g_p06_live_stats = stats;
+    g_p06_live_obstacle = obstacle;
+    uint32_t processing_ms = HAL_GetTick() - process_start;
+    if (!g_p06.done) {
+        if (generate_ms > g_p06.max_generate_ms) g_p06.max_generate_ms = generate_ms;
+        if (processing_ms > g_p06.max_processing_ms) g_p06.max_processing_ms = processing_ms;
+        if (view.frame != &g_p04_frame || view.timestamp_ms != view.frame->timestamp_ms ||
+            stats.valid_count + stats.invalid_count != P04_ZONE_COUNT ||
+            stats.min_mm < 2450u || stats.max_mm > 2550u ||
+            obstacle.detected != 0u || obstacle.close_count != 0u)
+            ++g_p06.data_failures;
+        if (g_p06.samples == 0u) {
+            g_p06.hash_first = P04Hash(view.frame);
+            if (g_p06.hash_first != 3424744673u || stats.invalid_count != 112u)
+                ++g_p06.data_failures;
+            g_p06.first_timestamp_ms = view.timestamp_ms;
+            g_p06.first_id = view.frame_id;
+            if (view.frame_id != 1u) ++g_p06.id_failures;
+            g_p06.interval_min_ms = UINT32_MAX;
+        } else {
+            if (g_p06.samples == 1u) {
+                g_p06.hash_second = P04Hash(view.frame);
+                if (g_p06.hash_second != 4087108911u || stats.invalid_count != 113u)
+                    ++g_p06.data_failures;
+            }
+            uint32_t dt = view.timestamp_ms - g_p06.last_timestamp_ms;
+            if (dt == 0u || dt > 0x7FFFFFFFu) ++g_p06.timestamp_failures;
+            if (view.frame_id - g_p06.last_id != 1u) ++g_p06.id_failures;
+            if (dt < g_p06.interval_min_ms) g_p06.interval_min_ms = dt;
+            if (dt > g_p06.interval_max_ms) g_p06.interval_max_ms = dt;
+            ++g_p06.interval_count;
+        }
+        g_p06.last_timestamp_ms = view.timestamp_ms;
+        g_p06.last_id = view.frame_id;
+        ++g_p06.samples;
+    }
+    if (LidarSource_ReleaseFrame(&g_p06_source) != LIDAR_SOURCE_OK) {
+        g_p06.runtime_fault = 4u;
+        g_p06.done = 1u;
+        return;
+    }
+    if (g_p06.done) return;
+    if (g_p06.samples == 1u) {
+        g_p06.camera_start_ms = HAL_GetTick();
+        g_p06.start_camera_frames = CameraSource_GetFrameCount();
+        g_p06.start_camera_reads = g_camera_source_read_count;
+    }
+    if (g_p06.samples == P06_SAMPLE_COUNT) {
+        LidarSourceCounters counters;
+        if (LidarSource_GetCounters(&g_p06_source, &counters) != LIDAR_SOURCE_OK) {
+            g_p06.runtime_fault = 5u;
+            g_p06.done = 1u;
+            return;
+        }
+        g_p06.elapsed_ms = g_p06.last_timestamp_ms - g_p06.first_timestamp_ms;
+        g_p06.camera_elapsed_ms = HAL_GetTick() - g_p06.camera_start_ms;
+        g_p06.camera_frames = CameraSource_GetFrameCount() - g_p06.start_camera_frames;
+        g_p06.camera_reads = g_camera_source_read_count - g_p06.start_camera_reads;
+        g_p06.produced = counters.produced;
+        g_p06.acquired = counters.acquired;
+        g_p06.released = counters.released;
+        g_p06.missed_slots = counters.missed_slots;
+        g_p06.backend_errors = counters.backend_errors;
+        /* Compare 100 intervals to 9.5..10.5 Hz without float rounding. */
+        g_p06.measurement_pass = g_p06.interval_count == 100u &&
+            g_p06.elapsed_ms >= 9524u && g_p06.elapsed_ms <= 10526u &&
+            g_p06.produced == P06_SAMPLE_COUNT &&
+            g_p06.acquired == P06_SAMPLE_COUNT && g_p06.released == P06_SAMPLE_COUNT &&
+            g_p06.missed_slots == 0u && g_p06.backend_errors == 0u &&
+            g_p06.id_failures == 0u && g_p06.timestamp_failures == 0u &&
+            g_p06.data_failures == 0u;
+        /* Camera metrics evaluated separately: one pending ISR frame at a
+         * measurement boundary can affect the difference by one. */
+        g_p06.done = 1u;
+    }
+}
+
 #if P03_SNAPSHOT_TEST_ENABLED
 static uint32_t SnapshotTestCRC(const CameraFrame *frame)
 {
@@ -622,6 +935,7 @@ int main(void)
     SnapshotTestProcess();
 #endif
     P04TestProcess();
+    P06Process();
     if ((HAL_GetTick() - g_last_fps_tick) >= 1000u)
     {
         g_camera_fps = CameraSource_GetFrameCount() - g_last_frame_count;
