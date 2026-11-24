@@ -1,58 +1,13 @@
-# Remarques sur le code caméra et lidar de Seb, du point de vue du Wi-Fi
+# Remarques sur le code de Seb pour l'intégration du Wi-Fi
 
-Ce document explique comment le code écrit par Seb pour la caméra et le lidar pourra fonctionner avec le module Wi-Fi, que nous avons testé sur le kit STM32N6570-DK (voir les autres fichiers de ce dossier). Il s'appuie sur la lecture de la branche `Note-de-Seb` du dépôt, telle qu'elle était le 24 novembre 2026. Le dernier commit lu porte le message « P06: add interchangeable LiDAR source and validate continuous acquisition on STM32 ».
+Ces remarques portent sur la branche `Note-de-Seb` (caméra IMX335 et lidar simulé, état du 24/11/2026). Elles visent le prototype A : une carte fille posée sur le kit STM32N6570-DK, qui porte le module Wi-Fi ST67W611M1 et le lidar, et qui garde l'écran et la caméra du kit. Le module y est relié au même SPI que lors de nos essais : les remarques s'appliquent donc au prototype A.
 
-Le but n'est pas de critiquer ce code, qui fonctionne et qui est bien organisé, mais de repérer à l'avance ce qu'il faudra adapter quand le Wi-Fi, la caméra et le lidar devront tourner ensemble sur le prototype A.
+**Il faudra passer à FreeRTOS.** Le pilote Wi-Fi de ST ne fonctionne qu'avec ce système d'exploitation, alors que le code de Seb tourne dans une simple boucle `while (1)`. Il faudra en faire des tâches séparées pour la caméra, le lidar, la fusion et l'envoi Wi-Fi. Sa règle actuelle, qui veut que chaque module ne soit appelé que d'un seul endroit, rend ce passage simple.
 
-## Ce que contient la branche de Seb
+**Il faudra refaire le plan mémoire.** Le code de Seb et le projet Wi-Fi rangent leurs données à des adresses différentes, qui ne peuvent pas être réunies telles quelles. En particulier, la photo figée de la caméra (à partir de `0x342E0000`) chevauche le panneau d'état de la démo Wi-Fi (de `0x342C0000` à `0x3437B800`) : il faudra déplacer l'une des deux zones.
 
-La branche contient deux programmes séparés pour le kit : `firmware/camera_imx335/` fait fonctionner la caméra IMX335 du kit, et `firmware/lidar_sim/` simule un lidar. Le vrai capteur lidar (VL53L9CX) n'est pas encore branché : c'est l'étape P07 prévue par Seb, qui n'a pas commencé. Les étapes suivantes (P08 à P11) prévoient de synchroniser la caméra et le lidar, puis de construire le nuage de points et la carte 3D.
+**Le débit Wi-Fi est suffisant.** Le lidar au format de Seb produit environ 1,3 Mbit/s, alors que le Wi-Fi a tenu 8,3 Mbit/s. Une photo complète de la caméra met en revanche près d'une seconde à partir : on pourra en envoyer à la demande, mais pas en vidéo continue.
 
-Les deux programmes fonctionnent sans système d'exploitation. Le cœur du programme est une boucle infinie (`while (1)` dans `main.c`) qui appelle à tour de rôle la caméra, le lidar, les tests et l'affichage. Seule la caméra utilise une interruption : quand une image est prête, le matériel prévient le programme, qui note simplement que l'image est disponible. Le lidar simulé produit une image toutes les 100 ms (10 images par seconde) ; le programme vérifie l'heure à chaque tour de boucle pour savoir quand produire la suivante.
+**Il faudra envoyer en continu.** Nos essais ont montré que le module décroche si on lui envoie les données avec des pauses, et que des données arrivent à zéro si on lui confie plus de 1 520 octets à la fois. Les scans devront donc passer par une file d'attente vidée sans pause par la tâche d'envoi, par blocs de 1 520 octets au plus.
 
-Le code est découpé proprement en modules. Le module caméra (`camera_source`) s'occupe de démarrer la caméra, de récupérer la dernière image et de prendre une photo figée à la demande. Le module lidar (`lidar_source`) offre une interface qui ne dépend pas du capteur utilisé, ce qui permettra de remplacer le lidar simulé par le vrai sans changer le reste du programme. Seb a fixé une règle claire : ces modules ne sont appelés que depuis la boucle principale, jamais depuis une interruption, et le programme n'alloue jamais de mémoire en cours de route.
-
-Côté données, l'image de la caméra fait 800 × 480 pixels en couleurs (768 000 octets) et arrive environ 30 fois par seconde. Une image lidar contient 54 × 42 zones ; chaque zone occupe 7 octets (distance, amplitude, lumière ambiante et un indicateur de qualité), ce qui donne 15 880 octets par image avec l'horodatage.
-
-## Ce que cela implique pour le Wi-Fi
-
-### Il faudra passer à FreeRTOS
-
-Le pilote Wi-Fi fourni par ST ne fonctionne qu'avec FreeRTOS, un système d'exploitation temps réel qui découpe le programme en plusieurs tâches tournant en parallèle, chacune avec sa priorité. Le pilote a besoin de ses propres tâches, à haute priorité, pour dialoguer avec le module Wi-Fi sans jamais le faire attendre. Comme le code de Seb tourne dans une simple boucle, sans FreeRTOS, il faudra le réorganiser en tâches pour le prototype A : une tâche pour la caméra, une pour le lidar, une pour la fusion des données et une pour l'envoi Wi-Fi.
-
-Ce passage devrait être assez simple, car la règle de Seb (chaque module n'est utilisé que par un seul endroit du programme) correspond déjà à cette organisation : chaque module deviendra une tâche, et les tâches se passeront les images par des files d'attente ou des tampons protégés.
-
-### Il faudra revoir l'organisation de la mémoire
-
-Les deux projets ne rangent pas leurs données au même endroit. Le programme de Seb utilise 256 Ko de mémoire interne à partir de l'adresse `0x341C0000`, plus des zones à part pour les images. Le projet Wi-Fi de ST, lui, utilise 1,5 Mo à partir de l'adresse `0x34000000`, dont 200 000 octets réservés à FreeRTOS. Ces deux organisations ne peuvent pas être additionnées telles quelles. Il faudra établir un plan mémoire commun, quitte à réduire la mémoire réservée à FreeRTOS ou à déplacer certains tampons.
-
-Il existe aussi un chevauchement précis entre la démo Wi-Fi et le code de Seb. La démo affiche son panneau d'état dans une zone de mémoire qui commence à `0x342C0000` et s'étend jusqu'à `0x3437B800`. Or Seb range sa photo figée de la caméra à partir de `0x342E0000`. Les deux zones se recouvrent : si on les assemble sans rien changer, la photo et le panneau d'état s'écraseraient mutuellement. Il faudra déplacer l'une des deux. En revanche, le fait que la démo Wi-Fi et la caméra de Seb utilisent toutes les deux l'adresse `0x34200000` pour l'image de fond est voulu : cette zone était prévue dès le départ pour recevoir l'image de la caméra.
-
-### Le débit Wi-Fi est largement suffisant
-
-Avec le format de Seb, le lidar produit 15 880 octets dix fois par seconde, soit environ 159 Ko par seconde (1,3 Mbit/s). Le Wi-Fi a tenu 8,3 Mbit/s pendant nos essais : il reste donc une marge confortable. En revanche, une image complète de la caméra (768 000 octets) mettrait environ trois quarts de seconde à partir : on peut envoyer une photo de temps en temps, mais pas une vidéo en continu.
-
-### Il faudra respecter les règles d'envoi trouvées pendant les essais Wi-Fi
-
-Nos essais ont montré que le module Wi-Fi décroche si on lui envoie les données par à-coups, avec des pauses entre les envois, et que des données arrivent remplies de zéros si on lui confie plus de 1 520 octets à la fois. Le futur programme devra donc envoyer les scans en continu, par blocs de 1 520 octets au maximum. La solution la plus simple sera de faire déposer les scans par la tâche de fusion dans une file d'attente, que la tâche d'envoi videra sans s'arrêter.
-
-Il faudra aussi veiller à trois détails techniques lors du passage à FreeRTOS. D'abord, les tâches du pilote Wi-Fi doivent rester plus prioritaires que celles des capteurs. Ensuite, l'interruption de la caméra devra se contenter de réveiller la tâche caméra, et son niveau de priorité devra être compatible avec FreeRTOS. Enfin, les attentes qui reposent aujourd'hui sur la lecture de l'heure dans la boucle devront être remplacées par les fonctions d'attente de FreeRTOS.
-
-### Un réglage d'horloge à vérifier
-
-Le projet caméra de Seb ne règle pas l'une des horloges du microcontrôleur (la PLL4). La démo Wi-Fi, elle, s'en sert pour cadencer l'écran. Si l'on ajoute le panneau d'état de la démo au projet de Seb, il faudra vérifier ce réglage, sinon l'écran risque de ne pas s'afficher correctement.
-
-## Ces remarques s'appliquent-elles au prototype A ?
-
-Le travail de Seb est destiné au prototype A. Ce prototype n'utilise pas la carte d'essai X-NUCLEO-67W61M1 de nos essais : c'est une carte fille posée sur le kit STM32N6570-DK, qui porte elle-même le module Wi-Fi ST67W611M1, le lidar VL53L9CX et la centrale inertielle. Le kit garde son écran et sa caméra. D'après le schéma de la carte A (branche `prototype_A`, `carte_fille_A/generateur/design_A.py`), le module y est relié au même SPI5 que sur la X-NUCLEO portée au kit (broches PA3, PG2, PH8 et PE15). Deux signaux changent : SPI_RDY passe sur D2 (PD0) et CHIP_EN sur D7 (PD6), avec une résistance qui maintient le module éteint tant que le microcontrôleur ne l'active pas. Le signal BOOT du module n'est pas relié au microcontrôleur : il est sorti sur un connecteur, avec l'UART du module, pour mettre à jour son firmware à l'aide d'un cavalier.
-
-Toutes les remarques ci-dessus restent valables pour le prototype A, car elles tiennent au microcontrôleur du kit, au pilote Wi-Fi de ST et au module lui-même, qui sont les mêmes :
-
-- **FreeRTOS** reste obligatoire, puisque le pilote Wi-Fi est le même. Le code de Seb devra donc bien passer en tâches.
-- **Le plan mémoire** concerne le même microcontrôleur (STM32N6 du kit), avec la même mémoire : le problème est identique.
-- **Le chevauchement d'adresses** ne se pose que si l'on reprend le panneau d'état de la démo Wi-Fi. C'est prévu, puisque l'écran du kit doit afficher l'état du scanner et la vue caméra.
-- **Le débit** dépend du module et du lien SPI, qui sont les mêmes : il devrait rester largement suffisant. Il faudra toutefois le remesurer sur la carte A, car son antenne et son routage sont différents de ceux de la X-NUCLEO.
-- **Les règles d'envoi** (envoi continu, blocs de 1 520 octets au plus) viennent du comportement du module et de son firmware. Elles s'appliquent donc aussi, avec une réserve : nos essais ont été faits avec le firmware 2.0.89 déjà présent sur la X-NUCLEO. Le module soudé sur la carte A peut arriver avec un autre firmware, voire sans firmware. Il faudra lire sa version avec la commande `info` dès la première mise sous tension, et refaire un court essai d'envoi continu pour confirmer ces règles.
-- **Le réglage d'horloge de l'écran** concerne le kit, qui ne change pas : la remarque s'applique telle quelle.
-
-Deux points supplémentaires sont propres à la carte A. Le programme devra utiliser les nouvelles broches de SPI_RDY (PD0, avec son interruption EXTI0) et de CHIP_EN (PD6) : il suffit d'adapter les définitions dans `main.h`, comme l'a fait le script de portage pour le kit. Ensuite, comme le signal BOOT n'est pas relié au microcontrôleur, le programme ne pourra pas mettre à jour le module tout seul. Une mise à jour de son firmware passera par le connecteur et le cavalier prévus sur la carte, et seulement si elle s'avère nécessaire, car elle est irréversible.
+**Trois points à vérifier sur la carte A.** Les broches SPI_RDY (D2, PD0) et CHIP_EN (D7, PD6) changent : il faudra adapter `main.h`. Le module soudé peut avoir un autre firmware que celui de nos essais (2.0.89) : il faudra lire sa version avec `info` et refaire un court essai d'envoi continu. Enfin, le projet caméra ne règle pas l'horloge PLL4 que la démo utilise pour l'écran : il faudra l'ajouter si l'on reprend le panneau d'état.
