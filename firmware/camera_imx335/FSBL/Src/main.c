@@ -21,8 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "isp_api.h"
-#include "imx335_E27_isp_param_conf.h"
+
+
 #include "camera_types.h"
 #include "camera_source.h"
 /* USER CODE END Includes */
@@ -44,45 +44,24 @@
 
 /* Private variables ---------------------------------------------------------*/
 
-DCMIPP_HandleTypeDef hdcmipp;
 LTDC_HandleTypeDef hltdc;
-ISP_HandleTypeDef  hcamera_isp;
 /* USER CODE BEGIN PV */
-static __IO uint32_t NbMainFrames = 0;
 
 static uint32_t g_last_fps_tick = 0;
 static uint32_t g_last_frame_count = 0;
 static uint32_t g_camera_fps = 0;
 
-static CameraFrame g_camera_frame;
 static CameraFrame g_camera_source_latest_frame;
 static __IO uint32_t g_camera_source_read_count = 0u;
 static __IO uint32_t g_camera_source_last_id = 0u;
 static __IO uint32_t g_camera_source_last_timestamp_ms = 0u;
 
-static IMX335_Object_t   IMX335Obj;
-static int32_t isp_gain;
-static int32_t isp_exposure;
-/* Calculate division factor for a given source and destination dimension (width or height) */
-#define DIV_FACTOR(SRC, DST) (((uint32_t)((1024 * DST) / SRC)) > 1023 ? 1023 : ((uint32_t)((1024 * DST) / SRC)))
-
-/* Calculate down scale ratio in unsigned 3.13 fixed-point format */
-#define DOWNSCALE_RATIO(SRC, DST) (((uint32_t)(((float_t)(SRC) / (float_t)(DST)) * 8192) < 8192) ? 8192 : \
-                                   ((((uint32_t)(((float_t)(SRC) / (float_t)(DST)) * 8192)) > 65535) ? 65535 : \
-                                   ((uint32_t)(((float_t)(SRC) / (float_t)(DST)) * 8192))))
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-static void MX_DCMIPP_Init(void);
 static void LCD_Init(uint32_t Width, uint32_t Height);
 /* USER CODE BEGIN PFP */
-static void IMX335_Probe(uint32_t Resolution, uint32_t PixelFormat);
-static ISP_StatusTypeDef GetSensorInfoHelper(uint32_t Instance, ISP_SensorInfoTypeDef *SensorInfo);
-static ISP_StatusTypeDef SetSensorGainHelper(uint32_t Instance, int32_t Gain);
-static ISP_StatusTypeDef GetSensorGainHelper(uint32_t Instance, int32_t *Gain);
-static ISP_StatusTypeDef SetSensorExposureHelper(uint32_t Instance, int32_t Exposure);
-static ISP_StatusTypeDef GetSensorExposureHelper(uint32_t Instance, int32_t *Exposure);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -98,7 +77,6 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-  ISP_AppliHelpersTypeDef appliHelpers = {0};
   /* USER CODE END 1 */
 
   /* Enable the CPU Cache */
@@ -143,53 +121,12 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  MX_DCMIPP_Init();
-
-  /* Initialize the IMX335 Sensor ----------------------------- */
-  IMX335_Probe(IMX335_R2592_1944, IMX335_RAW_RGGB10);
+  CameraSource_PrepareHardware();
 
   /* USER CODE BEGIN 2 */
   LCD_Init(FRAME_WIDTH, FRAME_HEIGHT);
 
-  /* Fill init struct with Camera driver helpers */
-  appliHelpers.GetSensorInfo = GetSensorInfoHelper;
-  appliHelpers.SetSensorGain = SetSensorGainHelper;
-  appliHelpers.GetSensorGain = GetSensorGainHelper;
-  appliHelpers.SetSensorExposure = SetSensorExposureHelper;
-  appliHelpers.GetSensorExposure = GetSensorExposureHelper;
-
-  /* Initialize the Image Signal Processing middleware */
-  if(ISP_Init(&hcamera_isp, &hdcmipp, 0, &appliHelpers, ISP_IQParamCacheInit[0]) != ISP_OK)
-  {
-    Error_Handler();
-  }
-
-  g_camera_frame.frame_id = NbMainFrames;
-  g_camera_frame.timestamp_ms = HAL_GetTick();
-
-  g_camera_frame.width = FRAME_WIDTH;
-  g_camera_frame.height = FRAME_HEIGHT;
-
-  g_camera_frame.format = CAMERA_PIXEL_FORMAT_RGB565;
-
-  g_camera_frame.data = (uint8_t *)BUFFER_ADDRESS;
-
-  g_camera_frame.data_size_bytes =
-      FRAME_WIDTH * FRAME_HEIGHT * 2u;
-
-  CameraSource_Init(&g_camera_frame);
-
-  if (HAL_DCMIPP_CSI_PIPE_Start(&hdcmipp, DCMIPP_PIPE1, DCMIPP_VIRTUAL_CHANNEL0 , BUFFER_ADDRESS, DCMIPP_MODE_CONTINUOUS) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /* Start the Image Signal Processing */
-  if (ISP_Start(&hcamera_isp) != ISP_OK)
-  {
-    Error_Handler();
-  }
-
+  CameraSource_Start();
 
   /* USER CODE END 2 */
 
@@ -199,7 +136,7 @@ int main(void)
   {
     /* USER CODE END WHILE */
     BSP_LED_Toggle(LED_GREEN);
-    if (ISP_BackgroundProcess(&hcamera_isp) != ISP_OK)
+    if (!CameraSource_Process())
     {
       BSP_LED_Toggle(LED_RED);
     }
@@ -218,9 +155,9 @@ int main(void)
     }
     if ((HAL_GetTick() - g_last_fps_tick) >= 1000u)
     {
-        g_camera_fps = NbMainFrames - g_last_frame_count;
+        g_camera_fps = CameraSource_GetFrameCount() - g_last_frame_count;
 
-        g_last_frame_count = NbMainFrames;
+        g_last_frame_count = CameraSource_GetFrameCount();
         g_last_fps_tick = HAL_GetTick();
     }
   }
@@ -320,85 +257,6 @@ void SystemClock_Config(void)
   }
 }
 
-/**
-  * @brief DCMIPP Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_DCMIPP_Init(void)
-{
-  /* USER CODE BEGIN DCMIPP_Init 0 */
-  /* USER CODE END DCMIPP_Init 0 */
-  DCMIPP_PipeConfTypeDef pPipeConf = {0};
-  DCMIPP_CSI_PIPE_ConfTypeDef pCSIPipeConf = {0};
-  DCMIPP_CSI_ConfTypeDef csiconf = {0};
-  DCMIPP_DownsizeTypeDef DonwsizeConf ={0};
-
-  /* Set DCMIPP instance */
-  hdcmipp.Instance = DCMIPP;
-  if (HAL_DCMIPP_Init(&hdcmipp) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /* Configure the CSI */
-  csiconf.DataLaneMapping = DCMIPP_CSI_PHYSICAL_DATA_LANES;
-  csiconf.NumberOfLanes   = DCMIPP_CSI_TWO_DATA_LANES;
-  csiconf.PHYBitrate      = DCMIPP_CSI_PHY_BT_1600;
-  if(HAL_DCMIPP_CSI_SetConfig(&hdcmipp, &csiconf) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* Configure the Virtual Channel 0 */
-  /* Set Virtual Channel config */
-  if(HAL_DCMIPP_CSI_SetVCConfig(&hdcmipp, DCMIPP_VIRTUAL_CHANNEL0, DCMIPP_CSI_DT_BPP10) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /* Configure the serial Pipe */
-  pCSIPipeConf.DataTypeMode = DCMIPP_DTMODE_DTIDA;
-  pCSIPipeConf.DataTypeIDA  = DCMIPP_DT_RAW10;
-  pCSIPipeConf.DataTypeIDB  = DCMIPP_DT_RAW10; /* Don't Care */
-
-
-  if (HAL_DCMIPP_CSI_PIPE_SetConfig(&hdcmipp, DCMIPP_PIPE1, &pCSIPipeConf) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  pPipeConf.FrameRate  = DCMIPP_FRAME_RATE_ALL;
-  pPipeConf.PixelPackerFormat = DCMIPP_PIXEL_PACKER_FORMAT_RGB565_1;
-
-  /* Set Pitch for Main and Ancillary Pipes */
-  pPipeConf.PixelPipePitch  = 1600 ; /* Number of bytes */
-
-  /* Configure Pipe */
-  if (HAL_DCMIPP_PIPE_SetConfig(&hdcmipp, DCMIPP_PIPE1, &pPipeConf) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /* Configure the downsize */
-  DonwsizeConf.HSize       = 800; /* Destination Image Width  */
-  DonwsizeConf.VSize       = 480; /* Destination Image Height */
-  DonwsizeConf.HRatio      = DOWNSCALE_RATIO(IMX335_WIDTH, DonwsizeConf.HSize);
-  DonwsizeConf.VRatio      = DOWNSCALE_RATIO(IMX335_HEIGHT, DonwsizeConf.VSize);
-  DonwsizeConf.HDivFactor  = DIV_FACTOR(IMX335_WIDTH, DonwsizeConf.HSize);
-  DonwsizeConf.VDivFactor  = DIV_FACTOR(IMX335_HEIGHT, DonwsizeConf.VSize);
-
-  if(HAL_DCMIPP_PIPE_SetDownsizeConfig(&hdcmipp, DCMIPP_PIPE1, &DonwsizeConf) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if(HAL_DCMIPP_PIPE_EnableDownsize(&hdcmipp, DCMIPP_PIPE1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN DCMIPP_Init 2 */
-  /* USER CODE END DCMIPP_Init 2 */
-}
-
 static void LCD_Init(uint32_t Width, uint32_t Height)
 {
   LTDC_LayerCfgTypeDef pLayerCfg ={0};
@@ -451,151 +309,6 @@ static void LCD_Init(uint32_t Width, uint32_t Height)
 }
 
 /* USER CODE BEGIN 4 */
-/**
-  * @brief  Register Bus IOs if component ID is OK
-  * @retval error status
-  */
-static void IMX335_Probe(uint32_t Resolution, uint32_t PixelFormat)
-{
-  IMX335_IO_t              IOCtx;
-  uint32_t                 id;
-
-  /* Configure the camera driver */
-  IOCtx.Address     = CAMERA_IMX335_ADDRESS;
-  IOCtx.Init        = BSP_I2C1_Init;
-  IOCtx.DeInit      = BSP_I2C1_DeInit;
-  IOCtx.ReadReg     = BSP_I2C1_ReadReg16;
-  IOCtx.WriteReg    = BSP_I2C1_WriteReg16;
-  IOCtx.GetTick     = BSP_GetTick;
-
-  if (IMX335_RegisterBusIO(&IMX335Obj, &IOCtx) != IMX335_OK)
-  {
-    Error_Handler();
-  }
-  else if (IMX335_ReadID(&IMX335Obj, &id) != IMX335_OK)
-  {
-    Error_Handler();
-  }
-  else
-  {
-    if (id != (uint32_t) IMX335_CHIP_ID)
-    {
-      Error_Handler();
-    }
-    else
-    {
-      if (IMX335_Init(&IMX335Obj, Resolution, PixelFormat) != IMX335_OK)
-      {
-        Error_Handler();
-      }
-      else if(IMX335_SetFrequency(&IMX335Obj, IMX335_INCK_24MHZ)!= IMX335_OK)
-      {
-        Error_Handler();
-      }
-      else if (IMX335_MirrorFlipConfig(&IMX335Obj, IMX335_MIRROR) != IMX335_OK)
-      {
-        Error_Handler();
-      }
-      else
-      {
-        return;
-      }
-    }
-  }
-}
-
-/**
-  * @brief  ISP Middleware helper. Camera sensor info getter
-  * @retval ISP Status
-  */
-static ISP_StatusTypeDef GetSensorInfoHelper(uint32_t Instance, ISP_SensorInfoTypeDef *SensorInfo)
-{
-  UNUSED(Instance);
-  return (ISP_StatusTypeDef) IMX335_GetSensorInfo(&IMX335Obj, (IMX335_SensorInfo_t *) SensorInfo);
-}
-
-/**
-  * @brief  ISP Middleware helper. Camera gain setter
-  * @retval ISP Status
-  */
-static ISP_StatusTypeDef SetSensorGainHelper(uint32_t Instance, int32_t Gain)
-{
-  UNUSED(Instance);
-  isp_gain = Gain;
-  return (ISP_StatusTypeDef) IMX335_SetGain(&IMX335Obj, Gain);
-}
-
-/**
-  * @brief  ISP Middleware helper. Camera gain getter
-  * @retval ISP Status
-  */
-static ISP_StatusTypeDef GetSensorGainHelper(uint32_t Instance, int32_t *Gain)
-{
-  UNUSED(Instance);
-  *Gain = isp_gain;
-  return ISP_OK;
-}
-
-/**
-  * @brief  ISP Middleware helper. Camera exposure setter
-  * @retval ISP Status
-  */
-static ISP_StatusTypeDef SetSensorExposureHelper(uint32_t Instance, int32_t Exposure)
-{
-  UNUSED(Instance);
-  isp_exposure = Exposure;
-  return (ISP_StatusTypeDef) IMX335_SetExposure(&IMX335Obj, Exposure);
-}
-
-/**
-  * @brief  ISP Middleware helper. Camera exposure getter
-  * @retval ISP Status
-  */
-static ISP_StatusTypeDef GetSensorExposureHelper(uint32_t Instance, int32_t *Exposure)
-{
-  UNUSED(Instance);
-  *Exposure = isp_exposure;
-  return ISP_OK;
-}
-
-
-void HAL_DCMIPP_PIPE_FrameEventCallback(
-    DCMIPP_HandleTypeDef *hdcmipp,
-    uint32_t Pipe)
-{
-    NbMainFrames++;
-
-    g_camera_frame.frame_id = NbMainFrames;
-    g_camera_frame.timestamp_ms = HAL_GetTick();
-    CameraSource_OnFrameEvent(g_camera_frame.frame_id, g_camera_frame.timestamp_ms);
-}
-
-
-/**
- * @brief  Vsync Event callback on pipe
- * @param  hdcmipp DCMIPP device handle
- *         Pipe    Pipe receiving the callback
- * @retval None
- */
-void HAL_DCMIPP_PIPE_VsyncEventCallback(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe)
-{
-  UNUSED(hdcmipp);
-  /* Update the frame counter and call the ISP statistics handler */
-  switch (Pipe)
-  {
-    case DCMIPP_PIPE0 :
-      ISP_IncDumpFrameId(&hcamera_isp);
-      break;
-    case DCMIPP_PIPE1 :
-      ISP_IncMainFrameId(&hcamera_isp);
-      ISP_GatherStatistics(&hcamera_isp);
-      break;
-    case DCMIPP_PIPE2 :
-      ISP_IncAncillaryFrameId(&hcamera_isp);
-      break;
-  }
-}
-
 /* USER CODE END 4 */
 
 /**

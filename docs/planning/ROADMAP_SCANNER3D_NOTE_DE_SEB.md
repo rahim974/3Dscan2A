@@ -24,9 +24,9 @@ Construire progressivement un scanner 3D portable sur STM32N6570-DK utilisant la
 | Passe | Objectif | Critère principal de clôture | Statut de départ |
 |---|---|---|---|
 | P00 | Acquisition IMX335, framebuffer 800×480 RGB565, `CameraFrame` dynamique et cadence ~30 FPS | Test réel STM32 documenté | **Validée** ; commit `bda6a43` |
-| P01 | **CameraSource minimal** : `.h` / `.c`, état nouvelle frame et API de lecture des métadonnées | Fichiers réellement construits par CubeIDE depuis Git ; test STM32 et non-régression FPS | **Prochaine passe**, non commencée |
-| P02 | Déplacement progressif des appels IMX335/DCMIPP/ISP hors du code applicatif | `main.c` consomme l'API ; image et FPS maintenus sur STM32 | Prévu |
-| P03 | Snapshot / capture à la demande et intégrité des buffers | Captures successives fiables ; pixels non réécrits pendant leur exploitation | Prévu |
+| P01 | **CameraSource minimal** : `.h` / `.c`, état nouvelle frame et API de lecture des métadonnées | Fichiers réellement construits par CubeIDE depuis Git ; test STM32 et non-régression FPS | **Validee STM32** - 30.26 FPS |
+| P02 | Déplacement progressif des appels IMX335/DCMIPP/ISP hors du code applicatif | `main.c` consomme l'API ; image et FPS maintenus sur STM32 | **Validee STM32** - 30.45 FPS |
+| P03 | Snapshot / capture à la demande et intégrité des buffers | Captures successives fiables ; pixels non réécrits pendant leur exploitation | **Prochaine passe** - non implementee |
 | P04 | LiDAR simulé : statistiques et scènes 54×42 | Valeurs attendues vérifiées sur STM32 | Prévu |
 | P05 | Détection obstacle ; `lidar_types` et `lidar_processing` | Tests STM32 ; traitements indépendants du simulateur | Prévu |
 | P06 | `LidarSource` interchangeable, backend simulation | API et génération de frames testées sur STM32 | Prévu |

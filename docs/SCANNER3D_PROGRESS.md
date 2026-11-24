@@ -128,6 +128,71 @@
 - Prochaine passe : P02, refactoring du pipeline camera.
 
 
+
+### 2026-11-24 - P02 : audit et refactoring camera
+
+- Branche exclusive : Note-de-Seb.
+- Baseline locale et distante verifiee : 896783dca9ad39fab0c64eddf4660d586a5fc787.
+- Les quatre documents de reference P02 ont ete lus sur GitHub.
+- Sources HAL, ISP, IMX335, interruptions et configuration CubeIDE examinees.
+- DCMIPP, IMX335, ISP et callbacks transferes dans camera_source.c.
+- API : PrepareHardware, Start, Process, GetFrameCount.
+- Ordre initialisation DCMIPP / IMX335 / LCD / ISP conserve.
+- Reglages materiels et callbacks extraits sans modification fonctionnelle intentionnelle.
+- API P01 et protection PRIMASK conservees.
+- Compteurs de diagnostic applicatifs conserves.
+- Ressource CubeIDE existante verifiee.
+- Settings : Variation locale env-hash uniquement ; conservee hors commit P02.
+- Statut : implemente localement ; compilation et validation STM32 a effectuer.
+- Limite : framebuffer toujours partage ; snapshot reserve a P03.
+- Prochaine action : compilation Debug et validation STM32.
+
+
+### 2026-11-24 - P02 : compilation Debug reussie
+
+- Refactoring local execute avec succes.
+- Controles statiques et git diff --check reussis.
+- Quatre nouvelles fonctions CameraSource integrees.
+- Pipeline IMX335 / DCMIPP / ISP deplace hors de main.c.
+- Compilation Debug CubeIDE a 15:07:17.
+- Resultat : 0 erreur, 0 avertissement.
+- Duree de compilation : 3.993 secondes.
+- ELF, BIN et LIST generes.
+- Text : 148300 octets.
+- Data : 324 octets.
+- BSS : 8836 octets.
+- Total des sections : 157460 octets.
+- Modification language.settings.xml exclue du futur commit.
+- Statut P02 : implemente et compile.
+- Validation STM32 non encore effectuee.
+- Prochaine action : test materiel et non-regression FPS.
+
+
+### 2026-11-24 - P02 : validation STM32 et cloture
+
+- Camera et LCD confirmes fonctionnels.
+- Execution du nouveau CameraSource observee dans la pile Debug.
+- Releve 1 : read_count=563 ; id=563 ; timestamp=18971 ms.
+- Releve 2 : read_count=652 ; id=652 ; timestamp=21894 ms.
+- 89 frames sur 2923 ms : 30.45 FPS.
+- Baseline P01 : 30.26 FPS.
+- Aucun saut observe entre les deux releves.
+- CameraFrame : 800x480 RGB565.
+- Adresse : 0x34200000.
+- Taille : 768000 octets.
+- Toutes les metadonnees controlees sont conformes.
+- Compilation : 0 erreur, 0 avertissement.
+- Statut : P02 validee sur STM32 dans le perimetre teste.
+- Limites : une seule carte et intervalle de mesure court.
+- Stabilite des pixels non garantie ; reservee a P03.
+- Settings : Variation env-hash uniquement ; conservee hors commit.
+- Rapport : docs/tests/CAMERA_REFACTOR_VALIDATION_2026-11-24.md.
+- Handoff : docs/handoffs/HANDOFF_P03_CAMERA_SNAPSHOT_2026-11-24.md.
+- Roadmap actualisee pour P01, P02 et P03.
+- Publication : commit de cloture P02 sur Note-de-Seb ;
+  verification distante executee apres le push.
+- Prochaine passe : P03, snapshot et integrite des buffers.
+
 ## Modèle obligatoire pour les prochaines entrées
 
 ### AAAA-MM-JJ — PXX : titre

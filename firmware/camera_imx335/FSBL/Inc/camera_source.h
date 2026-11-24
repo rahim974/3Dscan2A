@@ -5,6 +5,12 @@
 #include <stdint.h>
 #include "camera_types.h"
 
+/* Pipeline materiel IMX335 / DCMIPP / ISP. */
+void CameraSource_PrepareHardware(void);
+void CameraSource_Start(void);
+bool CameraSource_Process(void);
+uint32_t CameraSource_GetFrameCount(void);
+
 /* Appeler une fois avant le demarrage DCMIPP. */
 void CameraSource_Init(const CameraFrame *initial_frame);
 
