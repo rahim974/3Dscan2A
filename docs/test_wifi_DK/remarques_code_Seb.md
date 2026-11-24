@@ -41,3 +41,18 @@ Il faudra aussi veiller à trois détails techniques lors du passage à FreeRTOS
 ### Un réglage d'horloge à vérifier
 
 Le projet caméra de Seb ne règle pas l'une des horloges du microcontrôleur (la PLL4). La démo Wi-Fi, elle, s'en sert pour cadencer l'écran. Si l'on ajoute le panneau d'état de la démo au projet de Seb, il faudra vérifier ce réglage, sinon l'écran risque de ne pas s'afficher correctement.
+
+## Ces remarques s'appliquent-elles au prototype A ?
+
+Le travail de Seb est destiné au prototype A. Ce prototype n'utilise pas la carte d'essai X-NUCLEO-67W61M1 de nos essais : c'est une carte fille posée sur le kit STM32N6570-DK, qui porte elle-même le module Wi-Fi ST67W611M1, le lidar VL53L9CX et la centrale inertielle. Le kit garde son écran et sa caméra. D'après le schéma de la carte A (branche `prototype_A`, `carte_fille_A/generateur/design_A.py`), le module y est relié au même SPI5 que sur la X-NUCLEO portée au kit (broches PA3, PG2, PH8 et PE15). Deux signaux changent : SPI_RDY passe sur D2 (PD0) et CHIP_EN sur D7 (PD6), avec une résistance qui maintient le module éteint tant que le microcontrôleur ne l'active pas. Le signal BOOT du module n'est pas relié au microcontrôleur : il est sorti sur un connecteur, avec l'UART du module, pour mettre à jour son firmware à l'aide d'un cavalier.
+
+Toutes les remarques ci-dessus restent valables pour le prototype A, car elles tiennent au microcontrôleur du kit, au pilote Wi-Fi de ST et au module lui-même, qui sont les mêmes :
+
+- **FreeRTOS** reste obligatoire, puisque le pilote Wi-Fi est le même. Le code de Seb devra donc bien passer en tâches.
+- **Le plan mémoire** concerne le même microcontrôleur (STM32N6 du kit), avec la même mémoire : le problème est identique.
+- **Le chevauchement d'adresses** ne se pose que si l'on reprend le panneau d'état de la démo Wi-Fi. C'est prévu, puisque l'écran du kit doit afficher l'état du scanner et la vue caméra.
+- **Le débit** dépend du module et du lien SPI, qui sont les mêmes : il devrait rester largement suffisant. Il faudra toutefois le remesurer sur la carte A, car son antenne et son routage sont différents de ceux de la X-NUCLEO.
+- **Les règles d'envoi** (envoi continu, blocs de 1 520 octets au plus) viennent du comportement du module et de son firmware. Elles s'appliquent donc aussi, avec une réserve : nos essais ont été faits avec le firmware 2.0.89 déjà présent sur la X-NUCLEO. Le module soudé sur la carte A peut arriver avec un autre firmware, voire sans firmware. Il faudra lire sa version avec la commande `info` dès la première mise sous tension, et refaire un court essai d'envoi continu pour confirmer ces règles.
+- **Le réglage d'horloge de l'écran** concerne le kit, qui ne change pas : la remarque s'applique telle quelle.
+
+Deux points supplémentaires sont propres à la carte A. Le programme devra utiliser les nouvelles broches de SPI_RDY (PD0, avec son interruption EXTI0) et de CHIP_EN (PD6) : il suffit d'adapter les définitions dans `main.h`, comme l'a fait le script de portage pour le kit. Ensuite, comme le signal BOOT n'est pas relié au microcontrôleur, le programme ne pourra pas mettre à jour le module tout seul. Une mise à jour de son firmware passera par le connecteur et le cavalier prévus sur la carte, et seulement si elle s'avère nécessaire, car elle est irréversible.
