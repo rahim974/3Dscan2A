@@ -43,6 +43,8 @@
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths.229771640" name="Include paths (-I)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="../../../FSBL/Inc"/>
+<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../../lidar_sim/FSBL/Core/Inc&quot;"/>
+
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Application/User&quot;"/>
 									<listOptionValue builtIn="false" value="../../../Drivers/BSP/STM32N6570-DK"/>
 									<listOptionValue builtIn="false" value="../../../Drivers/STM32N6xx_HAL_Driver/Inc"/>
@@ -140,6 +142,8 @@
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths.706517693" name="Include paths (-I)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="../../../FSBL/Inc"/>
+<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../../lidar_sim/FSBL/Core/Inc&quot;"/>
+
 									<listOptionValue builtIn="false" value="../../../Drivers/BSP/STM32N6570-DK"/>
 									<listOptionValue builtIn="false" value="../../../Drivers/STM32N6xx_HAL_Driver/Inc"/>
 									<listOptionValue builtIn="false" value="../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include"/>

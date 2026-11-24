@@ -25,6 +25,9 @@
 
 #include "camera_types.h"
 #include "camera_source.h"
+#include "lidar_simulator.h"
+
+#define P03_SNAPSHOT_TEST_ENABLED 0
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -57,6 +60,7 @@ static __IO uint32_t g_camera_source_last_id = 0u;
 static __IO uint32_t g_camera_source_last_timestamp_ms = 0u;
 
 /* P03 diagnostic: temporary automatic test, view g_snapshot_test in GDB. */
+#if P03_SNAPSHOT_TEST_ENABLED
 static CameraFrame g_snapshot_test_frame;
 static volatile struct
 {
@@ -85,6 +89,7 @@ static volatile struct
     uint32_t format;
     uint32_t next_tick;
 } g_snapshot_test = {0};
+#endif
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -96,6 +101,196 @@ static void LCD_Init(uint32_t Width, uint32_t Height);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+#define P04_CASE_COUNT 6u
+#define P04_ZONE_COUNT 2268u
+
+typedef struct
+{
+    uint32_t scene;
+    uint32_t noise;
+    uint32_t invalid_percent;
+    uint32_t min_mm;
+    uint32_t max_mm;
+    uint32_t mean_mm;
+    uint32_t valid_count;
+    uint32_t invalid_count;
+    uint32_t hash;
+} P04Expected;
+
+static const P04Expected p04_expected[P04_CASE_COUNT] =
+{
+    {0, 50,   2, 2000, 2000, 2000, 2268,    0, 3250742445u},
+    {1, 50,   2, 1200, 4000, 3600, 2268,    0, 1354660117u},
+    {2, 50,   2, 1137, 4175, 2656, 2268,    0, 2634872127u},
+    {3, 50,   2, 2450, 2550, 2500, 2156,  112, 3424744673u},
+    {3,  0,   0, 2500, 2500, 2500, 2189,   79, 1515758359u},
+    {3, 50, 100,    0,    0,    0,    0, 2268, 3875788133u}
+};
+
+typedef struct
+{
+    uint32_t scene;
+    uint32_t noise;
+    uint32_t invalid_percent;
+    LidarFrameStats stats;
+    uint32_t hash;
+    uint32_t timestamp_ok;
+    uint32_t elapsed_ms;
+    uint32_t passed;
+} P04Result;
+
+static LidarFrame g_p04_frame;
+static LidarSimulator g_p04_sim;
+
+static volatile struct
+{
+    uint32_t completed;
+    uint32_t pass_mask;
+    uint32_t failures;
+    uint32_t width;
+    uint32_t height;
+    uint32_t frame_bytes;
+    uint32_t last_tick;
+    uint32_t start_tick;
+    uint32_t start_frames;
+    uint32_t start_reads;
+    uint32_t camera_elapsed_ms;
+    uint32_t camera_frames;
+    uint32_t camera_reads;
+    uint32_t done;
+
+    P04Result results[P04_CASE_COUNT];
+
+} g_p04 = {0};
+
+static uint32_t P04Hash(const LidarFrame *frame)
+{
+    uint32_t hash = 2166136261u;
+
+    for (uint32_t r = 0; r < LIDAR_HEIGHT; r++)
+    {
+        for (uint32_t c = 0; c < LIDAR_WIDTH; c++)
+        {
+            hash = (hash ^ frame->range_mm[r][c]) * 16777619u;
+            hash = (hash ^ frame->amplitude[r][c]) * 16777619u;
+            hash = (hash ^ frame->ambient[r][c]) * 16777619u;
+            hash = (hash ^ frame->dss[r][c]) * 16777619u;
+        }
+    }
+
+    return hash;
+}
+
+static void P04TestProcess(void)
+{
+    uint32_t now = HAL_GetTick();
+
+    if (g_p04.done)
+        return;
+
+    if (CameraSource_GetFrameCount() == 0u || now < 1000u)
+        return;
+
+    if (g_p04.completed < P04_CASE_COUNT &&
+        (now - g_p04.last_tick) >= 500u)
+    {
+        uint32_t i = g_p04.completed;
+
+        const P04Expected *e = &p04_expected[i];
+
+        P04Result result = {0};
+
+        if (i == 0u)
+        {
+            g_p04.width = LIDAR_WIDTH;
+            g_p04.height = LIDAR_HEIGHT;
+            g_p04.frame_bytes = sizeof(LidarFrame);
+
+            g_p04.start_tick = now;
+            g_p04.start_frames = CameraSource_GetFrameCount();
+            g_p04.start_reads = g_camera_source_read_count;
+        }
+
+        result.scene = e->scene;
+        result.noise = e->noise;
+        result.invalid_percent = e->invalid_percent;
+
+        LidarSim_Init(&g_p04_sim, 1234u);
+
+        LidarSim_SetNoise(
+            &g_p04_sim,
+            (uint16_t)e->noise
+        );
+
+        LidarSim_SetInvalidPercent(
+            &g_p04_sim,
+            (uint8_t)e->invalid_percent
+        );
+
+        LidarSim_Generate(
+            &g_p04_sim,
+            (LidarSimScene)e->scene,
+            now,
+            &g_p04_frame
+        );
+
+        LidarSim_ComputeStats(
+            &g_p04_frame,
+            &result.stats
+        );
+
+        result.hash = P04Hash(&g_p04_frame);
+
+        result.timestamp_ok =
+            g_p04_frame.timestamp_ms == now;
+
+        result.elapsed_ms = HAL_GetTick() - now;
+
+        result.passed =
+            LIDAR_WIDTH == 54u &&
+            LIDAR_HEIGHT == 42u &&
+            sizeof(LidarFrame) == 15880u &&
+            result.stats.min_mm == e->min_mm &&
+            result.stats.max_mm == e->max_mm &&
+            result.stats.mean_mm == e->mean_mm &&
+            result.stats.valid_count == e->valid_count &&
+            result.stats.invalid_count == e->invalid_count &&
+            result.stats.valid_count +
+                result.stats.invalid_count == P04_ZONE_COUNT &&
+            result.hash == e->hash &&
+            result.timestamp_ok;
+
+        g_p04.results[i] = result;
+
+        if (result.passed)
+            g_p04.pass_mask |= (1u << i);
+        else
+            g_p04.failures++;
+
+        g_p04.last_tick = HAL_GetTick();
+        g_p04.completed++;
+    }
+
+    now = HAL_GetTick();
+
+    if (g_p04.completed == P04_CASE_COUNT &&
+        (now - g_p04.start_tick) >= 5000u)
+    {
+        g_p04.camera_elapsed_ms =
+            now - g_p04.start_tick;
+
+        g_p04.camera_frames =
+            CameraSource_GetFrameCount() - g_p04.start_frames;
+
+        g_p04.camera_reads =
+            g_camera_source_read_count - g_p04.start_reads;
+
+        g_p04.done = 1u;
+    }
+}
+
+
+#if P03_SNAPSHOT_TEST_ENABLED
 static uint32_t SnapshotTestCRC(const CameraFrame *frame)
 {
     static uint32_t table[256];
@@ -203,6 +398,7 @@ static void SnapshotTestProcess(void)
             break;
     }
 }
+#endif
 /* USER CODE END 0 */
 
 /**
@@ -263,7 +459,9 @@ int main(void)
   LCD_Init(FRAME_WIDTH, FRAME_HEIGHT);
 
   CameraSource_Start();
+  #if P03_SNAPSHOT_TEST_ENABLED
   g_snapshot_test.next_tick = HAL_GetTick() + 3000u;
+#endif
 
   /* USER CODE END 2 */
 
@@ -290,7 +488,10 @@ int main(void)
             g_camera_source_latest_frame.timestamp_ms;
       }
     }
+    #if P03_SNAPSHOT_TEST_ENABLED
     SnapshotTestProcess();
+#endif
+    P04TestProcess();
     if ((HAL_GetTick() - g_last_fps_tick) >= 1000u)
     {
         g_camera_fps = CameraSource_GetFrameCount() - g_last_frame_count;

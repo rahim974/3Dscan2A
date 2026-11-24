@@ -314,3 +314,68 @@
 - Quatre schemas SVG versionnes ; roadmap actualisee ; handoff P04 prepare.
 - Publication : commit/push a effectuer par ce script et SHA distant a verifier ; aucune modification de main.
 - Prochaine passe : P04, LiDAR simule.
+
+
+### 2026-11-24 - P04 : audit et integration locale
+
+- Branche exclusive : Note-de-Seb.
+- Baseline distante : b1e0f50e58590a83695127733180bcb3713356bf.
+- Documents de reference, sources LiDAR et configurations CubeIDE audites.
+- Statistiques deja implementees et appelees dans le firmware LiDAR historique.
+- Quatre scenes identifiees ; dimensions 54 x 42, distances en mm.
+- Valeur invalide : 0xFFFF ; moyenne entiere sur valeurs valides.
+- Six configurations de test, seed 1234 reinitialisee avant chaque generation.
+- Statistiques attendues et empreintes des matrices calculees independamment.
+- Scene bruitee : 79 zones invalides imposees, en plus des invalidations aleatoires.
+- Simulateur original lie au projet camera sans duplication.
+- Test automatique P03 isole par constante de compilation reversible.
+- Reglages camera, LCD, linker et CameraSource conserves.
+- Diagnostic g_p04 et mesure camera sur une fenetre de 5 secondes.
+- Statut : implementation locale, compilation et tests STM32 non effectues.
+- SVG et rapport de validation a produire apres les mesures.
+- Prochaine action : compilation Debug et validation materielle.
+
+
+### 2026-11-24 - P04-A : correction du chemin include
+
+- Premier build Debug : 5 erreurs, 0 avertissement.
+- Source lidar_simulator.c correctement liee et appelee par GCC.
+- Header lidar_simulator.h non resolu dans deux unites de compilation.
+- Correction du chemin include via ProjDirPath.
+- Configuration Debug et Release actualisee.
+- Aucun changement du simulateur ou des reglages materiels.
+- Statut : correctif local ; recompilation requise.
+
+
+### 2026-11-24 - P04 : compilation Debug reussie
+
+- Correction P04-A appliquee.
+- Build Debug a 16:07:10 : 0 erreur, 0 avertissement.
+- Dernier build incremental : 194 ms.
+- Text : 152388 octets.
+- Data : 324 octets.
+- BSS : 793076 octets.
+- Total : 945788 octets.
+- Reservation snapshot conservee : 768000 octets.
+- LidarFrame : 15880 octets.
+- Adresse LidarFrame : 0x341C06A0.
+- Placement memoire verifie dans le fichier map.
+- Statut : implemente et compile.
+- Validation STM32 non encore effectuee.
+- Prochaine action : six tests LiDAR et non-regression camera.
+
+### 2026-11-24 - P04 : validation STM32 et cloture documentaire
+
+- Build Debug valide a 16:07:10, 0 erreur, 0 avertissement ; invocation incrementale 194 ms.
+- Map : LidarFrame 0x341C06A0 a 0x341C44A8 (fin exclusive), 15880 octets ; snapshot 0x342E0000 a 0x3439B800, 768000 octets ; diagnostic 320 octets a 0x341C44B0.
+- Symboles LidarSim_Generate, LidarSim_ComputeStats, P04Hash et P04TestProcess presents.
+- STM32 : completed=6, pass_mask=63, failures=0, done=1 ; dimensions 54 x 42, frame 15880 octets.
+- Six configurations conformes aux references, statistiques et empreintes ; valeurs individuelles attestees par le masque, durees individuelles non relevees.
+- start_tick=1000, last_tick=3507 ; 151 frames produites et lues en 5000 ms, 30.20 FPS ; g_camera_fps=30, hdcmipp.ErrorCode=0 au releve.
+- Operateur confirme le LCD affichant la scene camera.
+- Statut : P04 validee STM32 sur une carte dans le perimetre teste ; charge LiDAR ponctuelle, pas de test de debit continu ni de capteur physique.
+- Test automatique snapshot P03 desactive, API et reservation conservees ; integrite snapshot non retestee pendant P04.
+- Rapport : docs/tests/LIDAR_SIMULATION_VALIDATION_2026-11-24.md.
+- Quatre SVG P04 : matrice, scenes theoriques, pipeline et validation.
+- Roadmap actualisee ; handoff P05 prepare. P05 non commencee.
+- Publication : commit/push et verification de Note-de-Seb par le script de cloture ; aucun changement main.
