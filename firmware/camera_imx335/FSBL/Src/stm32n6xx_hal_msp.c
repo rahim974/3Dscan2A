@@ -174,12 +174,18 @@ void HAL_DCMIPP_MspInit(DCMIPP_HandleTypeDef* hdcmipp)
     /* SRAM3 and SRAM4 memories clock enable */
     LL_MEM_EnableClock(LL_MEM_AXISRAM3);
     LL_MEM_EnableClock(LL_MEM_AXISRAM4);
+    LL_MEM_EnableClock(LL_MEM_AXISRAM5);
+    LL_MEM_EnableClock(LL_MEM_AXISRAM6);
 
     /* Power On AXSRAM3 and AXISRAM4 */
     hramcfg.Instance = RAMCFG_SRAM3_AXI;
     HAL_RAMCFG_EnableAXISRAM(&hramcfg);
 
     hramcfg.Instance = RAMCFG_SRAM4_AXI;
+    HAL_RAMCFG_EnableAXISRAM(&hramcfg);
+    hramcfg.Instance = RAMCFG_SRAM5_AXI;
+    HAL_RAMCFG_EnableAXISRAM(&hramcfg);
+    hramcfg.Instance = RAMCFG_SRAM6_AXI;
     HAL_RAMCFG_EnableAXISRAM(&hramcfg);
 
     __HAL_RCC_RIFSC_CLK_ENABLE();

@@ -46,6 +46,7 @@ MEMORY
 {
   ROM    (xrw)    : ORIGIN = 0x34180400,   LENGTH = 255K
   RAM    (xrw)    : ORIGIN = 0x341C0000,   LENGTH = 256K
+  SNAPSHOT (rw)   : ORIGIN = 0x342E0000,   LENGTH = 896K
 }
 
 /* Sections */
@@ -190,6 +191,20 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >RAM
+
+  /* P03: DMA-owned snapshot; never initialized by FSBL startup. */
+  .camera_snapshot (NOLOAD) :
+  {
+    . = ALIGN(32);
+    __camera_snapshot_start__ = .;
+    KEEP(*(.camera_snapshot))
+    . = ALIGN(32);
+    __camera_snapshot_end__ = .;
+  } > SNAPSHOT
+  ASSERT(SIZEOF(.camera_snapshot) == 768000, "Invalid camera snapshot size")
+  ASSERT(ADDR(.camera_snapshot) == ORIGIN(SNAPSHOT), "Invalid camera snapshot base")
+  ASSERT(ADDR(.camera_snapshot) >= 0x34200000 + 768000, "Snapshot overlaps LCD framebuffer")
+  ASSERT(__camera_snapshot_end__ <= ORIGIN(SNAPSHOT) + LENGTH(SNAPSHOT), "Snapshot overflow")
 
   /* Remove information from the compiler libraries */
   /DISCARD/ :

@@ -56,6 +56,35 @@ static __IO uint32_t g_camera_source_read_count = 0u;
 static __IO uint32_t g_camera_source_last_id = 0u;
 static __IO uint32_t g_camera_source_last_timestamp_ms = 0u;
 
+/* P03 diagnostic: temporary automatic test, view g_snapshot_test in GDB. */
+static CameraFrame g_snapshot_test_frame;
+static volatile struct
+{
+    uint32_t phase; /* 0=wait, 1=capture, 2=held, 3=error */
+    uint32_t captures;
+    uint32_t releases;
+    uint32_t refused_while_held;
+    uint32_t integrity_failures;
+    uint32_t changed_captures;
+    uint32_t errors;
+    uint32_t crc_before;
+    uint32_t crc_after;
+    uint32_t previous_crc;
+    uint32_t request_tick;
+    uint32_t capture_ms;
+    uint32_t hold_tick;
+    uint32_t held_ms;
+    uint32_t hold_start_frames;
+    uint32_t held_pipe1_frames;
+    uint32_t frame_id;
+    uint32_t timestamp_ms;
+    uint32_t address;
+    uint32_t size;
+    uint32_t width;
+    uint32_t height;
+    uint32_t format;
+    uint32_t next_tick;
+} g_snapshot_test = {0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -67,6 +96,113 @@ static void LCD_Init(uint32_t Width, uint32_t Height);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+static uint32_t SnapshotTestCRC(const CameraFrame *frame)
+{
+    static uint32_t table[256];
+    static bool initialized = false;
+    if (!initialized)
+    {
+        for (uint32_t i = 0; i < 256u; i++)
+        {
+            uint32_t v = i;
+            for (uint32_t bit = 0; bit < 8u; bit++)
+            {
+                v = (v >> 1) ^ ((v & 1u) ? 0xEDB88320u : 0u);
+            }
+            table[i] = v;
+        }
+        initialized = true;
+    }
+    /* Force reads from physical SRAM, not stale cache lines. */
+    SCB_InvalidateDCache_by_Addr((uint32_t *)frame->data,
+                                 (int32_t)frame->data_size_bytes);
+    __DSB();
+    uint32_t crc = 0xFFFFFFFFu;
+    const uint8_t *data = frame->data;
+    for (uint32_t i = 0; i < frame->data_size_bytes; i++)
+    {
+        crc = (crc >> 8) ^ table[(crc ^ data[i]) & 0xFFu];
+    }
+    return crc ^ 0xFFFFFFFFu;
+}
+
+static void SnapshotTestProcess(void)
+{
+    uint32_t now = HAL_GetTick();
+    g_snapshot_test.errors = CameraSource_GetSnapshotErrorCount();
+    if (g_snapshot_test.errors != 0u)
+    {
+        g_snapshot_test.phase = 3u;
+        return;
+    }
+    switch (g_snapshot_test.phase)
+    {
+        case 0u:
+            if ((int32_t)(now - g_snapshot_test.next_tick) >= 0)
+            {
+                g_snapshot_test.request_tick = now;
+                g_snapshot_test.phase = CameraSource_RequestSnapshot() ? 1u : 3u;
+            }
+            break;
+        case 1u:
+            if (CameraSource_IsSnapshotReady() &&
+                CameraSource_AcquireSnapshot(&g_snapshot_test_frame))
+            {
+                g_snapshot_test.frame_id = g_snapshot_test_frame.frame_id;
+                g_snapshot_test.timestamp_ms = g_snapshot_test_frame.timestamp_ms;
+                g_snapshot_test.address = (uint32_t)(uintptr_t)g_snapshot_test_frame.data;
+                g_snapshot_test.size = g_snapshot_test_frame.data_size_bytes;
+                g_snapshot_test.width = g_snapshot_test_frame.width;
+                g_snapshot_test.height = g_snapshot_test_frame.height;
+                g_snapshot_test.format = g_snapshot_test_frame.format;
+                g_snapshot_test.capture_ms = g_snapshot_test.timestamp_ms - g_snapshot_test.request_tick;
+                g_snapshot_test.crc_before = SnapshotTestCRC(&g_snapshot_test_frame);
+                if (g_snapshot_test.captures != 0u &&
+                    g_snapshot_test.crc_before != g_snapshot_test.previous_crc)
+                {
+                    g_snapshot_test.changed_captures++;
+                }
+                g_snapshot_test.captures++;
+                if (CameraSource_RequestSnapshot())
+                {
+                    g_snapshot_test.integrity_failures++;
+                    g_snapshot_test.phase = 3u;
+                    break;
+                }
+                g_snapshot_test.refused_while_held++;
+                g_snapshot_test.hold_start_frames = CameraSource_GetFrameCount();
+                g_snapshot_test.hold_tick = HAL_GetTick();
+                g_snapshot_test.phase = 2u;
+            }
+            break;
+        case 2u:
+            if ((now - g_snapshot_test.hold_tick) >= 5000u)
+            {
+                g_snapshot_test.held_ms = now - g_snapshot_test.hold_tick;
+                g_snapshot_test.held_pipe1_frames = CameraSource_GetFrameCount() - g_snapshot_test.hold_start_frames;
+                g_snapshot_test.crc_after = SnapshotTestCRC(&g_snapshot_test_frame);
+                if (g_snapshot_test.crc_after != g_snapshot_test.crc_before)
+                {
+                    g_snapshot_test.integrity_failures++;
+                    g_snapshot_test.phase = 3u;
+                    break;
+                }
+                g_snapshot_test.previous_crc = g_snapshot_test.crc_before;
+                if (!CameraSource_ReleaseSnapshot())
+                {
+                    g_snapshot_test.phase = 3u;
+                    break;
+                }
+                g_snapshot_test_frame.data = 0;
+                g_snapshot_test.releases++;
+                g_snapshot_test.next_tick = HAL_GetTick() + 500u;
+                g_snapshot_test.phase = 0u;
+            }
+            break;
+        default:
+            break;
+    }
+}
 /* USER CODE END 0 */
 
 /**
@@ -127,6 +263,7 @@ int main(void)
   LCD_Init(FRAME_WIDTH, FRAME_HEIGHT);
 
   CameraSource_Start();
+  g_snapshot_test.next_tick = HAL_GetTick() + 3000u;
 
   /* USER CODE END 2 */
 
@@ -153,6 +290,7 @@ int main(void)
             g_camera_source_latest_frame.timestamp_ms;
       }
     }
+    SnapshotTestProcess();
     if ((HAL_GetTick() - g_last_fps_tick) >= 1000u)
     {
         g_camera_fps = CameraSource_GetFrameCount() - g_last_frame_count;

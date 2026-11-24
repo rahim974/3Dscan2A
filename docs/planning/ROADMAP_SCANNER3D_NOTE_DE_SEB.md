@@ -26,8 +26,8 @@ Construire progressivement un scanner 3D portable sur STM32N6570-DK utilisant la
 | P00 | Acquisition IMX335, framebuffer 800×480 RGB565, `CameraFrame` dynamique et cadence ~30 FPS | Test réel STM32 documenté | **Validée** ; commit `bda6a43` |
 | P01 | **CameraSource minimal** : `.h` / `.c`, état nouvelle frame et API de lecture des métadonnées | Fichiers réellement construits par CubeIDE depuis Git ; test STM32 et non-régression FPS | **Validee STM32** - 30.26 FPS |
 | P02 | Déplacement progressif des appels IMX335/DCMIPP/ISP hors du code applicatif | `main.c` consomme l'API ; image et FPS maintenus sur STM32 | **Validee STM32** - 30.45 FPS |
-| P03 | Snapshot / capture à la demande et intégrité des buffers | Captures successives fiables ; pixels non réécrits pendant leur exploitation | **Prochaine passe** - non implementee |
-| P04 | LiDAR simulé : statistiques et scènes 54×42 | Valeurs attendues vérifiées sur STM32 | Prévu |
+| P03 | Snapshot / capture à la demande et intégrité des buffers | Captures successives fiables ; pixels non réécrits pendant leur exploitation | **Validée STM32** - 5 captures, 4 cycles CRC sans échec, 30.20 FPS |
+| P04 | LiDAR simulé : statistiques et scènes 54×42 | Valeurs attendues vérifiées sur STM32 | **Prochaine passe** - non implémentée dans P04 |
 | P05 | Détection obstacle ; `lidar_types` et `lidar_processing` | Tests STM32 ; traitements indépendants du simulateur | Prévu |
 | P06 | `LidarSource` interchangeable, backend simulation | API et génération de frames testées sur STM32 | Prévu |
 | P07 | Bring-up VL53L9CX réel et interface matérielle confirmée | Acquisition physique vérifiée sur STM32 ; sinon *bloqué matériel* | Prévu |
@@ -54,3 +54,5 @@ Construire progressivement un scanner 3D portable sur STM32N6570-DK utilisant la
 - Commits : `b66709b` (baseline), `e4be1bc` (handoff historique), `bda6a43` (CameraFrame dynamique).
 
 Toute révision du planning doit être datée et motivée dans le journal permanent.
+
+Révision du 24/11/2026 : P03 validée dans le périmètre testé ; voir [rapport](../tests/CAMERA_SNAPSHOT_VALIDATION_2026-11-24.md). Les incidents CSI initiaux restent documentés. Les schémas techniques sont versionnés dans `docs/assets/diagrams/`.

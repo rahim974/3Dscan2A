@@ -208,3 +208,109 @@
 - **Échecs, anomalies, limitations :**
 - **Commit(s) / push GitHub vérifié(s) :**
 - **Prochaine action / handoff :**
+
+
+### 2026-11-24 - P03 : audit initial
+
+- Branche exclusive : Note-de-Seb.
+- Baseline distante et locale :
+  dd25eb349e3d2bf0955646915ffb01155a2d2812.
+- Cinq documents obligatoires lus sur GitHub.
+- Sources CameraSource, HAL, ISP et linker examinees.
+- D-Cache et I-Cache actives dans P02.
+- Snapshot materiel et partage Pipe1/Pipe2 confirmes.
+- Strategie retenue : Pipe1 continu, Pipe2 snapshot.
+- AXISRAM5/6 identifiees comme zone candidate.
+- Capacite candidate : 917504 octets.
+- Snapshot RGB565 : 768000 octets.
+- Reservation effective et permissions a confirmer.
+- Callback Pipe1 a distinguer de Pipe2.
+- Propriete exclusive du snapshot jusqu'a liberation.
+- Statut : audit et conception ; non implemente.
+- Compilation et validation STM32 non effectuees.
+- Prochaine action : implementation et reservation linker.
+
+### 2026-11-24 - P03 : implementation locale
+
+- Prevol local : linker Debug confirme ; aucune occurrence de conflit trouvee dans les dossiers examines.
+- Correction du blanc final du journal (git diff --check).
+- Carte memoire : AXISRAM5/6, 0x342E0000 a 0x343BFFFF ; RM0486, 896 Kio.
+- Section .camera_snapshot NOLOAD, 768000 octets, alignement 32, assertions linker.
+- Activation SRAM5/6 ; configuration partagee ISP et sortie RGB565 Pipe2.
+- Snapshot materiel ; Pipe1 conserve en continu ; compteurs separes.
+- Transfert explicite de propriete, maintenance D-Cache, controle CPTACT/CPTREQ, erreurs et timeout.
+- Test automatique : CRC32 complet avant/apres detention de 5 s, rearmement refuse pendant detention, cadence Pipe1.
+- Les visuels techniques seront versions sous docs/assets/diagrams/ aux jalons majeurs ; distinguer conception et validation.
+- Statut : modifications locales ; compilation, placement effectif et validation STM32 non effectues.
+- Prochaine action : compilation Debug et controle du fichier .map avant lancement materiel.
+
+### 2026-11-24 - P03 : compilation Debug
+
+- Implementation locale appliquee avec succes.
+- Compilation Debug a 15:33:42.
+- Resultat : 0 erreur, 0 avertissement.
+- Duree : 1.217 seconde.
+- Text : 150700 octets.
+- Data : 324 octets.
+- BSS : 778004 octets.
+- Total : 929028 octets.
+- Section .camera_snapshot verifiee dans le map.
+- Adresse : 0x342E0000.
+- Taille : 768000 octets.
+- Statut : implemente et compile.
+- Validation STM32 non effectuee.
+- Prochaine action : test snapshot et CRC32.
+
+### 2026-11-24 - P03 : premier test STM32
+
+- Pipe1 operationnel : 30 FPS.
+- Frame ID et read_count : 966.
+- Timestamp : 32313 ms.
+- Snapshot : SNAPSHOT_ERROR.
+- Phase de test : 3.
+- Compteur errors : 2.
+- Captures et releases : 0.
+- Request_tick : 0.
+- Integrite des pixels non testee.
+- Hypothese : erreur CSI/DCMIPP avant la premiere demande.
+- Cause racine non determinee.
+- Statut : compile et teste STM32, non valide.
+- Suite : diagnostic ErrorCode et registres DCMIPP.
+
+### 2026-11-24 - P03-A : diagnostic CSI au demarrage
+
+- Premier test STM32 : Pipe1 maintenu a 30 FPS.
+- HAL ErrorCode : 32768 (0x8000).
+- Type : HAL_DCMIPP_CSI_ERROR_DPHY_CTRL.
+- DCMIPP State : READY.
+- Pipe1 : BUSY ; Pipe2 : READY.
+- P2FCTCR : 0 ; snapshot_id : 0.
+- Deux incidents CSI comptabilises.
+- Aucune erreur AXI signalee dans le registre observe.
+- Blocage logiciel avant la premiere demande de snapshot.
+- Correction : separation des incidents DPHY CTRL initiaux.
+- Historique CSI conserve dans des compteurs distincts.
+- Verification des flags physiques CSI avant capture.
+- Surveillance DPHY reactivee avant acquisition.
+- Intervalle minimal sans incident : 100 ms.
+- Les autres erreurs restent bloquantes.
+- Aucun changement du linker ou des reglages camera.
+- Cause physique CSI non determinee.
+- Statut : correctif applique, compilation et test a effectuer.
+
+### 2026-11-24 - P03 : validation STM32 et cloture
+
+- P03-A execute sur cible ; nouveaux symboles observes. Console build P03-A non fournie.
+- Pipe1 : 866 frames produites/lues, 28989 ms, FPS instantane 31 ; LCD fonctionnel confirme.
+- 5 snapshots, 4 releases, 5 refus pendant HELD, 4 changements de CRC, 0 echec CRC, 0 erreur snapshot.
+- Derniere detention complete : 5000 ms, 151 frames, 30.20 FPS ; derniere latence 49 ms.
+- Dernier snapshot : id 5, timestamp 25875 ms, 800x480 RGB565, 768000 octets a 0x342E0000.
+- CRC snapshot 5 en cours : 1116724303 ; CRC final snapshot 4 : 3491194965.
+- Operateur : plafond, visage, mains, plafond pendant la session ; transitions non horodatees.
+- Deux incidents CSI DPHY CTRL initiaux, dernier tick 278 ms ; cause physique non determinee. ErrorCode final 0.
+- Statut : P03 validee STM32 sur une carte dans le perimetre teste ; cinquieme detention non terminee au releve.
+- Limites : test court, CRC aux points de controle, pas de test exhaustif de fautes, test automatique encore actif.
+- Rapport : docs/tests/CAMERA_SNAPSHOT_VALIDATION_2026-11-24.md.
+- Quatre schemas SVG versionnes ; roadmap actualisee ; handoff P04 prepare.
+- Publication : commit/push a effectuer par ce script et SHA distant a verifier ; aucune modification de main.
+- Prochaine passe : P04, LiDAR simule.

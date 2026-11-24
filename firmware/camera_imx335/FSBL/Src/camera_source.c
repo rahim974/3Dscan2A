@@ -1,4 +1,4 @@
-﻿#include "camera_source.h"
+#include "camera_source.h"
 #include "main.h"
 #include "isp_api.h"
 #include "imx335_E27_isp_param_conf.h"
@@ -104,6 +104,202 @@ bool CameraSource_GetLatestFrame(CameraFrame *out_frame)
     return true;
 }
 
+/* P03: one independent, cache-line-aligned DMA destination. */
+#define SNAPSHOT_TIMEOUT_MS 500u
+static uint8_t s_snapshot_buffer[FRAME_BUFFER_SIZE]
+    __attribute__((section(".camera_snapshot"), aligned(32), used));
+_Static_assert((FRAME_BUFFER_SIZE % 32u) == 0u, "Snapshot cache alignment");
+
+typedef enum
+{
+    SNAPSHOT_FREE = 0,
+    SNAPSHOT_CAPTURING,
+    SNAPSHOT_COMPLETE,
+    SNAPSHOT_READY,
+    SNAPSHOT_HELD,
+    SNAPSHOT_ERROR
+} SnapshotState;
+
+static volatile SnapshotState s_snapshot_state = SNAPSHOT_FREE;
+static volatile uint32_t s_snapshot_id = 0u;
+static volatile uint32_t s_snapshot_timestamp = 0u;
+static volatile uint32_t s_snapshot_errors = 0u;
+static uint32_t s_snapshot_request_tick;
+
+static volatile uint32_t s_snapshot_startup_csi_errors = 0u;
+static volatile uint32_t s_snapshot_startup_csi_code = 0u;
+static volatile uint32_t s_snapshot_startup_csi_last_tick = 0u;
+static volatile uint32_t s_snapshot_startup_csi_last_lane = 0u;
+
+static void SnapshotError(void)
+{
+    s_snapshot_errors++;
+    if (s_snapshot_state == SNAPSHOT_CAPTURING ||
+        s_snapshot_state == SNAPSHOT_COMPLETE ||
+        s_snapshot_state == SNAPSHOT_READY ||
+        s_snapshot_state == SNAPSHOT_FREE)
+    {
+        s_snapshot_state = SNAPSHOT_ERROR;
+    }
+    /* A HELD buffer remains owned by its consumer; no rearm on error. */
+}
+
+static bool SnapshotHardwareIdle(void)
+{
+    return ((hdcmipp.Instance->CMSR1 & DCMIPP_CMSR1_P2CPTACT) == 0u) &&
+           ((hdcmipp.Instance->P2FCTCR & DCMIPP_P2FCTCR_CPTREQ) == 0u);
+}
+
+static bool SnapshotHardwareClean(void)
+{
+    return (HAL_DCMIPP_GetError(&hdcmipp) == 0u) &&
+           ((CSI->SR1 & (DCMIPP_CSI_FLAG_ECTRLDL0 |
+                         DCMIPP_CSI_FLAG_ECTRLDL1)) == 0u) &&
+           ((hdcmipp.Instance->CMSR2 & (DCMIPP_FLAG_PIPE2_OVR |
+             DCMIPP_FLAG_AXI_TRANSFER_ERROR)) == 0u) &&
+           (hdcmipp.PipeState[DCMIPP_PIPE2] == HAL_DCMIPP_PIPE_STATE_READY);
+}
+
+bool CameraSource_RequestSnapshot(void)
+{
+    if (s_snapshot_state != SNAPSHOT_FREE || s_snapshot_errors != 0u ||
+        !s_initialized)
+    {
+        return false;
+    }
+    if (!SnapshotHardwareIdle() || !SnapshotHardwareClean())
+    {
+        SnapshotError();
+        return false;
+    }
+
+    /* Transfer ownership CPU -> DCMIPP, no dirty cache lines remain. */
+    SCB_CleanInvalidateDCache_by_Addr((uint32_t *)s_snapshot_buffer,
+                                     (int32_t)sizeof(s_snapshot_buffer));
+    __DSB();
+    uint32_t primask = __get_PRIMASK();
+    __disable_irq();
+    if (s_snapshot_state != SNAPSHOT_FREE || s_snapshot_errors != 0u)
+    {
+        __set_PRIMASK(primask);
+        return false;
+    }
+    if (!SnapshotHardwareIdle() || !SnapshotHardwareClean() ||
+        (s_snapshot_request_tick == 0u &&
+         s_snapshot_startup_csi_errors != 0u &&
+         (HAL_GetTick() - s_snapshot_startup_csi_last_tick) < 100u))
+    {
+        SnapshotError();
+        __set_PRIMASK(primask);
+        return false;
+    }
+
+    /* Restore DPHY control-error monitoring before capture. */
+    __HAL_DCMIPP_CSI_DPHY_ENABLE_IT(
+        CSI,
+        DCMIPP_CSI_IT_ECTRLDL0 | DCMIPP_CSI_IT_ECTRLDL1);
+
+    s_snapshot_request_tick = HAL_GetTick();
+    s_snapshot_state = SNAPSHOT_CAPTURING;
+    __set_PRIMASK(primask);
+
+    if (HAL_DCMIPP_CSI_PIPE_Start(&hdcmipp, DCMIPP_PIPE2,
+            DCMIPP_VIRTUAL_CHANNEL0, (uint32_t)(uintptr_t)s_snapshot_buffer,
+            DCMIPP_MODE_SNAPSHOT) != HAL_OK)
+    {
+        primask = __get_PRIMASK();
+        __disable_irq();
+        SnapshotError();
+        __set_PRIMASK(primask);
+        return false;
+    }
+    return s_snapshot_state != SNAPSHOT_ERROR;
+}
+
+static void SnapshotProcess(void)
+{
+    if (s_snapshot_state == SNAPSHOT_COMPLETE)
+    {
+        if (!SnapshotHardwareIdle() || !SnapshotHardwareClean())
+        {
+            uint32_t primask = __get_PRIMASK();
+            __disable_irq();
+            SnapshotError();
+            __set_PRIMASK(primask);
+            return;
+        }
+        /* Transfer ownership DCMIPP -> CPU only after completion. */
+        __DSB();
+        SCB_InvalidateDCache_by_Addr((uint32_t *)s_snapshot_buffer,
+                                     (int32_t)sizeof(s_snapshot_buffer));
+        __DSB();
+        uint32_t primask = __get_PRIMASK();
+        __disable_irq();
+        if (s_snapshot_state == SNAPSHOT_COMPLETE && s_snapshot_errors == 0u)
+        {
+            s_snapshot_state = SNAPSHOT_READY;
+        }
+        __set_PRIMASK(primask);
+    }
+    else if (s_snapshot_state == SNAPSHOT_CAPTURING &&
+             (HAL_GetTick() - s_snapshot_request_tick) > SNAPSHOT_TIMEOUT_MS)
+    {
+        uint32_t primask = __get_PRIMASK();
+        __disable_irq();
+        if (s_snapshot_state == SNAPSHOT_CAPTURING)
+        {
+            SnapshotError();
+        }
+        __set_PRIMASK(primask);
+    }
+}
+
+bool CameraSource_IsSnapshotReady(void)
+{
+    return s_snapshot_state == SNAPSHOT_READY;
+}
+
+bool CameraSource_AcquireSnapshot(CameraFrame *out_frame)
+{
+    if (out_frame == 0)
+    {
+        return false;
+    }
+    uint32_t primask = __get_PRIMASK();
+    __disable_irq();
+    if (s_snapshot_state != SNAPSHOT_READY || s_snapshot_errors != 0u)
+    {
+        __set_PRIMASK(primask);
+        return false;
+    }
+    *out_frame = s_frame_template;
+    out_frame->data = s_snapshot_buffer;
+    out_frame->frame_id = s_snapshot_id;
+    out_frame->timestamp_ms = s_snapshot_timestamp;
+    s_snapshot_state = SNAPSHOT_HELD;
+    __set_PRIMASK(primask);
+    return true;
+}
+
+bool CameraSource_ReleaseSnapshot(void)
+{
+    uint32_t primask = __get_PRIMASK();
+    __disable_irq();
+    if (s_snapshot_state != SNAPSHOT_HELD)
+    {
+        __set_PRIMASK(primask);
+        return false;
+    }
+    s_snapshot_state = s_snapshot_errors == 0u ? SNAPSHOT_FREE : SNAPSHOT_ERROR;
+    __set_PRIMASK(primask);
+    return true;
+}
+
+uint32_t CameraSource_GetSnapshotErrorCount(void)
+{
+    return s_snapshot_errors;
+}
+
 /* Preparation avant initialisation du LCD. */
 void CameraSource_PrepareHardware(void)
 {
@@ -158,6 +354,7 @@ void CameraSource_Start(void)
 
 bool CameraSource_Process(void)
 {
+    SnapshotProcess();
     return ISP_BackgroundProcess(&hcamera_isp) == ISP_OK;
 }
 
@@ -238,6 +435,14 @@ static void MX_DCMIPP_Init(void)
     Error_Handler();
   }
   if(HAL_DCMIPP_PIPE_EnableDownsize(&hdcmipp, DCMIPP_PIPE1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* P03: share Pipe1 ISP input; configure independent RGB565 output. */
+  if (HAL_DCMIPP_PIPE_CSI_EnableShare(&hdcmipp, DCMIPP_PIPE2) != HAL_OK ||
+      HAL_DCMIPP_PIPE_SetConfig(&hdcmipp, DCMIPP_PIPE2, &pPipeConf) != HAL_OK ||
+      HAL_DCMIPP_PIPE_SetDownsizeConfig(&hdcmipp, DCMIPP_PIPE2, &DonwsizeConf) != HAL_OK ||
+      HAL_DCMIPP_PIPE_EnableDownsize(&hdcmipp, DCMIPP_PIPE2) != HAL_OK)
   {
     Error_Handler();
   }
@@ -357,6 +562,29 @@ void HAL_DCMIPP_PIPE_FrameEventCallback(
     DCMIPP_HandleTypeDef *hdcmipp,
     uint32_t Pipe)
 {
+    if (Pipe == DCMIPP_PIPE2)
+    {
+        if (s_snapshot_state == SNAPSHOT_CAPTURING)
+        {
+            if (SnapshotHardwareIdle() && SnapshotHardwareClean())
+            {
+                s_snapshot_timestamp = HAL_GetTick();
+                s_snapshot_id++;
+                __DMB();
+                s_snapshot_state = SNAPSHOT_COMPLETE;
+            }
+            else
+            {
+                SnapshotError();
+            }
+        }
+        return;
+    }
+    if (Pipe != DCMIPP_PIPE1)
+    {
+        return;
+    }
+    UNUSED(hdcmipp);
     NbMainFrames++;
 
     g_camera_frame.frame_id = NbMainFrames;
@@ -388,4 +616,43 @@ void HAL_DCMIPP_PIPE_VsyncEventCallback(DCMIPP_HandleTypeDef *hdcmipp, uint32_t 
       ISP_IncAncillaryFrameId(&hcamera_isp);
       break;
   }
+}
+
+/* ISR error reporting; no blocking HAL operations here. */
+void HAL_DCMIPP_PIPE_ErrorCallback(DCMIPP_HandleTypeDef *handle, uint32_t Pipe)
+{
+    UNUSED(handle);
+    UNUSED(Pipe);
+    SnapshotError();
+}
+
+void HAL_DCMIPP_ErrorCallback(DCMIPP_HandleTypeDef *handle)
+{
+    UNUSED(handle);
+    SnapshotError();
+}
+
+void HAL_DCMIPP_CSI_LineErrorCallback(DCMIPP_HandleTypeDef *handle, uint32_t lane)
+{
+    uint32_t code = HAL_DCMIPP_GetError(handle);
+
+    /*
+     * Only the observed startup DPHY CTRL incident is
+     * recoverable. Preserve its diagnostic information.
+     * Any error after the first request remains fatal.
+     */
+    if (s_snapshot_state == SNAPSHOT_FREE &&
+        s_snapshot_request_tick == 0u &&
+        code == HAL_DCMIPP_CSI_ERROR_DPHY_CTRL)
+    {
+        s_snapshot_startup_csi_errors++;
+        s_snapshot_startup_csi_code |= code;
+        s_snapshot_startup_csi_last_tick = HAL_GetTick();
+        s_snapshot_startup_csi_last_lane = lane;
+
+        handle->ErrorCode &= ~HAL_DCMIPP_CSI_ERROR_DPHY_CTRL;
+        return;
+    }
+
+    SnapshotError();
 }
