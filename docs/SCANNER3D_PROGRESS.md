@@ -48,6 +48,86 @@
 - **Prochain jalon :** P01 — interface minimale `CameraSource`, avec vérification de l'intégration au build CubeIDE.
 - **Publication Git :** à compléter lorsque ces documents seront effectivement committés et poussés sur `Note-de-Seb`.
 
+### 2026-11-17 — P01 : audit initial
+
+- Branche : Note-de-Seb exclusivement.
+- HEAD initial : 00b38bde2582556cf1218a3806f31df3b56e19eb.
+- Verification locale : working tree clean ; divergence 0/0.
+- Baseline P00 : CameraFrame dynamique, STM32 validee, ~30 FPS.
+- Audit CubeIDE : camera_source.c absent des ressources liees de .project.
+- Risques : concurrence IRQ/lecture des metadonnees ; ordre d'initialisation ; framebuffer partage.
+- Ecriture GitHub directe : erreur 403 ; suivi effectue localement avant commit/push.
+- Statut P01 : audit effectue ; implementation non commencee ; compilation et tests non realises.
+- Suite : definir CameraSource, integrer les sources, compiler et tester sur STM32.
+### 2026-11-17 — P01 : module cree et integre au projet
+
+- Fichiers crees : FSBL/Inc/camera_source.h et FSBL/Src/camera_source.c.
+- API initiale : Init, OnFrameEvent, IsFrameReady, GetLatestFrame.
+- Concurrence : section critique courte pour la copie des metadonnees.
+- Configuration : ressource liee ajoutee a STM32CubeIDE/FSBL/.project.
+- Verification : XML valide et git diff --check sans erreur.
+- Statut : code cree localement ; compilation non encore testee.
+- Limite : aucune garantie de stabilite des pixels du framebuffer.
+- Prochaine action : compilation Debug du module dans CubeIDE.
+### 2026-11-17 — P01 : premiere compilation reussie
+
+- Projet : DCMIPP_ContinuousMode_FSBL.
+- Configuration : Debug, STM32CubeIDE.
+- Source : FSBL/Src/camera_source.c.
+- Verification : commande arm-none-eabi-gcc visible.
+- Edition des liens : reussie, ELF et BIN generes.
+- Resultat : 0 erreur, 0 avertissement.
+- Statut : CameraSource compile ; integration dans main.c a effectuer.
+- Tests STM32 P01 : non effectues.
+- Prochaine action : raccorder l'API au pipeline DCMIPP.
+### 2026-11-17 — P01 : raccordement et blocage ST-LINK
+
+- CameraSource raccorde dans main.c.
+- Appels Init, OnFrameEvent, IsFrameReady et GetLatestFrame presents.
+- Build Debug observe a 15:46 : 0 erreur, 0 avertissement.
+- Firmware ELF genere ; compilation incrementale reussie.
+- Lancement Debug : Failed to start GDB server.
+- Detail : Error in initializing ST-LINK device, reason (255) Unknown.
+- Cause precise : non determinee.
+- Statut : compile ; test STM32 P01 bloque.
+- Action suivante : diagnostic USB, alimentation et connexion ST-LINK.
+- Aucun flash ni validation STM32 P01 atteste.
+### 2026-11-17 — P01 : echec du chargement ELF
+
+- Compilation Debug : reussie, 0 erreur, 0 avertissement.
+- Nouvelle tentative Debug : serveur GDB lance jusqu'a la commande load.
+- Erreur : Failed to execute MI command: load.
+- Message final : Load failed.
+- Fichier cible : DCMIPP_ContinuousMode_FSBL.elf.
+- Configuration Git inspectee : ST-LINK, SWD, access port 1, connect under reset.
+- Linker : code en RAM interne a 0x34180400.
+- Hypothese a verifier : BOOT1 en mode developpement.
+- Statut : firmware compile ; chargement et tests STM32 non valides.
+- Prochaine action : verifier BOOT1 et le journal ST-LINK GDB Server.
+
+### 2026-11-24 - P01 : validation STM32
+
+- CameraSource minimal implemente et compile.
+- Build Debug : 0 erreur, 0 avertissement.
+- Blocage ST-LINK depasse ; cause racine non determinee.
+- Acquisition et affichage operationnels.
+- Deux cartes STM32N6570-DK disponibles.
+- Choix : une seule carte pour les validations courantes.
+- Seconde carte conservee en secours.
+- Identifiant de la carte utilisee pour P01 non precise.
+- Mesure 1 : id=3634, read_count=3634, timestamp=120783 ms.
+- Mesure 2 : id=3887, read_count=3887, timestamp=129144 ms.
+- 253 frames sur 8361 ms : 30.26 FPS.
+- Aucun saut observe par difference des compteurs.
+- CameraFrame : 800x480 RGB565, adresse 0x34200000.
+- Taille du framebuffer : 768000 octets.
+- Statut : P01 validee sur STM32 dans le perimetre teste.
+- Stabilite des pixels reservee a P03.
+- Rapport : docs/tests/CAMERA_SOURCE_VALIDATION_2026-11-24.md.
+- Handoff : docs/handoffs/HANDOFF_P02_CAMERA_REFACTOR_2026-11-24.md.
+- Prochaine passe : P02, refactoring du pipeline camera.
+
+
 ## Modèle obligatoire pour les prochaines entrées
 
 ### AAAA-MM-JJ — PXX : titre

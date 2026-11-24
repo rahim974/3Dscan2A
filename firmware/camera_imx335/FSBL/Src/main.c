@@ -24,6 +24,7 @@
 #include "isp_api.h"
 #include "imx335_E27_isp_param_conf.h"
 #include "camera_types.h"
+#include "camera_source.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,6 +55,10 @@ static uint32_t g_last_frame_count = 0;
 static uint32_t g_camera_fps = 0;
 
 static CameraFrame g_camera_frame;
+static CameraFrame g_camera_source_latest_frame;
+static __IO uint32_t g_camera_source_read_count = 0u;
+static __IO uint32_t g_camera_source_last_id = 0u;
+static __IO uint32_t g_camera_source_last_timestamp_ms = 0u;
 
 static IMX335_Object_t   IMX335Obj;
 static int32_t isp_gain;
@@ -159,17 +164,6 @@ int main(void)
     Error_Handler();
   }
 
-  if (HAL_DCMIPP_CSI_PIPE_Start(&hdcmipp, DCMIPP_PIPE1, DCMIPP_VIRTUAL_CHANNEL0 , BUFFER_ADDRESS, DCMIPP_MODE_CONTINUOUS) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /* Start the Image Signal Processing */
-  if (ISP_Start(&hcamera_isp) != ISP_OK)
-  {
-    Error_Handler();
-  }
-
   g_camera_frame.frame_id = NbMainFrames;
   g_camera_frame.timestamp_ms = HAL_GetTick();
 
@@ -182,6 +176,21 @@ int main(void)
 
   g_camera_frame.data_size_bytes =
       FRAME_WIDTH * FRAME_HEIGHT * 2u;
+
+  CameraSource_Init(&g_camera_frame);
+
+  if (HAL_DCMIPP_CSI_PIPE_Start(&hdcmipp, DCMIPP_PIPE1, DCMIPP_VIRTUAL_CHANNEL0 , BUFFER_ADDRESS, DCMIPP_MODE_CONTINUOUS) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /* Start the Image Signal Processing */
+  if (ISP_Start(&hcamera_isp) != ISP_OK)
+  {
+    Error_Handler();
+  }
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -195,6 +204,18 @@ int main(void)
       BSP_LED_Toggle(LED_RED);
     }
     /* USER CODE BEGIN 3 */
+    if (CameraSource_IsFrameReady())
+    {
+      if (CameraSource_GetLatestFrame(
+              &g_camera_source_latest_frame))
+      {
+        g_camera_source_read_count++;
+        g_camera_source_last_id =
+            g_camera_source_latest_frame.frame_id;
+        g_camera_source_last_timestamp_ms =
+            g_camera_source_latest_frame.timestamp_ms;
+      }
+    }
     if ((HAL_GetTick() - g_last_fps_tick) >= 1000u)
     {
         g_camera_fps = NbMainFrames - g_last_frame_count;
@@ -546,6 +567,7 @@ void HAL_DCMIPP_PIPE_FrameEventCallback(
 
     g_camera_frame.frame_id = NbMainFrames;
     g_camera_frame.timestamp_ms = HAL_GetTick();
+    CameraSource_OnFrameEvent(g_camera_frame.frame_id, g_camera_frame.timestamp_ms);
 }
 
 

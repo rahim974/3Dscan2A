@@ -32,6 +32,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>Application/User/camera_source.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/FSBL/Src/camera_source.c</locationURI>
+		</link>
+		<link>
 			<name>Doc/README.md</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/README.md</locationURI>
