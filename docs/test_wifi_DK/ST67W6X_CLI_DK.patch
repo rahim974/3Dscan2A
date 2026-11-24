@@ -1,0 +1,121 @@
+diff -ruN -x Release -x Debug -x .settings ST67W6X_CLI/FSBL/Core/Inc/main.h ST67W6X_CLI_DK/FSBL/Core/Inc/main.h
+--- ST67W6X_CLI/FSBL/Core/Inc/main.h	2026-11-24 14:31:42
++++ ST67W6X_CLI_DK/FSBL/Core/Inc/main.h	2026-11-24 14:31:42
+@@ -83,13 +83,13 @@
+ #define SPI_RDY_EXTI_IRQn EXTI9_IRQn
+ #define CHIP_EN_Pin GPIO_PIN_10
+ #define CHIP_EN_GPIO_Port GPIOE
+-#define USER_BUTTON_Pin GPIO_PIN_12
+-#define USER_BUTTON_GPIO_Port GPIOD
+-#define USER_BUTTON_EXTI_IRQn EXTI12_IRQn
+-#define BOOT_Pin GPIO_PIN_5
+-#define BOOT_GPIO_Port GPIOD
+-#define SPI_MISO_Pin GPIO_PIN_1
+-#define SPI_MISO_GPIO_Port GPIOG
++#define USER_BUTTON_Pin GPIO_PIN_7
++#define USER_BUTTON_GPIO_Port GPIOE
++#define USER_BUTTON_EXTI_IRQn EXTI7_IRQn
++#define BOOT_Pin GPIO_PIN_13
++#define BOOT_GPIO_Port GPIOE
++#define SPI_MISO_Pin GPIO_PIN_8
++#define SPI_MISO_GPIO_Port GPIOH
+ #define LED_GREEN_Pin GPIO_PIN_0
+ #define LED_GREEN_GPIO_Port GPIOG
+ #define SPI_CS_Pin GPIO_PIN_3
+diff -ruN -x Release -x Debug -x .settings ST67W6X_CLI/FSBL/Core/Inc/stm32n6xx_it.h ST67W6X_CLI_DK/FSBL/Core/Inc/stm32n6xx_it.h
+--- ST67W6X_CLI/FSBL/Core/Inc/stm32n6xx_it.h	2026-11-24 14:31:42
++++ ST67W6X_CLI_DK/FSBL/Core/Inc/stm32n6xx_it.h	2026-11-24 14:31:42
+@@ -54,7 +54,7 @@
+ void SecureFault_Handler(void);
+ void DebugMon_Handler(void);
+ void EXTI9_IRQHandler(void);
+-void EXTI12_IRQHandler(void);
++void EXTI7_IRQHandler(void);
+ void GPDMA1_Channel10_IRQHandler(void);
+ void GPDMA1_Channel11_IRQHandler(void);
+ void TIM6_IRQHandler(void);
+diff -ruN -x Release -x Debug -x .settings ST67W6X_CLI/FSBL/Core/Src/main.c ST67W6X_CLI_DK/FSBL/Core/Src/main.c
+--- ST67W6X_CLI/FSBL/Core/Src/main.c	2026-11-24 14:31:42
++++ ST67W6X_CLI_DK/FSBL/Core/Src/main.c	2026-11-24 14:31:42
+@@ -401,6 +401,7 @@
+   __HAL_RCC_GPIOB_CLK_ENABLE();
+   __HAL_RCC_GPIOG_CLK_ENABLE();
+   __HAL_RCC_GPIOA_CLK_ENABLE();
++  __HAL_RCC_GPIOH_CLK_ENABLE();
+ 
+   /*Configure GPIO pin Output Level */
+   HAL_GPIO_WritePin(CHIP_EN_GPIO_Port, CHIP_EN_Pin, GPIO_PIN_RESET);
+@@ -418,7 +419,7 @@
+   HAL_EXTI_ConfigLineAttributes(EXTI_LINE_9, EXTI_LINE_SEC);
+ 
+   /*Configure the EXTI line attribute */
+-  HAL_EXTI_ConfigLineAttributes(EXTI_LINE_12, EXTI_LINE_SEC);
++  HAL_EXTI_ConfigLineAttributes(EXTI_LINE_7, EXTI_LINE_SEC);
+ 
+   /*Configure GPIO pin : SPI_RDY_Pin */
+   GPIO_InitStruct.Pin = SPI_RDY_Pin;
+diff -ruN -x Release -x Debug -x .settings ST67W6X_CLI/FSBL/Core/Src/stm32n6xx_hal_msp.c ST67W6X_CLI_DK/FSBL/Core/Src/stm32n6xx_hal_msp.c
+--- ST67W6X_CLI/FSBL/Core/Src/stm32n6xx_hal_msp.c	2026-11-24 14:31:42
++++ ST67W6X_CLI_DK/FSBL/Core/Src/stm32n6xx_hal_msp.c	2026-11-24 14:31:42
+@@ -109,6 +109,7 @@
+ 
+     __HAL_RCC_GPIOE_CLK_ENABLE();
+     __HAL_RCC_GPIOG_CLK_ENABLE();
++    __HAL_RCC_GPIOH_CLK_ENABLE();
+     /**SPI5 GPIO Configuration
+     PE15     ------> SPI5_SCK
+     PG1     ------> SPI5_MISO
+@@ -121,13 +122,17 @@
+     GPIO_InitStruct.Alternate = GPIO_AF5_SPI5;
+     HAL_GPIO_Init(SPI_CLK_GPIO_Port, &GPIO_InitStruct);
+ 
+-    GPIO_InitStruct.Pin = SPI_MISO_Pin|SPI_MOSI_Pin;
++    GPIO_InitStruct.Pin = SPI_MOSI_Pin;
+     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+     GPIO_InitStruct.Pull = GPIO_NOPULL;
+     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+     GPIO_InitStruct.Alternate = GPIO_AF5_SPI5;
+-    HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
++    HAL_GPIO_Init(SPI_MOSI_GPIO_Port, &GPIO_InitStruct);
+ 
++    /* DK : MISO sur PH8 (D12). Vérifier l'AF de PH8 dans la datasheet / CubeMX (AF5 attendu). */
++    GPIO_InitStruct.Pin = SPI_MISO_Pin;
++    HAL_GPIO_Init(SPI_MISO_GPIO_Port, &GPIO_InitStruct);
++
+     /* SPI5 DMA Init */
+     /* GPDMA1_REQUEST_SPI5_RX Init */
+     handle_GPDMA1_Channel11.Instance = GPDMA1_Channel11;
+@@ -221,7 +226,8 @@
+     */
+     HAL_GPIO_DeInit(SPI_CLK_GPIO_Port, SPI_CLK_Pin);
+ 
+-    HAL_GPIO_DeInit(GPIOG, SPI_MISO_Pin|SPI_MOSI_Pin);
++    HAL_GPIO_DeInit(SPI_MOSI_GPIO_Port, SPI_MOSI_Pin);
++    HAL_GPIO_DeInit(SPI_MISO_GPIO_Port, SPI_MISO_Pin);
+ 
+     /* SPI5 DMA DeInit */
+     HAL_DMA_DeInit(hspi->hdmarx);
+diff -ruN -x Release -x Debug -x .settings ST67W6X_CLI/FSBL/Core/Src/stm32n6xx_it.c ST67W6X_CLI_DK/FSBL/Core/Src/stm32n6xx_it.c
+--- ST67W6X_CLI/FSBL/Core/Src/stm32n6xx_it.c	2026-11-24 14:31:42
++++ ST67W6X_CLI_DK/FSBL/Core/Src/stm32n6xx_it.c	2026-11-24 14:31:42
+@@ -195,15 +195,15 @@
+ /**
+   * @brief This function handles EXTI Line12 interrupt.
+   */
+-void EXTI12_IRQHandler(void)
++void EXTI7_IRQHandler(void)
+ {
+-  /* USER CODE BEGIN EXTI12_IRQn 0 */
++  /* USER CODE BEGIN EXTI7_IRQn 0 */
+ 
+-  /* USER CODE END EXTI12_IRQn 0 */
++  /* USER CODE END EXTI7_IRQn 0 */
+   HAL_GPIO_EXTI_IRQHandler(USER_BUTTON_Pin);
+-  /* USER CODE BEGIN EXTI12_IRQn 1 */
++  /* USER CODE BEGIN EXTI7_IRQn 1 */
+ 
+-  /* USER CODE END EXTI12_IRQn 1 */
++  /* USER CODE END EXTI7_IRQn 1 */
+ }
+ 
+ /**
